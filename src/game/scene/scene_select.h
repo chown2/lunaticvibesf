@@ -31,11 +31,11 @@ private:
     bool isHoldingDown = false;
     bool isScrollingByAxis = false;
 
-    Time navigateTimestamp;
+    lunaticvibes::Time navigateTimestamp;
 
     // hold SELECT to enter version list
     bool isInVersionList = false;
-    Time selectDownTimestamp;
+    lunaticvibes::Time selectDownTimestamp;
 
     // preview
     std::shared_mutex previewMutex;
@@ -53,8 +53,8 @@ private:
     std::shared_ptr<ChartFormatBase> previewChart = nullptr;
     std::shared_ptr<ChartObjectBase> previewChartObj = nullptr;
     std::shared_ptr<RulesetBase> previewRuleset = nullptr;
-    Time previewStartTime;
-    Time previewEndTime;
+    lunaticvibes::Time previewStartTime;
+    lunaticvibes::Time previewEndTime;
     std::array<size_t, 128> _bgmSampleIdxBuf{};
     std::array<size_t, 128> _keySampleIdxBuf{};
 
@@ -62,7 +62,7 @@ private:
     static std::shared_ptr<SceneCustomize> _virtualSceneCustomize;
 
     // smooth scrolling
-    Time scrollButtonTimestamp;
+    lunaticvibes::Time scrollButtonTimestamp;
     double scrollAccumulator = 0.0;
     double scrollAccumulatorAddUnit = 0.0;
 
@@ -106,33 +106,33 @@ protected:
 
 protected:
     // Register to InputWrapper: judge / keysound
-    void inputGamePress(InputMask&, const Time&);
-    void inputGameHold(InputMask&, const Time&);
-    void inputGameRelease(InputMask&, const Time&);
+    void inputGamePress(InputMask&, const lunaticvibes::Time&);
+    void inputGameHold(InputMask&, const lunaticvibes::Time&);
+    void inputGameRelease(InputMask&, const lunaticvibes::Time&);
 
 private:
-    void inputGamePressSelect(InputMask&, const Time&);
-    void inputGameHoldSelect(InputMask&, const Time&);
-    void inputGameReleaseSelect(InputMask&, const Time&);
-    void inputGameAxisSelect(double s1, double s2, const Time&);
+    void inputGamePressSelect(InputMask&, const lunaticvibes::Time&);
+    void inputGameHoldSelect(InputMask&, const lunaticvibes::Time&);
+    void inputGameReleaseSelect(InputMask&, const lunaticvibes::Time&);
+    void inputGameAxisSelect(double s1, double s2, const lunaticvibes::Time&);
 
-    void inputGamePressPanel(InputMask&, const Time&);
-    void inputGameHoldPanel(InputMask&, const Time&);
-    void inputGameReleasePanel(InputMask&, const Time&);
+    void inputGamePressPanel(InputMask&, const lunaticvibes::Time&);
+    void inputGameHoldPanel(InputMask&, const lunaticvibes::Time&);
+    void inputGameReleasePanel(InputMask&, const lunaticvibes::Time&);
 
 private:
-    void navigateUpBy1(const Time& t);
-    void navigateDownBy1(const Time& t);
-    void navigateEnter(const Time& t);
-    void navigateBack(const Time& t, bool sound = true);
+    void navigateUpBy1(const lunaticvibes::Time& t);
+    void navigateDownBy1(const lunaticvibes::Time& t);
+    void navigateEnter(const lunaticvibes::Time& t);
+    void navigateBack(const lunaticvibes::Time& t, bool sound = true);
     void decide();
-    void navigateVersionEnter(const Time& t);
-    void navigateVersionBack(const Time& t);
-    bool closeAllPanels(const Time& t);
+    void navigateVersionEnter(const lunaticvibes::Time& t);
+    void navigateVersionBack(const lunaticvibes::Time& t);
+    bool closeAllPanels(const lunaticvibes::Time& t);
 
 protected:
     virtual bool checkAndStartTextEdit() override;
-    void inputGamePressTextEdit(InputMask&, const Time&);
+    void inputGamePressTextEdit(InputMask&, const lunaticvibes::Time&);
     virtual void stopTextEdit(bool modify) override;
     void resetJukeboxText();
     void searchSong(const std::string& text);

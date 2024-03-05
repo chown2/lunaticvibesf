@@ -443,7 +443,7 @@ void SceneSelect::imguiPageArenaDiagnose()
         ImGui::Text("recvMessageIndex: %d", c.recvMessageIndex);
         ImGui::Text("sendMessageIndex: %d", c.sendMessageIndex);
         ImGui::Text("requestChartHash: %s", reqChartHash.c_str());
-        ImGui::Text("Heartbeat: %ds ago", (Time() - c.heartbeatTime).norm() / 1000);
+        ImGui::Text("Heartbeat: %ds ago", (lunaticvibes::Time() - c.heartbeatTime).norm() / 1000);
 #endif
     }
     else if (server && g_pArenaHost)
@@ -480,7 +480,7 @@ void SceneSelect::imguiPageArenaDiagnose()
         {
             hashs[key] = c.requestChartHash.hexdigest();
             ImGui::Text("%s %d: %s ping:%dms send:%d recv:%d hb:%ds [%s%s%s ] req:%s", key.c_str(), c.id,
-                c.name.c_str(), c.ping, c.sendMessageIndex, c.recvMessageIndex, (Time() - c.heartbeatRecvTime).norm() / 1000,
+                c.name.c_str(), c.ping, c.sendMessageIndex, c.recvMessageIndex, (lunaticvibes::Time() - c.heartbeatRecvTime).norm() / 1000,
                 c.isLoadingFinished ? " isLoadingFinished" : "",
                 c.isPlayingFinished ? " isPlayingFinished" : "",
                 c.isResultFinished ? " isResultFinished" : "",

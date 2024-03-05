@@ -42,7 +42,7 @@ protected:
     bool _isAutoplay = false;
 
     bool _hasStartTime = false;
-    Time _startTime;
+    lunaticvibes::Time _startTime;
 
     unsigned notesReached = 0;    // total notes reached. +1 when timestamp reached
     unsigned notesExpired = 0;    // total notes expired. +1 when timestamp+POOR reached; +1 for LN when tail timestamp (no +POOR) is reached
@@ -53,11 +53,11 @@ public:
         _format(format), _chart(chart), _basic{ 0 }{}
     virtual ~RulesetBase() = default;
 public:
-    virtual void updatePress(InputMask& pg, const Time& t) = 0;
-    virtual void updateHold(InputMask& hg, const Time& t) = 0;
-    virtual void updateRelease(InputMask& rg, const Time& t) = 0;
-    virtual void updateAxis(double s1, double s2, const Time& t) = 0;
-    virtual void update(const Time& t) = 0;
+    virtual void updatePress(InputMask& pg, const lunaticvibes::Time& t) = 0;
+    virtual void updateHold(InputMask& hg, const lunaticvibes::Time& t) = 0;
+    virtual void updateRelease(InputMask& rg, const lunaticvibes::Time& t) = 0;
+    virtual void updateAxis(double s1, double s2, const lunaticvibes::Time& t) = 0;
+    virtual void update(const lunaticvibes::Time& t) = 0;
 public:
     constexpr BasicData getData() const { return _basic; }
     constexpr double getClearHealth() const { return _clearHealth; }
@@ -83,5 +83,5 @@ public:
 
     void setComboDisplay(unsigned combo) { _basic.comboDisplay = combo; _basic.maxComboDisplay = std::max(_basic.maxComboDisplay, _basic.combo + combo); }
     void setMaxComboDisplay(unsigned combo) { _basic.maxComboDisplay = combo; }
-    void setStartTime(const Time& t) { _hasStartTime = true; _startTime = t; }
+    void setStartTime(const lunaticvibes::Time& t) { _hasStartTime = true; _startTime = t; }
 };

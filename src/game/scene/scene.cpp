@@ -123,7 +123,7 @@ SceneBase::~SceneBase()
 
 void SceneBase::update()
 {
-    Time t;
+    lunaticvibes::Time t;
     gUpdateContext.updateTime = t;
 
     if (pSkin)
@@ -186,7 +186,7 @@ void SceneBase::update()
     }
 }
 
-void SceneBase::MouseClick(InputMask& m, const Time& t)
+void SceneBase::MouseClick(InputMask& m, const lunaticvibes::Time& t)
 {
     if (!pSkin) return;
     if (m[Input::Pad::M1])
@@ -196,7 +196,7 @@ void SceneBase::MouseClick(InputMask& m, const Time& t)
     }
 }
 
-void SceneBase::MouseDrag(InputMask& m, const Time& t)
+void SceneBase::MouseDrag(InputMask& m, const lunaticvibes::Time& t)
 {
     if (!pSkin) return;
     if (m[Input::Pad::M1])
@@ -206,7 +206,7 @@ void SceneBase::MouseDrag(InputMask& m, const Time& t)
     }
 }
 
-void SceneBase::MouseRelease(InputMask& m, const Time& t)
+void SceneBase::MouseRelease(InputMask& m, const lunaticvibes::Time& t)
 {
     if (!pSkin) return;
     if (m[Input::Pad::M1])
@@ -369,7 +369,7 @@ void SceneBase::updateImgui()
 #endif
 }
 
-void SceneBase::DebugToggle(InputMask& p, const Time& t)
+void SceneBase::DebugToggle(InputMask& p, const lunaticvibes::Time& t)
 {
 #ifdef _DEBUG
     if (!(!gInCustomize || _type == SceneType::CUSTOMIZE)) return;
@@ -439,7 +439,7 @@ void SceneBase::stopTextEdit(bool modify)
 }
 
 
-void SceneBase::GlobalFuncKeys(InputMask& m, const Time& t)
+void SceneBase::GlobalFuncKeys(InputMask& m, const lunaticvibes::Time& t)
 {
     if (m[Input::F6])
     {

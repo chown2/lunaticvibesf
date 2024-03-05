@@ -121,7 +121,7 @@ void RulesetBMSAuto::setTargetRate(double rate)
     assert(noteJudges.size() == count);
 }
 
-void RulesetBMSAuto::update(const Time& t)
+void RulesetBMSAuto::update(const lunaticvibes::Time& t)
 {
     if (!_hasStartTime)
         setStartTime(t);
@@ -194,7 +194,7 @@ void RulesetBMSAuto::update(const Time& t)
                 {
                     if (!(itNote->flags & Note::LN_TAIL))
                     {
-                        const Time& hitTime = judgeTime[(size_t)_judgeDifficulty].BAD;
+                        const lunaticvibes::Time& hitTime = judgeTime[(size_t)_judgeDifficulty].BAD;
                         if (!itNote->expired && rt >= itNote->time)
                         {
                             itNote->hit = true;

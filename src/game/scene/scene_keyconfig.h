@@ -33,11 +33,11 @@ protected:
 
 protected:
     // Register to InputWrapper: judge / keysound
-    void inputGamePress(InputMask&, const Time&);
-    void inputGameAxis(double s1, double s2, const Time&);
-    void inputGamePressKeyboard(KeyboardMask&, const Time&);
-    void inputGamePressJoystick(JoystickMask&, size_t device, const Time&);
-    void inputGameAbsoluteAxis(JoystickAxis&, size_t device, const Time&);
+    void inputGamePress(InputMask&, const lunaticvibes::Time&);
+    void inputGameAxis(double s1, double s2, const lunaticvibes::Time&);
+    void inputGamePressKeyboard(KeyboardMask&, const lunaticvibes::Time&);
+    void inputGamePressJoystick(JoystickMask&, size_t device, const lunaticvibes::Time&);
+    void inputGameAbsoluteAxis(JoystickAxis&, size_t device, const lunaticvibes::Time&);
 
 public:
     static void setInputBindingText(GameModeKeys keys, Input::Pad pad);

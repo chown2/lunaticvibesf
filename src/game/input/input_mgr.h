@@ -32,7 +32,7 @@ private:
     double scratch1, scratch2;
 
     int debounceTime = 0;
-    std::array<Time, Input::Pad::KEY_COUNT> pressedTime;
+    std::array<lunaticvibes::Time, Input::Pad::KEY_COUNT> pressedTime;
 
 public:
     // Game keys param / functions

@@ -71,12 +71,12 @@ protected:
 		} type = Ty::EMPTY;
 
 		struct playslot {
-			Time time;
+			lunaticvibes::Time time;
 			bool base, layer, poor;
 		};
 
 		std::shared_ptr<Texture> pt = nullptr;
-		Time playStartTime = 0;	// video
+		lunaticvibes::Time playStartTime = 0;	// video
 
 		obj() = default;
 		obj(Ty t, std::shared_ptr<Texture> pt) :type(t), pt(pt) {}
@@ -85,7 +85,7 @@ protected:
 protected:
 	std::map<size_t, obj> objs;
 	std::map<size_t, obj> objs_layer;
-	std::vector<std::pair<Time, size_t>> baseSlot, layerSlot, poorSlot;
+	std::vector<std::pair<lunaticvibes::Time, size_t>> baseSlot, layerSlot, poorSlot;
 	decltype(baseSlot.begin()) baseIt;
 	decltype(layerSlot.begin()) layerIt;
 	decltype(poorSlot.begin()) poorIt;
@@ -105,12 +105,12 @@ public:
 
 public:
 	bool addBmp(size_t idx, Path path);
-	bool setSlot(size_t idx, Time time, bool base, bool layer, bool poor);
+	bool setSlot(size_t idx, lunaticvibes::Time time, bool base, bool layer, bool poor);
 	void sortSlot();
 	bool setSlotFromBMS(ChartObjectBMS& bms);
-	virtual void seek(const Time& t);
+	virtual void seek(const lunaticvibes::Time& t);
 
-	virtual void update(const Time& t, bool poor);
+	virtual void update(const lunaticvibes::Time& t, bool poor);
 	virtual void draw(const Rect& srcRect, RectF dstRect,
 		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees) const override;
 	virtual void draw(const Rect& srcRect, RectF dstRect,

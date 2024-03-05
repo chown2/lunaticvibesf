@@ -212,7 +212,7 @@ bool TextureBmsBga::addBmp(size_t idx, Path pBmp)
 	return false;
 }
 
-bool TextureBmsBga::setSlot(size_t idx, Time time, bool base, bool layer, bool poor)
+bool TextureBmsBga::setSlot(size_t idx, lunaticvibes::Time time, bool base, bool layer, bool poor)
 {
 	if (base) baseSlot.emplace_back(time, idx);
 	if (layer) layerSlot.emplace_back(time, idx);
@@ -222,7 +222,7 @@ bool TextureBmsBga::setSlot(size_t idx, Time time, bool base, bool layer, bool p
 
 void TextureBmsBga::sortSlot()
 {
-	auto less = [](const std::pair<Time, size_t>& l, const std::pair<Time, size_t>& r)
+	auto less = [](const std::pair<lunaticvibes::Time, size_t>& l, const std::pair<lunaticvibes::Time, size_t>& r)
 	{
 		if (l.first < r.first) return true;
 		else if (l.first == r.first && l.second < r.second) return true;
@@ -252,7 +252,7 @@ bool TextureBmsBga::setSlotFromBMS(ChartObjectBMS& bms)
 	return true;
 }
 
-void TextureBmsBga::seek(const Time& t)
+void TextureBmsBga::seek(const lunaticvibes::Time& t)
 {
 	if (!isLoaded()) return;
 
@@ -286,7 +286,7 @@ void TextureBmsBga::seek(const Time& t)
 	inPoor = false;
 }
 
-void TextureBmsBga::update(const Time& t, bool poor)
+void TextureBmsBga::update(const lunaticvibes::Time& t, bool poor)
 {
 	if (!isLoaded()) return;
 

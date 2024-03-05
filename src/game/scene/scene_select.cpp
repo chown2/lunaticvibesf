@@ -477,7 +477,7 @@ SceneSelect::SceneSelect() : SceneBase(SkinType::MUSIC_SELECT, 250)
     previewState = PREVIEW_FINISH;
 
     if (gArenaData.isOnline())
-        State::set(IndexTimer::ARENA_SHOW_LOBBY, Time().norm());
+        State::set(IndexTimer::ARENA_SHOW_LOBBY, lunaticvibes::Time().norm());
 
     imguiInit();
 }
@@ -516,7 +516,7 @@ void SceneSelect::_updateAsync()
 {
     if (gNextScene != SceneType::SELECT) return;
 
-    Time t;
+    lunaticvibes::Time t;
 
     if (gAppIsExiting)
     {
@@ -682,7 +682,7 @@ void SceneSelect::_updateAsync()
         scrollAccumulator = 0.;
         scrollAccumulatorAddUnit = 0.;
 
-        State::set(IndexTimer::LIST_MOVE, Time().norm());
+        State::set(IndexTimer::LIST_MOVE, lunaticvibes::Time().norm());
         SoundMgr::playSysSample(SoundChannelType::KEY_SYS, eSoundSample::SOUND_F_OPEN);
 
         gSelectContext.remoteRequestedChart.reset();
@@ -818,8 +818,8 @@ void SceneSelect::_updateAsync()
 
 void SceneSelect::updatePrepare()
 {
-    Time t;
-    Time rt = t - State::get(IndexTimer::SCENE_START);
+    lunaticvibes::Time t;
+    lunaticvibes::Time rt = t - State::get(IndexTimer::SCENE_START);
 
     if (rt.norm() >= pSkin->info.timeIntro)
     {
@@ -854,8 +854,8 @@ void SceneSelect::updatePrepare()
 
 void SceneSelect::updateSelect()
 {
-    Time t;
-    Time rt = t - State::get(IndexTimer::SCENE_START);
+    lunaticvibes::Time t;
+    lunaticvibes::Time rt = t - State::get(IndexTimer::SCENE_START);
 
     if (!refreshingSongList)
     {
@@ -1068,21 +1068,21 @@ void SceneSelect::updateSelect()
 
 void SceneSelect::updateSearch()
 {
-    Time t;
-    Time rt = t - State::get(IndexTimer::SCENE_START);
+    lunaticvibes::Time t;
+    lunaticvibes::Time rt = t - State::get(IndexTimer::SCENE_START);
 }
 
 void SceneSelect::updatePanel(unsigned idx)
 {
-    Time t;
-    Time rt = t - State::get(IndexTimer::SCENE_START);
+    lunaticvibes::Time t;
+    lunaticvibes::Time rt = t - State::get(IndexTimer::SCENE_START);
 }
 
 void SceneSelect::updateFadeout()
 {
-    Time t;
-    Time rt = t - State::get(IndexTimer::SCENE_START);
-    Time ft = t - State::get(IndexTimer::FADEOUT_BEGIN);
+    lunaticvibes::Time t;
+    lunaticvibes::Time rt = t - State::get(IndexTimer::SCENE_START);
+    lunaticvibes::Time ft = t - State::get(IndexTimer::FADEOUT_BEGIN);
 
     if (ft >= pSkin->info.timeOutro)
     {
@@ -1121,9 +1121,9 @@ void SceneSelect::update()
 ////////////////////////////////////////////////////////////////////////////////
 
 // CALLBACK
-void SceneSelect::inputGamePress(InputMask& m, const Time& t)
+void SceneSelect::inputGamePress(InputMask& m, const lunaticvibes::Time& t)
 {
-    Time rt = t - State::get(IndexTimer::SCENE_START);
+    lunaticvibes::Time rt = t - State::get(IndexTimer::SCENE_START);
 
     if (rt.norm() < pSkin->info.timeIntro) return;
 
@@ -1243,9 +1243,9 @@ void SceneSelect::inputGamePress(InputMask& m, const Time& t)
 }
 
 // CALLBACK
-void SceneSelect::inputGameHold(InputMask& m, const Time& t)
+void SceneSelect::inputGameHold(InputMask& m, const lunaticvibes::Time& t)
 {
-    Time rt = t - State::get(IndexTimer::SCENE_START);
+    lunaticvibes::Time rt = t - State::get(IndexTimer::SCENE_START);
 
     if (rt.norm() < pSkin->info.timeIntro) return;
 
@@ -1275,9 +1275,9 @@ void SceneSelect::inputGameHold(InputMask& m, const Time& t)
 }
 
 // CALLBACK
-void SceneSelect::inputGameRelease(InputMask& m, const Time& t)
+void SceneSelect::inputGameRelease(InputMask& m, const lunaticvibes::Time& t)
 {
-    Time rt = t - State::get(IndexTimer::SCENE_START);
+    lunaticvibes::Time rt = t - State::get(IndexTimer::SCENE_START);
 
     if (rt.norm() < pSkin->info.timeIntro) return;
 
@@ -1341,7 +1341,7 @@ void SceneSelect::inputGameRelease(InputMask& m, const Time& t)
 }
 
 
-void SceneSelect::inputGamePressSelect(InputMask& input, const Time& t)
+void SceneSelect::inputGamePressSelect(InputMask& input, const lunaticvibes::Time& t)
 {
     if (input[Input::Pad::F8])
     {
@@ -1420,7 +1420,7 @@ void SceneSelect::inputGamePressSelect(InputMask& input, const Time& t)
             }
 
             // reset infos, play sound
-            navigateEnter(Time());
+            navigateEnter(lunaticvibes::Time());
         }
         else
         {
@@ -1459,7 +1459,7 @@ void SceneSelect::inputGamePressSelect(InputMask& input, const Time& t)
                 resetJukeboxText();
             }
 
-            State::set(IndexTimer::LIST_MOVE, Time().norm());
+            State::set(IndexTimer::LIST_MOVE, lunaticvibes::Time().norm());
             SoundMgr::playSysSample(SoundChannelType::BGM_SYS, eSoundSample::SOUND_F_OPEN);
         }
 
@@ -1589,7 +1589,7 @@ void SceneSelect::inputGamePressSelect(InputMask& input, const Time& t)
     }
 }
 
-void SceneSelect::inputGameHoldSelect(InputMask& input, const Time& t)
+void SceneSelect::inputGameHoldSelect(InputMask& input, const lunaticvibes::Time& t)
 {
     // navigate
     if (isHoldingUp && (t - scrollButtonTimestamp).norm() >= gSelectContext.scrollTimeLength)
@@ -1612,7 +1612,7 @@ void SceneSelect::inputGameHoldSelect(InputMask& input, const Time& t)
     }
 }
 
-void SceneSelect::inputGameReleaseSelect(InputMask& input, const Time& t)
+void SceneSelect::inputGameReleaseSelect(InputMask& input, const lunaticvibes::Time& t)
 {
     if (pSkin->version() == SkinVersion::LR2beta3)
     {
@@ -1650,7 +1650,7 @@ void SceneSelect::inputGameReleaseSelect(InputMask& input, const Time& t)
     }
 }
 
-void SceneSelect::inputGameAxisSelect(double s1, double s2, const Time& t)
+void SceneSelect::inputGameAxisSelect(double s1, double s2, const lunaticvibes::Time& t)
 {
     double s = (s1 + s2) * 75.0;
     if (s <= -0.01 || 0.01 <= s)
@@ -1663,7 +1663,7 @@ void SceneSelect::inputGameAxisSelect(double s1, double s2, const Time& t)
     }
 }
 
-void SceneSelect::inputGamePressPanel(InputMask& input, const Time& t)
+void SceneSelect::inputGamePressPanel(InputMask& input, const lunaticvibes::Time& t)
 {
     using namespace Input;
 
@@ -1823,11 +1823,11 @@ void SceneSelect::inputGamePressPanel(InputMask& input, const Time& t)
     }
 }
 
-void SceneSelect::inputGameHoldPanel(InputMask& input, const Time& t)
+void SceneSelect::inputGameHoldPanel(InputMask& input, const lunaticvibes::Time& t)
 {
 }
 
-void SceneSelect::inputGameReleasePanel(InputMask& input, const Time& t)
+void SceneSelect::inputGameReleasePanel(InputMask& input, const lunaticvibes::Time& t)
 {
     if (State::get(IndexSwitch::SELECT_PANEL1) && (input[Input::Pad::K1START] || input[Input::Pad::K2START]))
     {
@@ -2386,7 +2386,7 @@ void SceneSelect::decide()
     gNextScene = SceneType::DECIDE;
 }
 
-void SceneSelect::navigateUpBy1(const Time& t)
+void SceneSelect::navigateUpBy1(const lunaticvibes::Time& t)
 {
     if (!isInVersionList)
         selectDownTimestamp = -1;
@@ -2407,7 +2407,7 @@ void SceneSelect::navigateUpBy1(const Time& t)
     }
 }
 
-void SceneSelect::navigateDownBy1(const Time& t)
+void SceneSelect::navigateDownBy1(const lunaticvibes::Time& t)
 {
     if (!isInVersionList)
         selectDownTimestamp = -1;
@@ -2428,7 +2428,7 @@ void SceneSelect::navigateDownBy1(const Time& t)
     }
 }
 
-void SceneSelect::navigateEnter(const Time& t)
+void SceneSelect::navigateEnter(const lunaticvibes::Time& t)
 {
     if (!gSelectContext.entries.empty())
     {
@@ -2536,11 +2536,11 @@ void SceneSelect::navigateEnter(const Time& t)
         scrollAccumulator = 0.;
         scrollAccumulatorAddUnit = 0.;
 
-        State::set(IndexTimer::LIST_MOVE, Time().norm());
+        State::set(IndexTimer::LIST_MOVE, lunaticvibes::Time().norm());
         SoundMgr::playSysSample(SoundChannelType::KEY_SYS, eSoundSample::SOUND_F_OPEN);
     }
 }
-void SceneSelect::navigateBack(const Time& t, bool sound)
+void SceneSelect::navigateBack(const lunaticvibes::Time& t, bool sound)
 {
     if (!isInVersionList)
         selectDownTimestamp = -1;
@@ -2617,7 +2617,7 @@ void SceneSelect::navigateBack(const Time& t, bool sound)
     }
 }
 
-void SceneSelect::navigateVersionEnter(const Time& t)
+void SceneSelect::navigateVersionEnter(const lunaticvibes::Time& t)
 {
     isInVersionList = true;
 
@@ -2632,7 +2632,7 @@ void SceneSelect::navigateVersionEnter(const Time& t)
     lr2skin::button::select_difficulty_filter(1);
 }
 
-void SceneSelect::navigateVersionBack(const Time& t)
+void SceneSelect::navigateVersionBack(const lunaticvibes::Time& t)
 {
     // TODO
     // play some sound
@@ -2642,7 +2642,7 @@ void SceneSelect::navigateVersionBack(const Time& t)
     isInVersionList = false;
 }
 
-bool SceneSelect::closeAllPanels(const Time& t)
+bool SceneSelect::closeAllPanels(const lunaticvibes::Time& t)
 {
     bool hasPanelOpened = false;
     for (int i = 1; i <= 9; ++i)
@@ -2685,7 +2685,7 @@ bool SceneSelect::checkAndStartTextEdit()
     return false;
 }
 
-void SceneSelect::inputGamePressTextEdit(InputMask& input, const Time& t)
+void SceneSelect::inputGamePressTextEdit(InputMask& input, const lunaticvibes::Time& t)
 {
     if (input[Input::Pad::ESC])
     {
@@ -2749,7 +2749,7 @@ void SceneSelect::searchSong(const std::string& text)
     loadSongList();
     sortSongList();
 
-    navigateTimestamp = Time();
+    navigateTimestamp = lunaticvibes::Time();
     postStopPreview();
 
     gSelectContext.selectedEntryIndex = 0;
@@ -3030,7 +3030,7 @@ void SceneSelect::updatePreview()
             LOG_DEBUG << "[Select] Preview start";
 
             // start from beginning. It's difficult to seek a chart for playback due to lengthy BGM samples...
-            previewStartTime = Time() - previewChartObj->getLeadInTime();
+            previewStartTime = lunaticvibes::Time() - previewChartObj->getLeadInTime();
             previewEndTime = 0;
             previewRuleset->setStartTime(previewStartTime);
 
@@ -3054,12 +3054,12 @@ void SceneSelect::updatePreview()
         {
             if (previewStartTime == 0)
             {
-                previewStartTime = Time();
+                previewStartTime = lunaticvibes::Time();
 
                 size_t idx = 0;
                 SoundMgr::playNoteSample(SoundChannelType::KEY_LEFT, 1, &idx);
             }
-            else if ((Time() - previewStartTime).norm() > previewStandaloneLength)
+            else if ((lunaticvibes::Time() - previewStartTime).norm() > previewStandaloneLength)
             {
                 LOG_DEBUG << "[Select] Preview finished";
 
@@ -3069,7 +3069,7 @@ void SceneSelect::updatePreview()
         }
         else
         {
-            auto t = Time();
+            auto t = lunaticvibes::Time();
             auto rt = t - previewStartTime;
             previewChartObj->update(rt);
             previewRuleset->update(t);
@@ -3166,7 +3166,7 @@ void SceneSelect::arenaHostLobby()
         g_pArenaHost->loopStart();
         createNotification(i18n::s(i18nText::ARENA_HOST_SUCCESS));
 
-        Time t;
+        lunaticvibes::Time t;
         navigateBack(t, false);
         State::set(IndexTimer::ARENA_SHOW_LOBBY, t.norm());
 
@@ -3199,7 +3199,7 @@ void SceneSelect::arenaLeaveLobby()
         g_pArenaHost->disbandLobby();
     }
 
-    Time t;
+    lunaticvibes::Time t;
     navigateBack(t, false);
     State::set(IndexTimer::ARENA_SHOW_LOBBY, TIMER_NEVER);
 
@@ -3231,7 +3231,7 @@ void SceneSelect::arenaJoinLobby()
         g_pArenaClient->loopStart();
         createNotification(i18n::s(i18nText::ARENA_JOIN_SUCCESS));
 
-        Time t;
+        lunaticvibes::Time t;
         navigateBack(t, false);
         State::set(IndexTimer::ARENA_SHOW_LOBBY, t.norm());
 

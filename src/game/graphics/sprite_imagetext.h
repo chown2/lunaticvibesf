@@ -41,7 +41,7 @@ public:
 
 public:
     virtual void updateTextRect();
-    virtual bool update(const Time& t);
+    virtual bool update(const lunaticvibes::Time& t);
     virtual void draw() const;
 
 private:

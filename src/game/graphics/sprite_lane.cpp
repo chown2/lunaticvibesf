@@ -90,7 +90,7 @@ void SpriteLaneVertical::getRectSize(int& w, int& h)
 	}
 }
 
-bool SpriteLaneVertical::update(const Time& t)
+bool SpriteLaneVertical::update(const lunaticvibes::Time& t)
 {
 	if (hideInternal) return false;
 
@@ -104,7 +104,7 @@ bool SpriteLaneVertical::update(const Time& t)
 	return false;
 }
 
-void SpriteLaneVertical::updateNoteRect(const Time& t)
+void SpriteLaneVertical::updateNoteRect(const lunaticvibes::Time& t)
 {
 	_outRect.clear();
 	auto pChart = gPlayContext.chartObj[gPlayContext.isBattle ? playerSlot : 0];
@@ -310,7 +310,7 @@ void SpriteLaneVerticalLN::setMotionStartTimer(IndexTimer t)
 }
 
 
-void SpriteLaneVerticalLN::updateNoteRect(const Time& t)
+void SpriteLaneVerticalLN::updateNoteRect(const lunaticvibes::Time& t)
 {
 	_outRect.clear();
 	_outRectBody.clear();

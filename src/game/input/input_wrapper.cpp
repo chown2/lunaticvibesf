@@ -34,7 +34,7 @@ void InputWrapper::_loop()
 
     _prev = _curr;
     _curr = InputMgr::detect();
-    Time now;
+    lunaticvibes::Time now;
 
     // detect key / button
     InputMask p{ 0 }, h{ 0 }, r{ 0 };

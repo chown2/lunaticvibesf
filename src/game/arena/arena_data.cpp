@@ -130,7 +130,7 @@ void ArenaData::updateTexts()
 
 void ArenaData::updateGlobals()
 {
-	Time t;
+	lunaticvibes::Time t;
 	std::vector<std::pair<unsigned, IndexOption>> ranking;
 	for (size_t i = 0; i < getPlayerCount(); ++i)
 	{

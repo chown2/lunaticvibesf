@@ -146,10 +146,10 @@ protected:
 protected:
     std::vector<Metre>   barMetreLength;
     std::vector<Metre>   _barMetrePos;
-    std::vector<Time>    _barTimestamp;
+    std::vector<lunaticvibes::Time>    _barTimestamp;
 
-    Time   _totalLength;
-    Time   _leadInTime = 0;    // when the first sound note locates
+    lunaticvibes::Time   _totalLength;
+    lunaticvibes::Time   _leadInTime = 0;    // when the first sound note locates
 
     double _averageBPM = 0.;    // already multiplied pitch speed
     double _mainBPM = 0.;       // already multiplied pitch speed
@@ -194,14 +194,14 @@ protected:
     auto nextNoteBpm          () -> decltype(_bpmNoteList)::iterator&;
 
 public:
-    Time getBarLength(size_t bar);
-    Time getCurrentBarLength();
+    lunaticvibes::Time getBarLength(size_t bar);
+    lunaticvibes::Time getCurrentBarLength();
     Metre getBarMetre(size_t bar);
 	Metre getCurrentBarMetre();
     Metre getBarMetrePosition(size_t bar);
-	Time getBarTimestamp(size_t m) { return m < MAX_MEASURES ? _barTimestamp[m] : LLONG_MAX; }
-	Time getCurrentBarTimestamp() { return getBarTimestamp(_currentBar); }
-    Time getLeadInTime() const { return _leadInTime.norm() > 200 ? Time(_leadInTime.hres() - 200 * 1000000, true) : Time(0); }
+	lunaticvibes::Time getBarTimestamp(size_t m) { return m < MAX_MEASURES ? _barTimestamp[m] : LLONG_MAX; }
+	lunaticvibes::Time getCurrentBarTimestamp() { return getBarTimestamp(_currentBar); }
+    lunaticvibes::Time getLeadInTime() const { return _leadInTime.norm() > 200 ? lunaticvibes::Time(_leadInTime.hres() - 200 * 1000000, true) : lunaticvibes::Time(0); }
 
 protected:
     unsigned _currentBarTemp       = 0;
@@ -209,17 +209,17 @@ protected:
     double   _currentMetreTemp     = 0.;
     double   _currentMetre         = 0.;
     BPM      _currentBPM           = 150.0;
-    Time     _currentBeatLength    = Time::singleBeatLengthFromBPM(150.0);
-    Time     _lastChangedBPMTime   = 0;
+    lunaticvibes::Time     _currentBeatLength    = lunaticvibes::Time::singleBeatLengthFromBPM(150.0);
+    lunaticvibes::Time     _lastChangedBPMTime   = 0;
     double   _lastChangedBPMMetre  = 0.;
     std::unordered_map<double, unsigned> bpmNoteCount;  // used for calculating main bpm
 
 public:
     void reset();
     void resetNoteListsIterators();            // set after parsing
-    /*virtual*/ void update(const Time& rt);    // call with RELATIVE time
-    virtual void preUpdate(const Time& rt) = 0;
-    virtual void postUpdate(const Time& rt) = 0;
+    /*virtual*/ void update(const lunaticvibes::Time& rt);    // call with RELATIVE time
+    virtual void preUpdate(const lunaticvibes::Time& rt) = 0;
+    virtual void postUpdate(const lunaticvibes::Time& rt) = 0;
     constexpr auto getCurrentBar() -> decltype(_currentBar) { return _currentBar; }
     constexpr auto getCurrentMetre() -> decltype(_currentMetre) { return _currentMetre; }
     constexpr auto getCurrentBPM() -> decltype(_currentBPM) { return _currentBPM; }
@@ -233,7 +233,7 @@ public:
     virtual chart::NoteLaneIndex getLaneFromKey(chart::NoteLaneCategory cat, Input::Pad input) = 0;
     virtual std::vector<Input::Pad> getInputFromLane(size_t channel) = 0;
 
-    inline const Time& getTotalLength() const { return _totalLength; }
+    inline const lunaticvibes::Time& getTotalLength() const { return _totalLength; }
     constexpr auto getAverageBPM() -> decltype(_averageBPM) { return _averageBPM; }
     constexpr auto getMainBPM() -> decltype(_mainBPM) { return _mainBPM; }
     constexpr auto getPlayMaxBPM() -> decltype(_playMaxBPM) { return _playMaxBPM; }

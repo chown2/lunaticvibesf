@@ -26,15 +26,15 @@ public:
     virtual bool isFinished() const override { return _isFinished; }
 
     // Register to InputWrapper
-    virtual void updatePress(InputMask& pg, const Time& t) override {}
+    virtual void updatePress(InputMask& pg, const lunaticvibes::Time& t) override {}
     // Register to InputWrapper
-    virtual void updateHold(InputMask& hg, const Time& t) override {}
+    virtual void updateHold(InputMask& hg, const lunaticvibes::Time& t) override {}
     // Register to InputWrapper
-    virtual void updateRelease(InputMask& rg, const Time& t) override {}
+    virtual void updateRelease(InputMask& rg, const lunaticvibes::Time& t) override {}
     // Register to InputWrapper
-    virtual void updateAxis(double s1, double s2, const Time& t) override {}
+    virtual void updateAxis(double s1, double s2, const lunaticvibes::Time& t) override {}
     // Called by ScenePlay
-    virtual void update(const Time& t) override;
+    virtual void update(const lunaticvibes::Time& t) override;
 
 public:
     struct PayloadInit

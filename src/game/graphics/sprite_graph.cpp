@@ -28,7 +28,7 @@ void SpriteLine::draw() const
     }
 }
 
-void SpriteLine::updateProgress(const Time& t)
+void SpriteLine::updateProgress(const lunaticvibes::Time& t)
 {
     int duration = _end - _start;
     if (duration > 0)
@@ -246,7 +246,7 @@ void SpriteLine::updateRects()
     }
 }
 
-bool SpriteLine::update(const Time& t)
+bool SpriteLine::update(const lunaticvibes::Time& t)
 {
     if (SpriteStatic::update(t))
     {

@@ -25,11 +25,11 @@ protected:
 
 	float sysVolumeGradientBegin = 1.0;
 	float sysVolumeGradientEnd = 1.0;
-	Time sysVolumeGradientBeginTime;
+	lunaticvibes::Time sysVolumeGradientBeginTime;
 	int sysVolumeGradientLength = 0;
 	float noteVolumeGradientBegin = 1.0;
 	float noteVolumeGradientEnd = 1.0;
-	Time noteVolumeGradientBeginTime;
+	lunaticvibes::Time noteVolumeGradientBeginTime;
 	int noteVolumeGradientLength = 0;
 
 	std::map<SoundChannelType, FMOD::DSP*> DSPMaster[3];

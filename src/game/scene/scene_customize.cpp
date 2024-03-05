@@ -74,7 +74,7 @@ SceneCustomize::SceneCustomize() : SceneBase(SkinType::THEME_SELECT, 240)
 
     LOG_DEBUG << "[Customize] Start";
 
-    State::set(IndexTimer::_SCENE_CUSTOMIZE_START, Time().norm());
+    State::set(IndexTimer::_SCENE_CUSTOMIZE_START, lunaticvibes::Time().norm());
 }
 
 SceneCustomize::~SceneCustomize()
@@ -106,8 +106,8 @@ void SceneCustomize::_updateAsync()
 
 void SceneCustomize::updateStart()
 {
-    Time t;
-    Time rt = t - State::get(IndexTimer::_SCENE_CUSTOMIZE_START);
+    lunaticvibes::Time t;
+    lunaticvibes::Time rt = t - State::get(IndexTimer::_SCENE_CUSTOMIZE_START);
     if (rt.norm() > pSkin->info.timeIntro)
     {
         _updateCallback = std::bind(&SceneCustomize::updateMain, this);
@@ -124,7 +124,7 @@ void SceneCustomize::updateStart()
 
 void SceneCustomize::updateMain()
 {
-    Time t;
+    lunaticvibes::Time t;
 
     // Mode has changed
     if (gCustomizeContext.mode != selectedMode)
@@ -411,8 +411,8 @@ void SceneCustomize::updateMain()
 
 void SceneCustomize::updateFadeout()
 {
-    Time t;
-    Time rt = t - State::get(IndexTimer::_SCENE_CUSTOMIZE_FADEOUT);
+    lunaticvibes::Time t;
+    lunaticvibes::Time rt = t - State::get(IndexTimer::_SCENE_CUSTOMIZE_FADEOUT);
 
     if (rt.norm() > pSkin->info.timeOutro)
     {
@@ -653,7 +653,7 @@ void SceneCustomize::updateTexts() const
 ////////////////////////////////////////////////////////////////////////////////
 
 // CALLBACK
-void SceneCustomize::inputGamePress(InputMask& m, const Time& t)
+void SceneCustomize::inputGamePress(InputMask& m, const lunaticvibes::Time& t)
 {
     if (m[Input::Pad::ESC]) exiting = true;
     if (m[Input::Pad::M2]) exiting = true;

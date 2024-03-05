@@ -60,8 +60,8 @@ private:
 		int recvMessageIndex = 0;
 
 		bool heartbeatPending = false;
-		Time heartbeatSendTime;
-		Time heartbeatRecvTime;
+		lunaticvibes::Time heartbeatSendTime;
+		lunaticvibes::Time heartbeatRecvTime;
 
 		HashMD5 requestChartHash;
 
@@ -75,7 +75,7 @@ private:
 
 		struct Task
 		{
-			Time t;
+			lunaticvibes::Time t;
 			std::shared_ptr<std::vector<unsigned char>> sentMessage;
 			int retryTimes = 0;
 			bool received = false;
@@ -85,7 +85,7 @@ private:
 		void addTaskWaitingForResponse(int messageIndex, std::shared_ptr<std::vector<unsigned char>> msg)
 		{
 			std::unique_lock l(tasksWaitingForResponseMutex);
-			tasksWaitingForResponse[messageIndex] = {Time(), msg, 0, false};
+			tasksWaitingForResponse[messageIndex] = {lunaticvibes::Time(), msg, 0, false};
 		}
 	};
 	int clientID = 0;

@@ -9,7 +9,7 @@ public:
 };
 
 static Rect TEST_RECT{ 0, 0, 256, 256 };
-static Time t0{ 1 }, t1{ 2 }, t2{ 3 }, t3{ 4 }, t4{ 5 }, t5{ 6 }, t6{ 7 }, t7{ 8 };
+static lunaticvibes::Time t0{ 1 }, t1{ 2 }, t2{ 3 }, t3{ 4 }, t4{ 5 }, t5{ 6 }, t6{ 7 }, t7{ 8 };
 class mock_Texture : public Texture
 {
 public:
@@ -131,7 +131,7 @@ public:
 TEST_F(test_SpriteBase, func_update)
 {
     State::set(IndexTimer::K11_BOMB, 0);
-    Time t(0), t1(128), t2(255), t3(256), t4(512);
+    lunaticvibes::Time t(0), t1(128), t2(255), t3(256), t4(512);
 
     ss1.update(t);
     ASSERT_TRUE(ss1._draw);

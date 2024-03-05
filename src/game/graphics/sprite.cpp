@@ -61,7 +61,7 @@ RenderParams& RenderParams::operator=(const MotionKeyFrameParams& rhs)
 SpriteBase::SpriteBase(const SpriteBuilder& builder) :
     srcLine(builder.srcLine), pTexture(builder.texture), _type(SpriteTypes::VIRTUAL), _current({0, MotionKeyFrameParams::CONSTANT, 0x00000000, BlendMode::NONE, false, 0}) {}
 
-bool SpriteBase::updateMotion(const Time& rawTime)
+bool SpriteBase::updateMotion(const lunaticvibes::Time& rawTime)
 {
     // Check if object is valid
 	// Note that nullptr texture shall pass
@@ -73,7 +73,7 @@ bool SpriteBase::updateMotion(const Time& rawTime)
     if (frameCount < 1)
         return false;
 
-	Time time;
+	lunaticvibes::Time time;
 
     // Check if timer is valid
     if (State::get(motionStartTimer) < 0 || State::get(motionStartTimer) == TIMER_NEVER)
@@ -86,7 +86,7 @@ bool SpriteBase::updateMotion(const Time& rawTime)
     }
     else
     {
-        time = rawTime - Time(State::get(motionStartTimer), false);
+        time = rawTime - lunaticvibes::Time(State::get(motionStartTimer), false);
     }
 
     // Check if the sprite is not visible yet
@@ -98,7 +98,7 @@ bool SpriteBase::updateMotion(const Time& rawTime)
         return false;
 
     // Check if loop target is valid
-    Time endTime = Time(motionKeyFrames[frameCount - 1].time, false);
+    lunaticvibes::Time endTime = lunaticvibes::Time(motionKeyFrames[frameCount - 1].time, false);
     if (motionLoopTo < 0 && time > endTime)
         return false;
     if (motionLoopTo > motionKeyFrames[frameCount - 1].time)
@@ -109,7 +109,7 @@ bool SpriteBase::updateMotion(const Time& rawTime)
     if (time > endTime)
     {
 		if (endTime != motionLoopTo)
-			time = Time((time - motionLoopTo).norm() % (endTime - motionLoopTo).norm() + motionLoopTo, false);
+			time = lunaticvibes::Time((time - motionLoopTo).norm() % (endTime - motionLoopTo).norm() + motionLoopTo, false);
         else
             time = motionLoopTo;
     }
@@ -190,7 +190,7 @@ bool SpriteBase::updateMotion(const Time& rawTime)
     return true;
 }
 
-bool SpriteBase::update(const Time& t)
+bool SpriteBase::update(const lunaticvibes::Time& t)
 {
     _draw = updateMotion(t);
 
@@ -318,7 +318,7 @@ void SpriteSelection::updateSelection(size_t frame)
     selectionIndex = frame < textureRects.size() ? frame : textureRects.size() - 1;
 }
 
-bool SpriteSelection::update(const Time& t)
+bool SpriteSelection::update(const lunaticvibes::Time& t)
 {
 	return SpriteBase::update(t);
 }
@@ -339,20 +339,20 @@ SpriteAnimated::SpriteAnimated(const SpriteAnimatedBuilder& builder) : SpriteSel
     animationDurationPerLoop = builder.animationDurationPerLoop;
 }
 
-bool SpriteAnimated::update(const Time& t)
+bool SpriteAnimated::update(const lunaticvibes::Time& t)
 {
 	if (SpriteSelection::update(t))
 	{
         long long timerAnim = State::get(animationStartTimer);
         if (timerAnim > 0 && timerAnim != TIMER_NEVER)
-            updateAnimation(t - Time(timerAnim));
+            updateAnimation(t - lunaticvibes::Time(timerAnim));
 
 		return true;
 	}
 	return false;
 }
 
-void SpriteAnimated::updateAnimation(const Time& time)
+void SpriteAnimated::updateAnimation(const lunaticvibes::Time& time)
 {
     if (textureRects.empty()) return;
     if (animationDurationPerLoop == -1) return;
@@ -388,7 +388,7 @@ SpriteText::SpriteText(const SpriteTextBuilder& builder) : SpriteBase(builder)
     editable = builder.editable;
 }
 
-bool SpriteText::update(const Time& t)
+bool SpriteText::update(const lunaticvibes::Time& t)
 {   
     return _draw = updateMotion(t);
 }
@@ -541,7 +541,7 @@ SpriteNumber::SpriteNumber(const SpriteNumberBuilder& builder): SpriteAnimated(b
     }
 }
 
-bool SpriteNumber::update(const Time& t)
+bool SpriteNumber::update(const lunaticvibes::Time& t)
 {
     if (maxDigits == 0) return false;
     if (numberType == 0) return false;
@@ -645,7 +645,7 @@ void SpriteNumber::updateNumberByInd()
         n = 0;
         break;
 	case (IndexNumber)10220:
-		n = int(Time().norm() & 0xFFFFFFFF);
+		n = int(lunaticvibes::Time().norm() & 0xFFFFFFFF);
 		break;
     default:
 #ifdef _DEBUG
@@ -795,7 +795,7 @@ void SpriteSlider::updatePos()
 	}
 }
 
-bool SpriteSlider::update(const Time& t)
+bool SpriteSlider::update(const lunaticvibes::Time& t)
 {
 	if (SpriteAnimated::update(t))
 	{
@@ -930,7 +930,7 @@ void SpriteBargraph::updateSize()
 }
 #pragma warning(pop)
 
-bool SpriteBargraph::update(const Time& t)
+bool SpriteBargraph::update(const lunaticvibes::Time& t)
 {
 	if (SpriteAnimated::update(t))
 	{
@@ -1020,7 +1020,7 @@ void SpriteOption::updateValByInd()
 	}
 }
 
-bool SpriteOption::update(const Time& t)
+bool SpriteOption::update(const lunaticvibes::Time& t)
 {
 	if (SpriteSelection::update(t))
 	{
@@ -1139,7 +1139,7 @@ void SpriteGaugeGrid::setGaugeType(SpriteGaugeGrid::GaugeType ty)
 	default: break;
 	}
 
-    Time t(1);
+    lunaticvibes::Time t(1);
 
     // set FailRect
     updateSelection(lightFailGridType);
@@ -1168,7 +1168,7 @@ void SpriteGaugeGrid::updateValByInd()
 	updateVal(State::get(numInd));
 }
 
-bool SpriteGaugeGrid::update(const Time& t)
+bool SpriteGaugeGrid::update(const lunaticvibes::Time& t)
 {
 	if (SpriteAnimated::update(t))
 	{
@@ -1235,7 +1235,7 @@ SpriteOnMouse::SpriteOnMouse(const SpriteOnMouseBuilder& builder) : SpriteAnimat
     mouseArea = builder.mouseArea;
 }
 
-bool SpriteOnMouse::update(const Time& t)
+bool SpriteOnMouse::update(const lunaticvibes::Time& t)
 {
     if (!checkPanel(visibleOnPanel)) return false;
     if (SpriteSelection::update(t))
@@ -1264,7 +1264,7 @@ SpriteCursor::SpriteCursor(const SpriteCursorBuilder& builder) : SpriteAnimated(
     _type = SpriteTypes::MOUSE_CURSOR;
 }
 
-bool SpriteCursor::update(const Time& t)
+bool SpriteCursor::update(const lunaticvibes::Time& t)
 {
     if (SpriteSelection::update(t))
     {

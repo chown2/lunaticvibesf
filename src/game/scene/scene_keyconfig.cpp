@@ -142,8 +142,8 @@ void SceneKeyConfig::_updateAsync()
 
 void SceneKeyConfig::updateStart()
 {
-    Time t;
-    Time rt = t - State::get(IndexTimer::SCENE_START);
+    lunaticvibes::Time t;
+    lunaticvibes::Time rt = t - State::get(IndexTimer::SCENE_START);
     if (rt.norm() > pSkin->info.timeIntro)
     {
         _updateCallback = std::bind(&SceneKeyConfig::updateMain, this);
@@ -159,7 +159,7 @@ void SceneKeyConfig::updateStart()
 
 void SceneKeyConfig::updateMain()
 {
-    Time t;
+    lunaticvibes::Time t;
     if (exiting)
     {
         State::set(IndexTimer::FADEOUT_BEGIN, t.norm());
@@ -176,8 +176,8 @@ void SceneKeyConfig::updateMain()
 
 void SceneKeyConfig::updateFadeout()
 {
-    Time t;
-    Time rt = t - State::get(IndexTimer::FADEOUT_BEGIN);
+    lunaticvibes::Time t;
+    lunaticvibes::Time rt = t - State::get(IndexTimer::FADEOUT_BEGIN);
 
     if (rt.norm() > pSkin->info.timeOutro)
     {
@@ -189,7 +189,7 @@ void SceneKeyConfig::updateFadeout()
 ////////////////////////////////////////////////////////////////////////////////
 
 // CALLBACK
-void SceneKeyConfig::inputGamePress(InputMask& m, const Time& t)
+void SceneKeyConfig::inputGamePress(InputMask& m, const lunaticvibes::Time& t)
 {
     if (m[Input::Pad::ESC]) exiting = true;
     if (m[Input::Pad::M2]) exiting = true;
@@ -207,7 +207,7 @@ void SceneKeyConfig::inputGamePress(InputMask& m, const Time& t)
     }
 }
 
-void SceneKeyConfig::inputGameAxis(double S1, double S2, const Time& t)
+void SceneKeyConfig::inputGameAxis(double S1, double S2, const lunaticvibes::Time& t)
 {
     using namespace Input;
 
@@ -246,7 +246,7 @@ static const std::map<Input::Pad, IndexBargraph> forceBargraphMap =
     { Input::Pad::K29,      IndexBargraph::FORCE_K29 },
 };
 
-void SceneKeyConfig::inputGamePressKeyboard(KeyboardMask& mask, const Time& t)
+void SceneKeyConfig::inputGamePressKeyboard(KeyboardMask& mask, const lunaticvibes::Time& t)
 {
     // update bindings
     auto [pad, slot] = gKeyconfigContext.selecting;
@@ -318,7 +318,7 @@ void SceneKeyConfig::inputGamePressKeyboard(KeyboardMask& mask, const Time& t)
     }
 }
 
-void SceneKeyConfig::inputGamePressJoystick(JoystickMask& mask, size_t device, const Time& t)
+void SceneKeyConfig::inputGamePressJoystick(JoystickMask& mask, size_t device, const lunaticvibes::Time& t)
 {
     // update bindings
     auto [pad, slot] = gKeyconfigContext.selecting;
@@ -434,7 +434,7 @@ void SceneKeyConfig::inputGamePressJoystick(JoystickMask& mask, size_t device, c
     }
 }
 
-void SceneKeyConfig::inputGameAbsoluteAxis(JoystickAxis& axis, size_t device, const Time&)
+void SceneKeyConfig::inputGameAbsoluteAxis(JoystickAxis& axis, size_t device, const lunaticvibes::Time&)
 {
     auto [pad, slot] = gKeyconfigContext.selecting;
     if (pad != Input::Pad::S1A && pad != Input::Pad::S2A)
@@ -482,7 +482,7 @@ void SceneKeyConfig::updateForceBargraphs()
 
     GameModeKeys keys = gKeyconfigContext.keys;
     const auto input = ConfigMgr::Input(keys);
-    Time t;
+    lunaticvibes::Time t;
 
     // update keyboard force bargraph
     for (Input::Keyboard k = Input::Keyboard::K_1; k != Input::Keyboard::K_COUNT; ++ * (unsigned*)&k)

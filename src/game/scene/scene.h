@@ -81,9 +81,9 @@ public:
 
 public:
     virtual void update();      // skin update
-    void MouseClick(InputMask& m, const Time& t);
-    void MouseDrag(InputMask& m, const Time& t);
-    void MouseRelease(InputMask& m, const Time& t);
+    void MouseClick(InputMask& m, const lunaticvibes::Time& t);
+    void MouseDrag(InputMask& m, const lunaticvibes::Time& t);
+    void MouseRelease(InputMask& m, const lunaticvibes::Time& t);
     virtual void draw() const;
 
     SkinBase::skinInfo getSkinInfo() const { return pSkin ? pSkin->info : SkinBase::skinInfo(); }
@@ -93,7 +93,7 @@ protected:
     void _updateAsync1();
 
     virtual void updateImgui();
-    void DebugToggle(InputMask& m, const Time& t);
+    void DebugToggle(InputMask& m, const lunaticvibes::Time& t);
 
     bool isInTextEdit() const;
     IndexText textEditType() const;
@@ -101,7 +101,7 @@ protected:
     virtual void startTextEdit(bool clear);
     virtual void stopTextEdit(bool modify);
 
-    void GlobalFuncKeys(InputMask& m, const Time& t);
+    void GlobalFuncKeys(InputMask& m, const lunaticvibes::Time& t);
 };
 
 

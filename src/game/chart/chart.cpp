@@ -183,7 +183,7 @@ void ChartObjectBase::reset()
     _currentBarTemp         = 0;
     _currentMetreTemp        = 0;
     _currentBPM         = _bpmNoteList.empty()? 150 : BPM(_bpmNoteList.front().fvalue);
-    _currentBeatLength    = Time::singleBeatLengthFromBPM(_currentBPM);
+    _currentBeatLength    = lunaticvibes::Time::singleBeatLengthFromBPM(_currentBPM);
     _lastChangedBPMTime = 0;
     _lastChangedBPMMetre    = 0;
 
@@ -288,7 +288,7 @@ auto ChartObjectBase::nextNoteBpm() -> decltype(_bpmNoteList)::iterator&
     return ++_bpmNoteListIter;
 }
 
-Time ChartObjectBase::getBarLength(size_t bar)
+lunaticvibes::Time ChartObjectBase::getBarLength(size_t bar)
 {
     if (bar + 1 >= _barTimestamp.size())
     {
@@ -299,7 +299,7 @@ Time ChartObjectBase::getBarLength(size_t bar)
 	return l.hres() > 0 ? l : -1;
 }
 
-Time ChartObjectBase::getCurrentBarLength()
+lunaticvibes::Time ChartObjectBase::getCurrentBarLength()
 {
     return getBarLength(_currentBarTemp);
 }
@@ -329,10 +329,10 @@ Metre ChartObjectBase::getBarMetrePosition(size_t bar)
 	return _barMetrePos[bar];
 }
 
-void ChartObjectBase::update(const Time& rt)
+void ChartObjectBase::update(const lunaticvibes::Time& rt)
 {
-    Time vt = rt + Time(State::get(IndexNumber::TIMING_ADJUST_VISUAL), false);
-    Time at = rt;
+    lunaticvibes::Time vt = rt + lunaticvibes::Time(State::get(IndexNumber::TIMING_ADJUST_VISUAL), false);
+    lunaticvibes::Time at = rt;
 
     noteExpired.clear();
     noteBgmExpired.clear();
@@ -355,7 +355,7 @@ void ChartObjectBase::update(const Time& rt)
     {
         //_currentMetreTemp = b->pos - getCurrentMeasureBeat();
         _currentBPM = BPM(b->fvalue);
-        _currentBeatLength = Time::singleBeatLengthFromBPM(_currentBPM);
+        _currentBeatLength = lunaticvibes::Time::singleBeatLengthFromBPM(_currentBPM);
         _lastChangedBPMTime = b->time - _barTimestamp[_currentBarTemp];
         _lastChangedBPMMetre = b->pos - _barMetrePos[_currentBarTemp];
         b = nextNoteBpm();
@@ -414,8 +414,8 @@ void ChartObjectBase::update(const Time& rt)
     }
 
     // update beat
-    Time currentMeasureTimePassed = vt - _barTimestamp[_currentBarTemp];
-    Time timeFromBPMChange = currentMeasureTimePassed - _lastChangedBPMTime;
+    lunaticvibes::Time currentMeasureTimePassed = vt - _barTimestamp[_currentBarTemp];
+    lunaticvibes::Time timeFromBPMChange = currentMeasureTimePassed - _lastChangedBPMTime;
     State::set(IndexNumber::_TEST4, (int)currentMeasureTimePassed.norm());
     _currentMetreTemp = _lastChangedBPMMetre + (double)timeFromBPMChange.hres() / _currentBeatLength.hres() / 4;
 

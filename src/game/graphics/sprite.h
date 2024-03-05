@@ -124,8 +124,8 @@ public:
     bool isMotionKeyFramesEmpty() const { return motionKeyFrames.empty(); }
     void clearMotionKeyFrames() { motionKeyFrames.clear(); }
 
-    bool updateMotion(const Time& time);
-    virtual bool update(const Time& time);
+    bool updateMotion(const lunaticvibes::Time& time);
+    virtual bool update(const lunaticvibes::Time& time);
     virtual void adjustAfterUpdate(int x, int y, int w = 0, int h = 0);
 
 protected:
@@ -171,7 +171,7 @@ public:
         srcLine = p->srcLine;
     }
 
-    virtual bool update(const Time& time) {
+    virtual bool update(const lunaticvibes::Time& time) {
         SpriteBase::update(time);
         if (getMyGlobalSpriteIndex()) 
             setSpriteReference(gSprites[getMyGlobalSpriteIndex()]);
@@ -252,7 +252,7 @@ public:
     SpriteSelection(const SpriteSelectionBuilder& builder);
     virtual ~SpriteSelection() = default;
 public:
-	virtual bool update(const Time& t);
+	virtual bool update(const lunaticvibes::Time& t);
     virtual void updateSelection(size_t i);
     virtual void draw() const;
 };
@@ -287,8 +287,8 @@ public:
     SpriteAnimated(const SpriteAnimatedBuilder& builder);
     virtual ~SpriteAnimated() = default;
 public:
-	virtual bool update(const Time& t);
-    virtual void updateAnimation(const Time& t);
+	virtual bool update(const lunaticvibes::Time& t);
+    virtual void updateAnimation(const lunaticvibes::Time& t);
     virtual void draw() const;
 };
 
@@ -342,7 +342,7 @@ private:
     void updateTextTexture(std::string&& text, const Color& c);
 
 public:
-	virtual bool update(const Time& t);
+	virtual bool update(const lunaticvibes::Time& t);
     virtual void draw() const;
 
 public:
@@ -424,7 +424,7 @@ public:
     void updateNumber(int n);           // invoke updateSplit to change number
     void updateNumberByInd();
     void updateNumberRect();
-	virtual bool update(const Time& t);
+	virtual bool update(const lunaticvibes::Time& t);
     virtual void appendMotionKeyFrame(const MotionKeyFrame& f) override;
     virtual void draw() const;
     virtual void adjustAfterUpdate(int x, int y, int w = 0, int h = 0) override;
@@ -470,7 +470,7 @@ public:
     void updateVal(double v);
     void updateValByInd();
     void updatePos();
-	virtual bool update(const Time& t);
+	virtual bool update(const lunaticvibes::Time& t);
 
     virtual void OnMouseMove(int x, int y) {}
     virtual bool OnClick(int x, int y);
@@ -512,7 +512,7 @@ public:
     void updateVal(Ratio v);
     void updateValByInd();
     void updateSize();
-	virtual bool update(const Time& t);
+	virtual bool update(const lunaticvibes::Time& t);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -551,7 +551,7 @@ public:
 	bool setInd(opType type, unsigned ind);
     void updateVal(unsigned v);     // invoke SpriteSplit::updateSplit(v)
     void updateValByInd();
-	virtual bool update(const Time& t);
+	virtual bool update(const lunaticvibes::Time& t);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -655,7 +655,7 @@ public:
 public:
     void updateVal(unsigned v);
     void updateValByInd();
-	virtual bool update(const Time& t);
+	virtual bool update(const lunaticvibes::Time& t);
 	virtual void draw() const;
 };
 
@@ -681,7 +681,7 @@ public:
     virtual ~SpriteOnMouse() = default;
 
 public:
-    virtual bool update(const Time& t);
+    virtual bool update(const lunaticvibes::Time& t);
 
     virtual void OnMouseMove(int x, int y);
     virtual bool OnClick(int x, int y) { return false; }
@@ -704,7 +704,7 @@ public:
     virtual ~SpriteCursor() = default;
 
 public:
-    virtual bool update(const Time& t);
+    virtual bool update(const lunaticvibes::Time& t);
 
     virtual void OnMouseMove(int x, int y);
     virtual bool OnClick(int x, int y) { return false; }

@@ -4304,7 +4304,7 @@ void SkinLR2::update()
     // update op
     updateDstOpt();
 
-    Time t;
+    lunaticvibes::Time t;
 
     // update turntables
     {

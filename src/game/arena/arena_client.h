@@ -52,13 +52,13 @@ private:
 	int sendMessageIndex = 0;
 	int recvMessageIndex = 0;
 
-	Time heartbeatTime;
+	lunaticvibes::Time heartbeatTime;
 
 	int playerID = 0;
 
 	struct Task
 	{
-		Time t;
+		lunaticvibes::Time t;
 		std::shared_ptr<std::vector<unsigned char>> sentMessage;
 		int retryTimes = 0;
 		bool received = false;
@@ -68,7 +68,7 @@ private:
 	void addTaskWaitingForResponse(int messageIndex, std::shared_ptr<std::vector<unsigned char>> msg)
 	{
 		std::unique_lock l(tasksWaitingForResponseMutex);
-		tasksWaitingForResponse[messageIndex] = { Time(), msg, 0, false };
+		tasksWaitingForResponse[messageIndex] = { lunaticvibes::Time(), msg, 0, false };
 	}
 
 public:

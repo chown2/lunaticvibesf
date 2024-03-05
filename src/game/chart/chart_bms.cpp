@@ -62,7 +62,7 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
         _noteCount_ln *= 2;
     }
 
-	Time basetime{ 0 };
+	lunaticvibes::Time basetime{ 0 };
 	Metre basemetre{ 0, 1 };
 
     BPM bpm = objBms.startBPM * gSelectContext.pitchSpeed;
@@ -420,7 +420,7 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
         Segment lastBPMChangedSegment(0, 1);
         double stopMetre = 0;
         Metre barMetre = objBms.metres[m];      // visual metre
-		Time beatLength = Time::singleBeatLengthFromBPM(bpm);
+		lunaticvibes::Time beatLength = lunaticvibes::Time::singleBeatLengthFromBPM(bpm);
 
         for (const auto& note : notes)
         {
@@ -428,7 +428,7 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
             const auto& [lane, val] = noteinfo;
             double metreFromBPMChange = (noteSegment - lastBPMChangedSegment) * barMetre;
             auto notemetre = static_cast<Metre>(basemetre + noteSegment * barMetre);
-			Time notetime = bpmfucked ? LLONG_MAX : basetime + beatLength * (metreFromBPMChange * 4);
+			lunaticvibes::Time notetime = bpmfucked ? LLONG_MAX : basetime + beatLength * (metreFromBPMChange * 4);
 
             if (!leadInTimeSet && (lane.type == eLanePriority::NOTE || lane.type == eLanePriority::LNHEAD || lane.type == eLanePriority::BGM))
             {
@@ -766,7 +766,7 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
                     basetime = notetime;
                     lastBPMChangedSegment = noteSegment;
                     bpm = static_cast<BPM>(val) * gSelectContext.pitchSpeed;
-                    beatLength = Time::singleBeatLengthFromBPM(bpm);
+                    beatLength = lunaticvibes::Time::singleBeatLengthFromBPM(bpm);
                     _bpmNoteList.push_back({ m, notemetre, notetime, 0, 0, bpm });
                     if (bpm <= 0) bpmfucked = true;
                     break;
@@ -777,7 +777,7 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
                     basetime = notetime;
                     lastBPMChangedSegment = noteSegment;
                     bpm = objBms.exBPM[val] * gSelectContext.pitchSpeed;
-                    beatLength = Time::singleBeatLengthFromBPM(bpm);
+                    beatLength = lunaticvibes::Time::singleBeatLengthFromBPM(bpm);
                     _bpmNoteList.push_back({ m, notemetre, notetime, 0, 0, bpm });
                     if (bpm <= 0) bpmfucked = true;
                     break;
@@ -786,7 +786,7 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
                     lastBarIdx = m;
                     double noteStopMetre = objBms.stop[val] / 192.0;
                     if (noteStopMetre <= 0) break;
-                    Time noteStopTime{ (long long)std::floor(beatLength.hres() * noteStopMetre * 4), true };
+                    lunaticvibes::Time noteStopTime{ (long long)std::floor(beatLength.hres() * noteStopMetre * 4), true };
                     _specialNoteLists[(size_t)eNoteExt::STOP].push_back({ m, notemetre, notetime, 0, noteStopTime.hres(), noteStopMetre });
                     //_chartingSpeedList.push_back({ m, notemetre, noteht, 0.0 });
                     //_chartingSpeedList.push_back({ m, notemetre + d2fr(noteStopBeat), noteht + noteStopTime, currentSpd });
@@ -808,7 +808,7 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
     }
 
     _totalLength = lastBarIdx + 1 < _barTimestamp.size() ? _barTimestamp[lastBarIdx + 1] : basetime +
-        Time(std::min(2000'000'000ll, std::max(500'000'000ll, static_cast<long long>(Time::singleBeatLengthFromBPM(bpm).hres()) * 4)), true);    // last measure + 1
+        lunaticvibes::Time(std::min(2000'000'000ll, std::max(500'000'000ll, static_cast<long long>(lunaticvibes::Time::singleBeatLengthFromBPM(bpm).hres()) * 4)), true);    // last measure + 1
 
     // get average BPM
     if (_totalLength.norm() > 0)
@@ -816,7 +816,7 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
         std::map<double, long long> bpmLength;
         double bpm = objBms.startBPM * gSelectContext.pitchSpeed;
         double bpmSum = 0.;
-        Time prevTime(0);
+        lunaticvibes::Time prevTime(0);
         long long bpmMainLength = 0;
         for (const auto& n : _bpmNoteList)
         {
@@ -885,7 +885,7 @@ std::vector<Input::Pad> ChartObjectBMS::getInputFromLane(size_t channel)
     return LaneToKey(_keys, channel);
 }
 
-void ChartObjectBMS::preUpdate(const Time& vt)
+void ChartObjectBMS::preUpdate(const lunaticvibes::Time& vt)
 {
     // check stop
     size_t idx = (size_t)eNoteExt::STOP;
@@ -919,7 +919,7 @@ void ChartObjectBMS::preUpdate(const Time& vt)
     }
 }
 
-void ChartObjectBMS::postUpdate(const Time& vt)
+void ChartObjectBMS::postUpdate(const lunaticvibes::Time& vt)
 {
     if (_inStopNote)
     {

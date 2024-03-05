@@ -14,7 +14,7 @@ RulesetBMSNetwork::RulesetBMSNetwork(GameModeKeys keys, unsigned playerIndex) :
     _judgeScratch = false;
 }
 
-void RulesetBMSNetwork::update(const Time& t)
+void RulesetBMSNetwork::update(const lunaticvibes::Time& t)
 {
     if (!_hasStartTime)
         setStartTime(t);

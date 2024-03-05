@@ -110,7 +110,7 @@ std::bitset<KEY_COUNT> InputMgr::_detect()
     scratch1 = 0.0;
     scratch2 = 0.0;
 
-    Time t;
+    lunaticvibes::Time t;
 
     // game input
     for (int k = S1L; k < LANE_COUNT; k++)

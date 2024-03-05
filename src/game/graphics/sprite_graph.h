@@ -57,9 +57,9 @@ public:
     void appendPoint(const ColorPoint&);
 
 public:
-    void updateProgress(const Time& t);
+    void updateProgress(const lunaticvibes::Time& t);
     void updateRects();
-    virtual bool update(const Time& t);
+    virtual bool update(const lunaticvibes::Time& t);
     virtual void draw() const;
 };
 

@@ -579,11 +579,11 @@ void RulesetBMS::initGaugeParams(PlayModifierGaugeType gauge)
     }
 }
 
-RulesetBMS::JudgeRes RulesetBMS::_judge(const Note& note, Time time)
+RulesetBMS::JudgeRes RulesetBMS::_judge(const Note& note, lunaticvibes::Time time)
 {
     // spot judge area
     JudgeArea a = JudgeArea::NOTHING;
-	Time error = time - note.time;
+	lunaticvibes::Time error = time - note.time;
     if (error > -judgeTime[(size_t)_judgeDifficulty].KPOOR)
     {
         if (error < -judgeTime[(size_t)_judgeDifficulty].BAD)
@@ -657,7 +657,7 @@ static const std::map<RulesetBMS::JudgeArea, ReplayChart::Commands::Type> judgeA
     }
 };
 
-void RulesetBMS::_judgePress(NoteLaneCategory cat, NoteLaneIndex idx, HitableNote& note, JudgeRes judge, const Time& t, int slot)
+void RulesetBMS::_judgePress(NoteLaneCategory cat, NoteLaneIndex idx, HitableNote& note, JudgeRes judge, const lunaticvibes::Time& t, int slot)
 {
     if (cat == NoteLaneCategory::LN && 
         (note.flags & Note::LN_TAIL) &&
@@ -767,7 +767,7 @@ void RulesetBMS::_judgePress(NoteLaneCategory cat, NoteLaneIndex idx, HitableNot
         }
     }
 }
-void RulesetBMS::_judgeHold(NoteLaneCategory cat, NoteLaneIndex idx, HitableNote& note, JudgeRes judge, const Time& t, int slot)
+void RulesetBMS::_judgeHold(NoteLaneCategory cat, NoteLaneIndex idx, HitableNote& note, JudgeRes judge, const lunaticvibes::Time& t, int slot)
 {
     switch (cat)
     {
@@ -867,7 +867,7 @@ void RulesetBMS::_judgeHold(NoteLaneCategory cat, NoteLaneIndex idx, HitableNote
         break;
     }
 }
-void RulesetBMS::_judgeRelease(NoteLaneCategory cat, NoteLaneIndex idx, HitableNote& note, JudgeRes judge, const Time& t, int slot)
+void RulesetBMS::_judgeRelease(NoteLaneCategory cat, NoteLaneIndex idx, HitableNote& note, JudgeRes judge, const lunaticvibes::Time& t, int slot)
 {
     bool pushReplayCommand = false;
     switch (cat)
@@ -1022,7 +1022,7 @@ void RulesetBMS::_updateHp(JudgeArea judge)
     _updateHp(_healthGain.at(JudgeAreaTypeMap.at(judge)));
 }
 
-void RulesetBMS::updateJudge(const Time& t, NoteLaneIndex ch, RulesetBMS::JudgeArea judge, int slot, bool force)
+void RulesetBMS::updateJudge(const lunaticvibes::Time& t, NoteLaneIndex ch, RulesetBMS::JudgeArea judge, int slot, bool force)
 {
     if (isFailed()) return;
     
@@ -1116,7 +1116,7 @@ void RulesetBMS::updateJudge(const Time& t, NoteLaneIndex ch, RulesetBMS::JudgeA
     }
 }
 
-void RulesetBMS::judgeNotePress(Input::Pad k, const Time& t, const Time& rt, int slot)
+void RulesetBMS::judgeNotePress(Input::Pad k, const lunaticvibes::Time& t, const lunaticvibes::Time& rt, int slot)
 {
     NoteLaneIndex idx1 = _chart->getLaneFromKey(NoteLaneCategory::Note, k);
     HitableNote* pNote1 = nullptr;
@@ -1157,7 +1157,7 @@ void RulesetBMS::judgeNotePress(Input::Pad k, const Time& t, const Time& rt, int
          judgeNotePress(k, t, rt, slot);
     }
 }
-void RulesetBMS::judgeNoteHold(Input::Pad k, const Time& t, const Time& rt, int slot)
+void RulesetBMS::judgeNoteHold(Input::Pad k, const lunaticvibes::Time& t, const lunaticvibes::Time& rt, int slot)
 {
     NoteLaneIndex idx; 
 
@@ -1177,7 +1177,7 @@ void RulesetBMS::judgeNoteHold(Input::Pad k, const Time& t, const Time& rt, int 
         _judgeHold(NoteLaneCategory::LN, idx, note, j, t, slot);
     }
 }
-void RulesetBMS::judgeNoteRelease(Input::Pad k, const Time& t, const Time& rt, int slot)
+void RulesetBMS::judgeNoteRelease(Input::Pad k, const lunaticvibes::Time& t, const lunaticvibes::Time& rt, int slot)
 {
     NoteLaneIndex idx = _chart->getLaneFromKey(NoteLaneCategory::LN, k);
     if (idx != _)
@@ -1196,9 +1196,9 @@ void RulesetBMS::judgeNoteRelease(Input::Pad k, const Time& t, const Time& rt, i
     }
 }
 
-void RulesetBMS::updatePress(InputMask& pg, const Time& t)
+void RulesetBMS::updatePress(InputMask& pg, const lunaticvibes::Time& t)
 {
-	Time rt = t - _startTime.norm();
+	lunaticvibes::Time rt = t - _startTime.norm();
     if (rt.norm() < 0) return;
     if (gPlayContext.isAuto) return;
     auto updatePressRange = [&](Input::Pad begin, Input::Pad end, int slot)
@@ -1227,9 +1227,9 @@ void RulesetBMS::updatePress(InputMask& pg, const Time& t)
         }
     }
 }
-void RulesetBMS::updateHold(InputMask& hg, const Time& t)
+void RulesetBMS::updateHold(InputMask& hg, const lunaticvibes::Time& t)
 {
-	Time rt = t - _startTime.norm();
+	lunaticvibes::Time rt = t - _startTime.norm();
     if (rt < 0) return;
     if (gPlayContext.isAuto) return;
 
@@ -1249,9 +1249,9 @@ void RulesetBMS::updateHold(InputMask& hg, const Time& t)
         if (_k2P) updateHoldRange(Input::S2L, Input::S2R, PLAYER_SLOT_TARGET);
     }
 }
-void RulesetBMS::updateRelease(InputMask& rg, const Time& t)
+void RulesetBMS::updateRelease(InputMask& rg, const lunaticvibes::Time& t)
 {
-	Time rt = t - _startTime.norm();
+	lunaticvibes::Time rt = t - _startTime.norm();
     if (rt < 0) return;
     if (gPlayContext.isAuto) return;
 
@@ -1283,9 +1283,9 @@ void RulesetBMS::updateRelease(InputMask& rg, const Time& t)
         }
     }
 }
-void RulesetBMS::updateAxis(double s1, double s2, const Time& t)
+void RulesetBMS::updateAxis(double s1, double s2, const lunaticvibes::Time& t)
 {
-    Time rt = t - _startTime.norm();
+    lunaticvibes::Time rt = t - _startTime.norm();
     if (rt.norm() < 0) return;
 
     using namespace Input;
@@ -1297,7 +1297,7 @@ void RulesetBMS::updateAxis(double s1, double s2, const Time& t)
     }
 }
 
-void RulesetBMS::update(const Time& t)
+void RulesetBMS::update(const lunaticvibes::Time& t)
 {
     if (!_hasStartTime)
         setStartTime(t);
@@ -1348,7 +1348,7 @@ void RulesetBMS::update(const Time& t)
                 auto itNote = _chart->incomingNote(NoteLaneCategory::Note, idx);
                 while (!_chart->isLastNote(NoteLaneCategory::Note, idx, itNote) && !itNote->expired)
                 {
-                    Time hitTime = (!scratch || _judgeScratch) ? judgeTime[(size_t)_judgeDifficulty].BAD : 0;
+                    lunaticvibes::Time hitTime = (!scratch || _judgeScratch) ? judgeTime[(size_t)_judgeDifficulty].BAD : 0;
                     if (rt - itNote->time >= hitTime)
                     {
                         itNote->expired = true;
@@ -1387,7 +1387,7 @@ void RulesetBMS::update(const Time& t)
                     {
                         if (rt >= itNote->time)
                         {
-                            Time hitTime = itNote->time + judgeTime[(size_t)_judgeDifficulty].BAD;
+                            lunaticvibes::Time hitTime = itNote->time + judgeTime[(size_t)_judgeDifficulty].BAD;
                             auto itTail = itNote;
                             itTail++;
                             if (!_chart->isLastNote(NoteLaneCategory::LN, idx, itTail) && (itTail->flags & Note::LN_TAIL) && hitTime > itTail->time)
@@ -1442,7 +1442,7 @@ void RulesetBMS::update(const Time& t)
             idx = _chart->getLaneFromKey(NoteLaneCategory::Invs, (Input::Pad)k);
             if (idx != NoteLaneIndex::_)
             {
-                const Time& hitTime = -judgeTime[(size_t)_judgeDifficulty].BAD;
+                const lunaticvibes::Time& hitTime = -judgeTime[(size_t)_judgeDifficulty].BAD;
                 auto itNote = _chart->incomingNote(NoteLaneCategory::Invs, idx);
                 while (!_chart->isLastNote(NoteLaneCategory::Invs, idx, itNote) && !itNote->expired && rt - itNote->time >= hitTime)
                 {
@@ -1468,7 +1468,7 @@ void RulesetBMS::update(const Time& t)
 
     if (_judgeScratch)
     {
-        auto updateScratch = [&](const Time& t, Input::Pad up, Input::Pad dn, double& val, int slot)
+        auto updateScratch = [&](const lunaticvibes::Time& t, Input::Pad up, Input::Pad dn, double& val, int slot)
         {
             double scratchThreshold = 0.001;
             double scratchRewind = 0.0001;

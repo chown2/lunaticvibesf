@@ -77,11 +77,11 @@ public:
     // Values are one-way judge times in ms, representing
     // PERFECT, GREAT, GOOD, BAD, ПеPOOR respectively.
     struct JudgeTime {
-        Time PERFECT;
-        Time GREAT;
-        Time GOOD;
-        Time BAD;
-        Time KPOOR;
+        lunaticvibes::Time PERFECT;
+        lunaticvibes::Time GREAT;
+        lunaticvibes::Time GOOD;
+        lunaticvibes::Time BAD;
+        lunaticvibes::Time KPOOR;
     };
     inline static const JudgeTime judgeTime[] = {
         { 8, 27, 40, 200, 600},        // VERY HARD
@@ -162,7 +162,7 @@ public:
         NETWORK,
     };
 
-    struct JudgeRes { JudgeArea area = JudgeArea::NOTHING; Time time; };
+    struct JudgeRes { JudgeArea area = JudgeArea::NOTHING; lunaticvibes::Time time; };
 
 protected:
     // members set on construction
@@ -194,7 +194,7 @@ protected:
     std::map<chart::NoteLane, ChartObjectBase::NoteIterator> _noteListIterators;
 
     std::array<AxisDir, 2>  playerScratchDirection = { 0, 0 };
-    std::array<Time, 2>     playerScratchLastUpdate = { TIMER_NEVER, TIMER_NEVER };
+    std::array<lunaticvibes::Time, 2>     playerScratchLastUpdate = { TIMER_NEVER, TIMER_NEVER };
     std::array<double, 2>   playerScratchAccumulator = { 0, 0 };
 
 protected:
@@ -217,31 +217,31 @@ public:
     void initGaugeParams(PlayModifierGaugeType gauge);
 
 protected:
-    JudgeRes _judge(const Note& note, Time time);
+    JudgeRes _judge(const Note& note, lunaticvibes::Time time);
 private:
-    void _judgePress(chart::NoteLaneCategory cat, chart::NoteLaneIndex idx, HitableNote& note, JudgeRes judge, const Time& t, int slot);
-    void _judgeHold(chart::NoteLaneCategory cat, chart::NoteLaneIndex idx, HitableNote& note, JudgeRes judge, const Time& t, int slot);
-    void _judgeRelease(chart::NoteLaneCategory cat, chart::NoteLaneIndex idx, HitableNote& note, JudgeRes judge, const Time& t, int slot);
-    void judgeNotePress(Input::Pad k, const Time& t, const Time& rt, int slot);
-    void judgeNoteHold(Input::Pad k, const Time& t, const Time& rt, int slot);
-    void judgeNoteRelease(Input::Pad k, const Time& t, const Time& rt, int slot);
+    void _judgePress(chart::NoteLaneCategory cat, chart::NoteLaneIndex idx, HitableNote& note, JudgeRes judge, const lunaticvibes::Time& t, int slot);
+    void _judgeHold(chart::NoteLaneCategory cat, chart::NoteLaneIndex idx, HitableNote& note, JudgeRes judge, const lunaticvibes::Time& t, int slot);
+    void _judgeRelease(chart::NoteLaneCategory cat, chart::NoteLaneIndex idx, HitableNote& note, JudgeRes judge, const lunaticvibes::Time& t, int slot);
+    void judgeNotePress(Input::Pad k, const lunaticvibes::Time& t, const lunaticvibes::Time& rt, int slot);
+    void judgeNoteHold(Input::Pad k, const lunaticvibes::Time& t, const lunaticvibes::Time& rt, int slot);
+    void judgeNoteRelease(Input::Pad k, const lunaticvibes::Time& t, const lunaticvibes::Time& rt, int slot);
     void _updateHp(double diff);
     void _updateHp(JudgeArea judge);
 public:
     // Register to InputWrapper
-    virtual void updatePress(InputMask& pg, const Time& t) override;
+    virtual void updatePress(InputMask& pg, const lunaticvibes::Time& t) override;
     // Register to InputWrapper
-    virtual void updateHold(InputMask& hg, const Time& t) override;
+    virtual void updateHold(InputMask& hg, const lunaticvibes::Time& t) override;
     // Register to InputWrapper
-    virtual void updateRelease(InputMask& rg, const Time& t) override;
+    virtual void updateRelease(InputMask& rg, const lunaticvibes::Time& t) override;
     // Register to InputWrapper
-    virtual void updateAxis(double s1, double s2, const Time& t) override;
+    virtual void updateAxis(double s1, double s2, const lunaticvibes::Time& t) override;
     // Called by ScenePlay
-    virtual void update(const Time& t);
+    virtual void update(const lunaticvibes::Time& t);
 
 public:
     //constexpr auto getJudge() const { return _count; }
-    void updateJudge(const Time& t, chart::NoteLaneIndex ch, JudgeArea judge, int slot, bool force = false);
+    void updateJudge(const lunaticvibes::Time& t, chart::NoteLaneIndex ch, JudgeArea judge, int slot, bool force = false);
 
 public:
     GaugeType getGaugeType() const { return _gauge; }

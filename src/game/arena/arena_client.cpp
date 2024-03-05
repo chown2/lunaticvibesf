@@ -367,7 +367,7 @@ void ArenaClient::handleHeartbeat(std::shared_ptr<ArenaMessage> msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageHeartbeat>(msg);
 
-	heartbeatTime = Time();
+	heartbeatTime = lunaticvibes::Time();
 
 	ArenaMessageResponse resp(*pMsg);
 
@@ -667,7 +667,7 @@ void ArenaClient::handleHostFinishedResult(std::shared_ptr<ArenaMessage> msg)
 
 void ArenaClient::update()
 {
-	Time now;
+	lunaticvibes::Time now;
 
 	bool alive = true;
 

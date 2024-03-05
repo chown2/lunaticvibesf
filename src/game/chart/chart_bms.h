@@ -49,6 +49,6 @@ protected:
 
 public:
     //virtual void update(hTime t);
-    virtual void preUpdate(const Time& t) override;
-    virtual void postUpdate(const Time& t) override;
+    virtual void preUpdate(const lunaticvibes::Time& t) override;
+    virtual void postUpdate(const lunaticvibes::Time& t) override;
 };

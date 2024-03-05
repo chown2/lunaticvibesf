@@ -54,13 +54,13 @@ RulesetBMSReplay::RulesetBMSReplay(
     }
 }
 
-void RulesetBMSReplay::update(const Time& t)
+void RulesetBMSReplay::update(const lunaticvibes::Time& t)
 {
     bool skipToEnd = t.hres() == LLONG_MAX;
 
     if (!_hasStartTime)
     {
-        setStartTime(skipToEnd ? Time(0) : t);
+        setStartTime(skipToEnd ? lunaticvibes::Time(0) : t);
     }
 
     auto rt = t - _startTime.norm();
@@ -225,7 +225,7 @@ void RulesetBMSReplay::update(const Time& t)
 
 void RulesetBMSReplay::fail()
 {
-    _startTime = Time(0);
+    _startTime = lunaticvibes::Time(0);
     _hasStartTime = true;
     RulesetBMS::fail();
 }

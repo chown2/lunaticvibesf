@@ -264,7 +264,7 @@ SceneCourseResult::SceneCourseResult() : SceneBase(SkinType::COURSE_RESULT, 1000
     _input.register_h("SCENE_HOLD", std::bind(&SceneCourseResult::inputGameHold, this, _1, _2));
     _input.register_r("SCENE_RELEASE", std::bind(&SceneCourseResult::inputGameRelease, this, _1, _2));
 
-    Time t;
+    lunaticvibes::Time t;
     State::set(IndexTimer::RESULT_GRAPH_START, t.norm());
 
     if (!gInCustomize)
@@ -314,7 +314,7 @@ void SceneCourseResult::_updateAsync()
 
 void SceneCourseResult::updateDraw()
 {
-    auto t = Time();
+    auto t = lunaticvibes::Time();
     auto rt = t - State::get(IndexTimer::SCENE_START);
 
     if (rt.norm() >= pSkin->info.timeResultRank)
@@ -328,13 +328,13 @@ void SceneCourseResult::updateDraw()
 
 void SceneCourseResult::updateStop()
 {
-    auto t = Time();
+    auto t = lunaticvibes::Time();
     auto rt = t - State::get(IndexTimer::SCENE_START);
 }
 
 void SceneCourseResult::updateRecord()
 {
-    auto t = Time();
+    auto t = lunaticvibes::Time();
     auto rt = t - State::get(IndexTimer::SCENE_START);
 
     // TODO sync score in online mode?
@@ -346,7 +346,7 @@ void SceneCourseResult::updateRecord()
 
 void SceneCourseResult::updateFadeout()
 {
-    auto t = Time();
+    auto t = lunaticvibes::Time();
     auto rt = t - State::get(IndexTimer::SCENE_START);
     auto ft = t - State::get(IndexTimer::FADEOUT_BEGIN);
 
@@ -427,7 +427,7 @@ void SceneCourseResult::updateFadeout()
 ////////////////////////////////////////////////////////////////////////////////
 
 // CALLBACK
-void SceneCourseResult::inputGamePress(InputMask& m, const Time& t)
+void SceneCourseResult::inputGamePress(InputMask& m, const lunaticvibes::Time& t)
 {
     if (t - State::get(IndexTimer::SCENE_START) < pSkin->info.timeIntro) return;
 
@@ -482,7 +482,7 @@ void SceneCourseResult::inputGamePress(InputMask& m, const Time& t)
 }
 
 // CALLBACK
-void SceneCourseResult::inputGameHold(InputMask& m, const Time& t)
+void SceneCourseResult::inputGameHold(InputMask& m, const lunaticvibes::Time& t)
 {
     if (t - State::get(IndexTimer::SCENE_START) < pSkin->info.timeIntro) return;
 
@@ -495,7 +495,7 @@ void SceneCourseResult::inputGameHold(InputMask& m, const Time& t)
 }
 
 // CALLBACK
-void SceneCourseResult::inputGameRelease(InputMask& m, const Time& t)
+void SceneCourseResult::inputGameRelease(InputMask& m, const lunaticvibes::Time& t)
 {
     if (t - State::get(IndexTimer::SCENE_START) < pSkin->info.timeIntro) return;
 }

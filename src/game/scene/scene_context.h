@@ -97,7 +97,7 @@ struct PlayContextParams
     unsigned courseRunningCombo[2] = { 0, 0 };
     unsigned courseMaxCombo[2] = { 0, 0 };
 
-    Time remainTime;
+    lunaticvibes::Time remainTime;
 
     uint64_t randomSeed;
 
@@ -109,7 +109,7 @@ struct PlayContextParams
     struct PlayerState
     {
         double hispeed = 2.0;
-        Time   hispeedGradientStart;
+        lunaticvibes::Time   hispeedGradientStart;
         double hispeedGradientFrom = 2.0;
         double hispeedGradientNow = 2.0;
 
@@ -235,7 +235,7 @@ struct CustomizeContextParams
 struct UpdateContextParams
 {
     // shared
-    Time updateTime;
+    lunaticvibes::Time updateTime;
 
     // SkinBase / Sprite
     double metre;
@@ -247,7 +247,7 @@ struct UpdateContextParams
 struct OverlayContextParams
 {
     std::shared_mutex _mutex;
-    std::list<std::pair<Time, StringContent>> notifications;
+    std::list<std::pair<lunaticvibes::Time, StringContent>> notifications;
 
     std::vector<StringContent> popupList;
     size_t popupListSel = 0;

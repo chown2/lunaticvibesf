@@ -33,6 +33,8 @@ typedef fraction Segment;  // Normal rhythm indicator, must be normalized (value
 typedef std::chrono::milliseconds timeNormRes; // Regular time, expect millisecond (1/1e3 second). Used for general timing demand
 typedef std::chrono::nanoseconds  timeHighRes; // High resolution time, expect nanosecond (1/1e9 second). Used for note timings
 
+namespace lunaticvibes {
+
 #pragma warning(push)
 #pragma warning(disable:4244)
 class Time
@@ -88,11 +90,13 @@ public:
 };
 #pragma warning(pop)
 
+} // namespace lunaticvibes
+
 struct Note
 {
     Bar measure;        // Which measure the note is placed
     Metre pos;        // Which metre the note is placed in visual (ignoring SV & STOP), can be above 1
-    Time time;             // Timestamp
+    lunaticvibes::Time time;             // Timestamp
 
 	enum Flags
 	{

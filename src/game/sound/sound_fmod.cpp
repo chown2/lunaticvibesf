@@ -908,7 +908,7 @@ void SoundDriverFMOD::update()
         }
         else
         {
-            double progress = double((Time() - sysVolumeGradientBeginTime).norm()) / sysVolumeGradientLength;
+            double progress = double((lunaticvibes::Time() - sysVolumeGradientBeginTime).norm()) / sysVolumeGradientLength;
             if (progress >= 1.0)
             {
                 sysVolume = sysVolumeGradientEnd;
@@ -929,7 +929,7 @@ void SoundDriverFMOD::update()
         }
         else
         {
-            double progress = double((Time() - noteVolumeGradientBeginTime).norm()) / noteVolumeGradientLength;
+            double progress = double((lunaticvibes::Time() - noteVolumeGradientBeginTime).norm()) / noteVolumeGradientLength;
             if (progress >= 1.0)
             {
                 noteVolume = noteVolumeGradientEnd;
@@ -958,7 +958,7 @@ void SoundDriverFMOD::setSysVolume(float v, int gradientTime)
 {
     sysVolumeGradientBegin = sysVolume;
     sysVolumeGradientEnd = v;
-    sysVolumeGradientBeginTime = Time();
+    sysVolumeGradientBeginTime = lunaticvibes::Time();
     sysVolumeGradientLength = gradientTime;
 }
 
@@ -966,7 +966,7 @@ void SoundDriverFMOD::setNoteVolume(float v, int gradientTime)
 {
     noteVolumeGradientBegin = noteVolume;
     noteVolumeGradientEnd = v;
-    noteVolumeGradientBeginTime = Time();
+    noteVolumeGradientBeginTime = lunaticvibes::Time();
     noteVolumeGradientLength = gradientTime;
 }
 

@@ -51,7 +51,7 @@ void SceneDecide::_updateAsync()
 
 void SceneDecide::updateStart()
 {
-    auto t = Time();
+    auto t = lunaticvibes::Time();
     auto rt = t - State::get(IndexTimer::SCENE_START);
 
     if (!gInCustomize && rt.norm() >= pSkin->info.timeDecideExpiry)
@@ -62,7 +62,7 @@ void SceneDecide::updateStart()
 
 void SceneDecide::updateSkip()
 {
-    auto t = Time();
+    auto t = lunaticvibes::Time();
     auto rt = t - State::get(IndexTimer::SCENE_START);
     auto ft = t - State::get(IndexTimer::FADEOUT_BEGIN);
 
@@ -74,7 +74,7 @@ void SceneDecide::updateSkip()
 
 void SceneDecide::updateCancel()
 {
-    auto t = Time();
+    auto t = lunaticvibes::Time();
     auto rt = t - State::get(IndexTimer::SCENE_START);
     auto ft = t - State::get(IndexTimer::FADEOUT_BEGIN);
 
@@ -90,7 +90,7 @@ void SceneDecide::updateCancel()
 ////////////////////////////////////////////////////////////////////////////////
 
 // CALLBACK
-void SceneDecide::inputGamePress(InputMask& m, Time t)
+void SceneDecide::inputGamePress(InputMask& m, lunaticvibes::Time t)
 {
     unsigned rt = (t - State::get(IndexTimer::SCENE_START)).norm();
     if (rt < pSkin->info.timeIntro) return;
@@ -134,7 +134,7 @@ void SceneDecide::inputGamePress(InputMask& m, Time t)
 }
 
 // CALLBACK
-void SceneDecide::inputGameHold(InputMask& m, Time t)
+void SceneDecide::inputGameHold(InputMask& m, lunaticvibes::Time t)
 {
     unsigned rt = (t - State::get(IndexTimer::SCENE_START)).norm();
     if (rt < pSkin->info.timeIntro) return;
@@ -163,7 +163,7 @@ void SceneDecide::inputGameHold(InputMask& m, Time t)
 }
 
 // CALLBACK
-void SceneDecide::inputGameRelease(InputMask& m, Time t)
+void SceneDecide::inputGameRelease(InputMask& m, lunaticvibes::Time t)
 {
     unsigned rt = (t - State::get(IndexTimer::SCENE_START)).norm();
     if (rt < pSkin->info.timeIntro) return;

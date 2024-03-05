@@ -111,7 +111,7 @@ pScene SceneMgr::get(SceneType e)
 		return nullptr;
     }
 
-    Time t;
+    lunaticvibes::Time t;
     State::set(IndexTimer::SCENE_START, t.norm());
     State::set(IndexTimer::START_INPUT, t.norm() + (ps ? ps->getSkinInfo().timeIntro : 0));
 

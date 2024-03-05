@@ -49,8 +49,8 @@ public:
 
     std::pair<chart::NoteLaneCategory, chart::NoteLaneIndex> getLane() const;
     void getRectSize(int& w, int& h);
-	virtual bool update(const Time& t);
-    virtual void updateNoteRect(const Time& t);
+	virtual bool update(const lunaticvibes::Time& t);
+    virtual void updateNoteRect(const lunaticvibes::Time& t);
     virtual void draw() const;
     virtual void adjustAfterUpdate(int x, int y, int w = 0, int h = 0) override;
 
@@ -95,7 +95,7 @@ public:
 public:
     virtual void setMotionStartTimer(IndexTimer t);
 
-    virtual void updateNoteRect(const Time& t) override;
+    virtual void updateNoteRect(const lunaticvibes::Time& t) override;
     virtual void draw() const;
     virtual void adjustAfterUpdate(int x, int y, int w = 0, int h = 0) override;
 };

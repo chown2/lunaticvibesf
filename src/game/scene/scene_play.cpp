@@ -1357,7 +1357,7 @@ void ScenePlay::_updateAsync()
         gNextScene = SceneType::EXIT_TRANS;
     }
 
-    Time t;
+    lunaticvibes::Time t;
 
     // update lanecover / hispeed change
     updateAsyncLanecover(t);
@@ -1448,7 +1448,7 @@ void ScenePlay::_updateAsync()
     }
 }
 
-void ScenePlay::updateAsyncLanecover(const Time& t)
+void ScenePlay::updateAsyncLanecover(const lunaticvibes::Time& t)
 {
     int lcThreshold = getRate() / 200 * _input.getRate() / 1000;  // lanecover, +200 per second
     int hsThreshold = getRate() / 25 * _input.getRate() / 1000;   // hispeed, +25 per second
@@ -1563,7 +1563,7 @@ void ScenePlay::updateAsyncLanecover(const Time& t)
     if (gPlayContext.isBattle) handleSide(PLAYER_SLOT_TARGET);
 }
 
-void ScenePlay::updateAsyncGreenNumber(const Time& t)
+void ScenePlay::updateAsyncGreenNumber(const lunaticvibes::Time& t)
 {
     // 120BPM with 1.0x HS is 2000ms (500ms/beat, green number 1200)
     auto updateSide = [&](int slot)
@@ -1629,7 +1629,7 @@ void ScenePlay::updateAsyncGreenNumber(const Time& t)
     }
 }
 
-void ScenePlay::updateAsyncGaugeUpTimer(const Time& t)
+void ScenePlay::updateAsyncGaugeUpTimer(const lunaticvibes::Time& t)
 {
     auto updateSide = [&](int slot)
     {
@@ -1665,7 +1665,7 @@ void ScenePlay::updateAsyncGaugeUpTimer(const Time& t)
     updateSide(PLAYER_SLOT_TARGET);
 }
 
-void ScenePlay::updateAsyncLanecoverDisplay(const Time& t)
+void ScenePlay::updateAsyncLanecoverDisplay(const lunaticvibes::Time& t)
 {
     auto updateSide = [&](int slot)
     {
@@ -1729,14 +1729,14 @@ void ScenePlay::updateAsyncLanecoverDisplay(const Time& t)
     updateSide(PLAYER_SLOT_TARGET);
 }
 
-void ScenePlay::updateAsyncHSGradient(const Time& t)
+void ScenePlay::updateAsyncHSGradient(const lunaticvibes::Time& t)
 {
     const long long HS_GRADIENT_LENGTH_MS = 200;
     for (int slot = PLAYER_SLOT_PLAYER; slot <= PLAYER_SLOT_TARGET; slot++)
     {
         if (gPlayContext.playerState[slot].hispeedGradientStart != TIMER_NEVER)
         {
-            Time hsGradient = t - gPlayContext.playerState[slot].hispeedGradientStart;
+            lunaticvibes::Time hsGradient = t - gPlayContext.playerState[slot].hispeedGradientStart;
             if (hsGradient.norm() < HS_GRADIENT_LENGTH_MS)
             {
                 double prog = std::sin((hsGradient.norm() / (double)HS_GRADIENT_LENGTH_MS) * 1.57079632679);
@@ -1752,9 +1752,9 @@ void ScenePlay::updateAsyncHSGradient(const Time& t)
     }
 }
 
-void ScenePlay::updateAsyncAbsoluteAxis(const Time& t)
+void ScenePlay::updateAsyncAbsoluteAxis(const lunaticvibes::Time& t)
 {
-    auto Scratch = [&](const Time& t, Input::Pad up, Input::Pad dn, double& val, int slot)
+    auto Scratch = [&](const lunaticvibes::Time& t, Input::Pad up, Input::Pad dn, double& val, int slot)
     {
         double scratchThreshold = 0.001;
         double scratchRewind = 0.0001;
@@ -1919,7 +1919,7 @@ void ScenePlay::updateAsyncAbsoluteAxis(const Time& t)
 
 void ScenePlay::updatePrepare()
 {
-	auto t = Time();
+	auto t = lunaticvibes::Time();
     auto rt = t - State::get(IndexTimer::SCENE_START);
     if (rt.norm() > pSkin->info.timeIntro)
     {
@@ -1933,7 +1933,7 @@ void ScenePlay::updatePrepare()
 
 void ScenePlay::updateLoading()
 {
-	auto t = Time();
+	auto t = lunaticvibes::Time();
     auto rt = t - State::get(IndexTimer::_LOAD_START);
 
     State::set(IndexNumber::PLAY_LOAD_PROGRESS_SYS, int(chartObjLoaded * 50 + rulesetLoaded * 50));
@@ -1984,7 +1984,7 @@ void ScenePlay::updateLoading()
 
 void ScenePlay::updateLoadEnd()
 {
-	auto t = Time();
+	auto t = lunaticvibes::Time();
     auto rt = t - State::get(IndexTimer::PLAY_READY);
     spinTurntable(false);
     if (rt > pSkin->info.timeGetReady)
@@ -2008,7 +2008,7 @@ void ScenePlay::updateLoadEnd()
 
 void ScenePlay::updatePlaying()
 {
-	auto t = Time();
+	auto t = lunaticvibes::Time();
 	auto rt = t - State::get(IndexTimer::PLAY_START);
     State::set(IndexTimer::MUSIC_BEAT, int(1000 * (gPlayContext.chartObj[PLAYER_SLOT_PLAYER]->getCurrentMetre() * 4.0)) % 1000);
 
@@ -2392,7 +2392,7 @@ void ScenePlay::updatePlaying()
 
 void ScenePlay::updateFadeout()
 {
-    auto t = Time();
+    auto t = lunaticvibes::Time();
     auto rt = t - State::get(IndexTimer::PLAY_START);
     auto ft = t - State::get(IndexTimer::FADEOUT_BEGIN);
 
@@ -2644,7 +2644,7 @@ void ScenePlay::updateFadeout()
 
 void ScenePlay::updateFailed()
 {
-    auto t = Time();
+    auto t = lunaticvibes::Time();
     auto rt = t - State::get(IndexTimer::PLAY_START);
     auto ft = t - State::get(IndexTimer::FAIL_BEGIN);
 
@@ -2688,7 +2688,7 @@ void ScenePlay::updateFailed()
 
 void ScenePlay::updateWaitArena()
 {
-    Time t;
+    lunaticvibes::Time t;
     auto rt = t - State::get(IndexTimer::PLAY_START);
 
     gPlayContext.chartObj[PLAYER_SLOT_PLAYER]->update(rt);
@@ -2717,7 +2717,7 @@ void ScenePlay::updateWaitArena()
     }
 }
 
-void ScenePlay::updatePlayTime(const Time& rt)
+void ScenePlay::updatePlayTime(const lunaticvibes::Time& rt)
 {
     if (gPlayContext.chartObj[PLAYER_SLOT_PLAYER] != nullptr)
     {
@@ -2798,9 +2798,9 @@ void ScenePlay::procCommonNotes()
     }
 }
 
-void ScenePlay::changeKeySampleMapping(const Time& t)
+void ScenePlay::changeKeySampleMapping(const lunaticvibes::Time& t)
 {
-    static const Time MIN_REMAP_INTERVAL{ 1000 };
+    static const lunaticvibes::Time MIN_REMAP_INTERVAL{ 1000 };
 
     auto changeKeySample = [&](Input::Pad k, int slot)
     {
@@ -2915,7 +2915,7 @@ void ScenePlay::changeKeySampleMapping(const Time& t)
 
 void ScenePlay::spinTurntable(bool startedPlaying)
 {
-    auto rt = startedPlaying ? Time().norm() - State::get(IndexTimer::PLAY_START) : 0;
+    auto rt = startedPlaying ? lunaticvibes::Time().norm() - State::get(IndexTimer::PLAY_START) : 0;
     auto angle = rt * 360 / 2000;
     State::set(IndexNumber::_ANGLE_TT_1P, (angle + (int)playerState[0].turntableAngleAdd) % 360);
     State::set(IndexNumber::_ANGLE_TT_2P, (angle + (int)playerState[1].turntableAngleAdd) % 360);
@@ -2926,7 +2926,7 @@ void ScenePlay::requestExit()
     if (state == ePlayState::FADEOUT || state == ePlayState::WAIT_ARENA)
         return;
 
-    Time t;
+    lunaticvibes::Time t;
 
     if (gChartContext.started)
     {
@@ -3041,7 +3041,7 @@ void ScenePlay::toggleLanecover(int slot, bool state)
 
 ////////////////////////////////////////////////////////////////////////////////
 // CALLBACK
-void ScenePlay::inputGamePress(InputMask& m, const Time& t)
+void ScenePlay::inputGamePress(InputMask& m, const lunaticvibes::Time& t)
 {
     using namespace Input;
 
@@ -3274,7 +3274,7 @@ void ScenePlay::inputGamePress(InputMask& m, const Time& t)
     }
 }
 
-void ScenePlay::inputGamePressTimer(InputMask& input, const Time& t)
+void ScenePlay::inputGamePressTimer(InputMask& input, const lunaticvibes::Time& t)
 {
     using namespace Input;
 
@@ -3300,7 +3300,7 @@ void ScenePlay::inputGamePressTimer(InputMask& input, const Time& t)
     }
 }
 
-void ScenePlay::inputGamePressPlayKeysounds(InputMask inputSample, const Time& t)
+void ScenePlay::inputGamePressPlayKeysounds(InputMask inputSample, const lunaticvibes::Time& t)
 {
     using namespace Input;
 
@@ -3332,7 +3332,7 @@ void ScenePlay::inputGamePressPlayKeysounds(InputMask inputSample, const Time& t
 }
 
 // CALLBACK
-void ScenePlay::inputGameHold(InputMask& m, const Time& t)
+void ScenePlay::inputGameHold(InputMask& m, const lunaticvibes::Time& t)
 {
     using namespace Input;
 
@@ -3375,7 +3375,7 @@ void ScenePlay::inputGameHold(InputMask& m, const Time& t)
 }
 
 // CALLBACK
-void ScenePlay::inputGameRelease(InputMask& m, const Time& t)
+void ScenePlay::inputGameRelease(InputMask& m, const lunaticvibes::Time& t)
 {
     using namespace Input;
     auto input = _inputAvailable & m;
@@ -3419,7 +3419,7 @@ void ScenePlay::inputGameRelease(InputMask& m, const Time& t)
     holdingSelect[1] &= !input[K2SELECT];
 }
 
-void ScenePlay::inputGameReleaseTimer(InputMask& input, const Time& t)
+void ScenePlay::inputGameReleaseTimer(InputMask& input, const lunaticvibes::Time& t)
 {
     using namespace Input;
 
@@ -3465,7 +3465,7 @@ void ScenePlay::inputGameReleaseTimer(InputMask& input, const Time& t)
 }
 
 // CALLBACK
-void ScenePlay::inputGameAxis(double S1, double S2, const Time& t)
+void ScenePlay::inputGameAxis(double S1, double S2, const lunaticvibes::Time& t)
 {
 	using namespace Input;
 

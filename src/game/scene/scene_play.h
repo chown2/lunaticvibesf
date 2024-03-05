@@ -43,13 +43,13 @@ private:
     {
 		bool finished = false;
 
-		Time startPressedTime = TIMER_NEVER;
-		Time selectPressedTime = TIMER_NEVER;
+		lunaticvibes::Time startPressedTime = TIMER_NEVER;
+		lunaticvibes::Time selectPressedTime = TIMER_NEVER;
 
 		double turntableAngleAdd = 0;
 
 		AxisDir scratchDirection = 0;
-		Time scratchLastUpdate = TIMER_NEVER;
+		lunaticvibes::Time scratchLastUpdate = TIMER_NEVER;
 		double scratchAccumulator = 0;
 
 		int hispeedAddPending = 0;
@@ -75,7 +75,7 @@ private:
 
     } playerState[2];
 
-    Time delayedReadyTime = 0;
+    lunaticvibes::Time delayedReadyTime = 0;
     int retryRequestTick = 0;
 
     std::vector<ReplayChart::Commands>::iterator itReplayCommand;
@@ -85,7 +85,7 @@ private:
     bool isManuallyRequestedExit = false;
     bool isReplayRequestedExit = false;
 
-    Time poorBgaStartTime;
+    lunaticvibes::Time poorBgaStartTime;
     int poorBgaDuration;
 
     double hiSpeedMinSoft = 0.25;
@@ -149,12 +149,12 @@ protected:
 protected:
     // Looper callbacks
     virtual void _updateAsync() override;
-    void updateAsyncLanecover(const Time& t);
-    void updateAsyncGreenNumber(const Time& t);
-    void updateAsyncGaugeUpTimer(const Time& t);
-    void updateAsyncLanecoverDisplay(const Time& t);
-    void updateAsyncHSGradient(const Time& t);
-    void updateAsyncAbsoluteAxis(const Time& t);
+    void updateAsyncLanecover(const lunaticvibes::Time& t);
+    void updateAsyncGreenNumber(const lunaticvibes::Time& t);
+    void updateAsyncGaugeUpTimer(const lunaticvibes::Time& t);
+    void updateAsyncLanecoverDisplay(const lunaticvibes::Time& t);
+    void updateAsyncHSGradient(const lunaticvibes::Time& t);
+    void updateAsyncAbsoluteAxis(const lunaticvibes::Time& t);
     void updatePrepare();
     void updateLoading();
     void updateLoadEnd();
@@ -165,22 +165,22 @@ protected:
 
 protected:
     // Inner-state updates
-    void updatePlayTime(const Time& rt);
+    void updatePlayTime(const lunaticvibes::Time& rt);
     void procCommonNotes();
-    void changeKeySampleMapping(const Time& t);
+    void changeKeySampleMapping(const lunaticvibes::Time& t);
     void spinTurntable(bool startedPlaying);
     void requestExit();
     void toggleLanecover(int slot, bool state);
 
 protected:
     // Register to InputWrapper: judge / keysound
-    void inputGamePress(InputMask&, const Time&);
-    void inputGameHold(InputMask&, const Time&);
-    void inputGameRelease(InputMask&, const Time&);
-    void inputGamePressTimer(InputMask&, const Time&);
-    void inputGamePressPlayKeysounds(InputMask, const Time&);
-    void inputGameReleaseTimer(InputMask&, const Time&);
-    void inputGameAxis(double s1, double s2, const Time&);
+    void inputGamePress(InputMask&, const lunaticvibes::Time&);
+    void inputGameHold(InputMask&, const lunaticvibes::Time&);
+    void inputGameRelease(InputMask&, const lunaticvibes::Time&);
+    void inputGamePressTimer(InputMask&, const lunaticvibes::Time&);
+    void inputGamePressPlayKeysounds(InputMask, const lunaticvibes::Time&);
+    void inputGameReleaseTimer(InputMask&, const lunaticvibes::Time&);
+    void inputGameAxis(double s1, double s2, const lunaticvibes::Time&);
 
 protected:
     bool imguiShowAdjustMenu = false;

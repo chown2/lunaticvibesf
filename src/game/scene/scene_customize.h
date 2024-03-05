@@ -46,7 +46,7 @@ protected:
     void updateTexts() const;
 
 protected:
-    void inputGamePress(InputMask&, const Time&);
+    void inputGamePress(InputMask&, const lunaticvibes::Time&);
 
 protected:
     std::shared_ptr<SceneBase> pSubScene = nullptr;

@@ -129,7 +129,7 @@ void SpriteImageText::updateTextRect()
 
 }
 
-bool SpriteImageText::update(const Time& t)
+bool SpriteImageText::update(const lunaticvibes::Time& t)
 {
     if (_draw = updateMotion(t))
     {
