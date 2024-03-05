@@ -77,19 +77,19 @@ set (sqlite3_LIBRARY ${sqlite3_LIBRARY} CACHE INTERNAL "sqlite3 target name")
 # Add SDL2
 if (${GRAPHICS_BACKEND} STREQUAL SDL2)
     # Add SDL2
-    find_package(SDL2 QUIET)
+    find_package(SDL2 QUIET GLOBAL)
     if (NOT SDL2_FOUND)
         add_subdirectory(SDL2)
     endif()
 
     # Add SDL2_image
-    find_package(SDL2_image QUIET)
+    find_package(SDL2_image QUIET GLOBAL)
     if (NOT SDL2_image_FOUND)
         add_subdirectory(SDL2_image)
     endif()
 
     # Add SDL2_ttf
-    find_package(SDL2_ttf QUIET)
+    find_package(SDL2_ttf QUIET GLOBAL)
     if (NOT SDL2_ttf_FOUND)
         add_subdirectory(SDL2_ttf)
     endif()

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "lunaticvibes",
+  "version": "0.11.0",
+  "builtin-baseline": "90542a476c8ef3288039e2443a775e48db279173",
+  "dependencies": [
+    "curl",
+    "openssl"
+  ]
+}
