@@ -1449,9 +1449,12 @@ bool SceneSelect::imguiBrowseFolder()
 #ifdef WIN32
     ShellExecute(NULL, "open", pathstr.c_str(), NULL, NULL, SW_SHOWDEFAULT);
 #else
-    // TODO: use xdg-open for unix*
-    LOG_ERROR << "unimplemented";
-    return false;
+    int rc = system((boost::format("xdg-open \"%s\"") % pathstr).str().c_str());
+    if (rc != 0)
+    {
+        LOG_ERROR << "xdg-open failed with rc=" << rc;
+        return false;
+    }
 #endif
 
     return true;
