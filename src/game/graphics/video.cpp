@@ -245,7 +245,7 @@ void sVideo::decodeLoop()
 					}
 				}
 			}
-			decoded_frames = pCodecCtx->frame_number;
+			decoded_frames = pCodecCtx->frame_num;
 		}
 
 		if (loop_playback)
@@ -276,7 +276,7 @@ void sVideo::decodeLoop()
 					av_frame_ref(pFrame, pFrame1);
 					valid = true;
 				}
-				decoded_frames = pCodecCtx->frame_number;
+				decoded_frames = pCodecCtx->frame_num;
 			}
 
 			playing = false;

@@ -61,7 +61,7 @@ private:
 	AVFrame *pFrame = nullptr;
 	AVPacket *pPacket = nullptr;
 	int videoIndex = -1;
-	unsigned decoded_frames = 0;
+	int64_t decoded_frames = 0;
 	std::chrono::time_point<std::chrono::system_clock> startTime;
 	std::future<void> decodeEnd;
 
