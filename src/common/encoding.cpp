@@ -61,7 +61,10 @@ eFileEncoding getFileEncoding(std::istream& is)
     if (charset == "SHIFT_JIS")
         return eFileEncoding::SHIFT_JIS;
     if (charset == "EUC_KR")
+    {
+        LOG_WARNING << "EUC_KR file encoding detected; this messages is here to gauge how often it appears in BMS";
         return eFileEncoding::EUC_KR;
+    }
     if (charset == "UTF-8")
         return eFileEncoding::UTF8;
     LOG_ERROR << "file has an unsupported charset: " << charset;
