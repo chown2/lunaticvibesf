@@ -147,8 +147,6 @@ int graphics_init()
 
         SDL_ShowCursor(SDL_DISABLE);
 
-        SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
-
         LOG_INFO << "[SDL2] SDL2 init finished.";
     }
 
@@ -430,18 +428,6 @@ void event_handle()
         case SDL_QUIT:
             LOG_WARNING << "[Event] SDL_QUIT";
             gEventQuit = true;
-            break;
-
-        case SDL_SYSWMEVENT:
-#ifdef WIN32
-            callWMEventHandler(
-                &e.syswm.msg->msg.win.hwnd,
-                &e.syswm.msg->msg.win.msg,
-                &e.syswm.msg->msg.win.wParam,
-                &e.syswm.msg->msg.win.lParam);
-#elif defined __linux__
-
-#endif
             break;
 
         case SDL_WINDOWEVENT:

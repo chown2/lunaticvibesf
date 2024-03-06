@@ -1400,6 +1400,8 @@ bool SceneSelect::imguiAddFolder(const char* path)
             }
             CoTaskMemFree(lpiil);
         }
+#else
+        LOG_ERROR << "unimplemented";
 #endif
     }
     else
@@ -1446,8 +1448,10 @@ bool SceneSelect::imguiBrowseFolder()
 
 #ifdef WIN32
     ShellExecute(NULL, "open", pathstr.c_str(), NULL, NULL, SW_SHOWDEFAULT);
-#elif defined __linux__
-    // linux has many WMs that may have to handle differently
+#else
+    // TODO: use xdg-open for unix*
+    LOG_ERROR << "unimplemented";
+    return false;
 #endif
 
     return true;

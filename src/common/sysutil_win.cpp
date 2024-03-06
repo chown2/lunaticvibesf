@@ -96,28 +96,6 @@ void getWindowHandle(void* handle)
     *(HWND*)handle = hwnd;
 }
 
-typedef LRESULT(*WMCALLBACK)(HWND, UINT, WPARAM, LPARAM);
-std::vector<WMCALLBACK> WMEventHandler;
-void addWMEventHandler(void* f)
-{
-    using namespace std::placeholders;
-    WMEventHandler.push_back((WMCALLBACK)f);
-}
-
-void callWMEventHandler(void* arg1, void* arg2, void* arg3, void* arg4)
-{
-    HWND hwnd = *(HWND*)arg1;
-    UINT msg = *(UINT*)arg2;
-    WPARAM wParam = *(WPARAM*)arg3;
-    LPARAM lParam = *(LPARAM*)arg4;
-
-    for (auto& f : WMEventHandler)
-    {
-        //f(hwnd, msg, wParam, lParam);
-        ((WMCALLBACK)f)(hwnd, msg, wParam, lParam);
-    }
-}
-
 long long getFileLastWriteTime(const Path& p)
 {
     return std::chrono::duration_cast<std::chrono::seconds>(fs::last_write_time(p).time_since_epoch()).count() - 11644473600;
