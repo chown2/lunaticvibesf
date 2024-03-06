@@ -1000,7 +1000,7 @@ int SongDB::refreshExistingFolder(const HashMD5& hash, const Path& path, FolderT
                 {
                     if (!fs::exists(existedList->getEntry(i)->getPath()))
                     {
-                        LOG_DEBUG << "[SongDB] Deleting file-not-found folder: " << existedList->getEntry(i)->getPath();
+                        LOG_DEBUG << "[SongDB] Deleting file-not-found folder: " << existedList->getEntry(i)->getPath().string();
                         deletedFiles.push_back(existedList->getEntry(i)->md5);
                     }
                 }

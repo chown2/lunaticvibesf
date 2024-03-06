@@ -818,7 +818,7 @@ int SkinLR2::IMAGE()
             textureNameMap[textureMapKey] = std::make_shared<Texture>(img);
         }
 
-        LOG_DEBUG << "[Skin] " << csvLineNumber << ": Added IMAGE[" << imageCount << "]: " << pathFile;
+        LOG_DEBUG << "[Skin] " << csvLineNumber << ": Added IMAGE[" << imageCount << "]: " << pathFile.u8string();
 
         ++imageCount;
         return 1;
@@ -1000,7 +1000,7 @@ int SkinLR2::SYSTEMFONT()
         Path fontPath = getSysMonoFontPath(NULL, &faceIndex, i18n::getCurrentLanguage());
         size_t idx = fontNameMap.size();
         fontNameMap[std::to_string(idx)] = std::make_shared<TTFFont>(fontPath.u8string().c_str(), ptsize, faceIndex);
-        LOG_DEBUG << "[Skin] " << csvLineNumber << ": Added FONT[" << idx << "]: " << fontPath;
+        LOG_DEBUG << "[Skin] " << csvLineNumber << ": Added FONT[" << idx << "]: " << fontPath.u8string();
         return 1;
     }
     return 0;

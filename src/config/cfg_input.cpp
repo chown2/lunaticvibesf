@@ -100,7 +100,7 @@ void ConfigInput::setDefaults() noexcept
     }
     catch (YAML::BadFile&)
     {
-        LOG_WARNING << "[Config] Bad file while loading default input config: " << path;
+        LOG_WARNING << "[Config] Bad file while loading default input config: " << path.string();
     }
 }
 
