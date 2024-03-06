@@ -2,8 +2,6 @@
 #include "common/types.h"
 #include "common/log.h"
 
-// TODO uncomment clearcount at 0.8 release
-
 const char* CREATE_SCORE_BMS_TABLE_STR =
 "CREATE TABLE IF NOT EXISTS score_bms( "
 "md5 TEXT PRIMARY KEY UNIQUE NOT NULL, " // 0
