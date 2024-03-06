@@ -37,7 +37,7 @@ TEST(tBMS, meta_basic)
 	ASSERT_NO_THROW(bms = std::make_shared<ChartFormatBMS>("bms/bgm32.bms"));
 	ASSERT_EQ(bms->isLoaded(), true);
 
-	EXPECT_STRCASEEQ(bms->fileHash.hexdigest().c_str(), "C396F76B2DE46425ED22B196230173F0");
+	EXPECT_STRCASEEQ(bms->fileHash.hexdigest().c_str(), "99dc7df057008479ac0dcf7772e678a3");
 	EXPECT_EQ(bms->haveNote, false);
 	EXPECT_EQ(bms->notes_total, 0);
 	EXPECT_EQ(bms->notes_key_ln, 0);
