@@ -4,6 +4,11 @@
   "version": "0.11.0",
   "builtin-baseline": "90542a476c8ef3288039e2443a775e48db279173",
   "dependencies": [
+    "boost-algorithm",
+    "boost-asio",
+    "boost-format",
+    "boost-property-tree",
+    "boost-tokenizer",
     "cereal",
     "curl",
     "ffmpeg",
