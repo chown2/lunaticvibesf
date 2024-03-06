@@ -33,10 +33,7 @@ target_link_libraries(common
     PUBLIC taocpp::json
 )
 
-# Add OpenSSL (from system)
-if (UNIX OR MINGW)
-    find_package(OpenSSL REQUIRED)
-    target_link_libraries(common PRIVATE OpenSSL::SSL OpenSSL::Crypto)
-endif()
+find_package(OpenSSL REQUIRED)
+target_link_libraries(common PRIVATE OpenSSL::SSL OpenSSL::Crypto)
 
 target_precompile_headers(common PUBLIC pch.h)

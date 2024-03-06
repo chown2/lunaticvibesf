@@ -10,6 +10,7 @@ endif()
 find_package(cereal CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(re2 CONFIG REQUIRED)
+find_package(CURL REQUIRED)
 
 if (${GRAPHICS_BACKEND} STREQUAL SDL2)
     set(GRAPHICS_BACKEND_SRC
@@ -92,17 +93,6 @@ add_library(gamelib
     arena/arena_client.cpp
 )
 
-if (UNIX OR MINGW)
-    target_link_libraries(gamelib PRIVATE -lpthread)
-    target_link_libraries(gamelib PRIVATE -lstdc++fs)
-    target_link_libraries(gamelib PRIVATE -lcrypto)
-    target_link_libraries(gamelib PRIVATE -lssl)
-    target_link_libraries(gamelib PRIVATE -lcurl)
-elseif (MSVC)
-    target_link_libraries(gamelib PRIVATE libcrypto.lib)
-    target_link_libraries(gamelib PRIVATE libssl.lib)
-    target_link_libraries(gamelib PRIVATE libcurl.lib)
-endif()
 
 target_include_directories(gamelib PUBLIC 
     ${PROJECT_INCLUDE_DIR}
@@ -112,14 +102,15 @@ set_target_properties(gamelib PROPERTIES
     CXX_STANDARD 17
 )
 
-target_link_libraries(gamelib 
+target_link_libraries(gamelib
     PUBLIC common
     PUBLIC config
     PUBLIC db
+    PUBLIC CURL::libcurl
+    PUBLIC cereal::cereal
     PUBLIC fmod
     PUBLIC imgui::imgui
     PUBLIC re2::re2
-    PUBLIC cereal::cereal
 )
 
 if (${GRAPHICS_BACKEND} STREQUAL SDL2)
