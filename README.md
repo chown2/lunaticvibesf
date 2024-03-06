@@ -33,46 +33,19 @@ For LR2 feature compatibility list, check out [the wiki](https://github.com/yaas
 
 ## Build
 
-### Windows (CMake + Visual Studio 2022)
+### Windows with Visual Studio
 
-1. Clone repository
-    ```
-    git clone https://github.com/yaasdf/lunaticvibes.git
-    cd lunaticvibes
-    git submodule update --init --recursive
-    ```
+Open the project's directory in Visual Studio, it should pick up CMake and install dependencies with vcpkg
+automatically.
 
-2. Configure / Build FFmpeg (Optional)
+### Linux
 
-    The configured header files are included now (see [#1](https://github.com/yaasdf/lunaticvibes/issues/1)), though it's recommended to configure FFmpeg yourself.
-
-    If you are going to configure FFmpeg, check out `ext/FFmpeg/build_lib.md` for instructions. Default configuration emits chunkload around 100MB
-
-
-3. Install dependencies via vcpkg (skip any you have already installed)
-    ```
-    vcpkg install openssl:x64-windows
-    vcpkg install boost:x64-windows
-    vcpkg install curl:x64-windows
-    ```
-
-4. Choose a generator to build
-
-    a. VS2022 (via console)
-
-        ```
-        mkdir build
-        cd build
-        cmake .. -G "Visual Studio 17 2022" -A x64
-        cmake --build . --config Release -j -t LunaticVibes
-        ```
-
-    b. Ninja (via IDE)
-
-        - Open project folder with Visual Studio
-        - Open CMake configuration, fill CMake toolchain file to the one from vcpkg like "D:/vcpkg/scripts/buildsystems/vcpkg.cmake"
-        - Build LunaticVibes.exe
-
+```sh
+# export VCPKG_ROOT=/path/to/vcpkg
+cmake --preset linux-vcpkg -B ./build
+cmake --build ./build --config=Debug -j
+ls build/bin/Debug
+```
 
 ## License
 * MIT License
