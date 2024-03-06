@@ -35,7 +35,9 @@ target_link_libraries(common
     PUBLIC taocpp::json
 )
 
-find_package(OpenSSL REQUIRED)
-target_link_libraries(common PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+if (LINUX)
+    find_package(OpenSSL REQUIRED)
+    target_link_libraries(common PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+endif()
 
 target_precompile_headers(common PUBLIC pch.h)

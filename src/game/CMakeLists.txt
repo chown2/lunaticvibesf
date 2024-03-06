@@ -148,7 +148,6 @@ set_target_properties(LunaticVibes PROPERTIES
 add_custom_command(TARGET LunaticVibes POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     $<TARGET_FILE:fmod>
-    $<$<BOOL:${USE_BUNDLED_SQLITE3}>:$<TARGET_FILE:${sqlite3_LIBRARY}>>
     $<TARGET_FILE_DIR:LunaticVibes>
 )
 
@@ -163,47 +162,3 @@ add_custom_command(TARGET LunaticVibes POST_BUILD
     ${CMAKE_SOURCE_DIR}/LICENSE_3RD_PARTY
     $<TARGET_FILE_DIR:LunaticVibes>/gamedata/resources/LICENSE_3RD_PARTY
 )
-
-if (WIN32)
-    if (BUILD_X64)
-        set(MINGW_LIB_DIR ${CMAKE_SOURCE_DIR}/ext/mingw/lib/x64)
-    else()
-        set(MINGW_LIB_DIR ${CMAKE_SOURCE_DIR}/ext/mingw/lib/x86)
-    endif()
-    file(GLOB MINGW_LIB_DLLS ${MINGW_LIB_DIR}/*.dll)
-    add_custom_command(TARGET LunaticVibes POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${MINGW_LIB_DLLS}
-        $<TARGET_FILE_DIR:LunaticVibes>
-    )
-endif()
-
-if (${GRAPHICS_BACKEND} STREQUAL SDL2 AND WIN32)
-    add_custom_command(TARGET LunaticVibes POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:SDL2>
-        $<TARGET_FILE:SDL2_image>
-        $<TARGET_FILE:SDL2_image::libjpeg>
-        $<TARGET_FILE:SDL2_image::libpng>
-        $<TARGET_FILE:SDL2_image::libtiff>
-        $<TARGET_FILE:SDL2_image::libwebp>
-        $<TARGET_FILE:SDL2_ttf>
-        $<TARGET_FILE:SDL2_ttf::libfreetype>
-        $<TARGET_FILE:SDL2_ttf::zlib>
-        $<TARGET_FILE_DIR:LunaticVibes>
-    )
-endif()
-
-if (${VIDEO_ENABLED} AND WIN32)
-    add_custom_command(TARGET LunaticVibes POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:libavcodec>
-        $<TARGET_FILE:libavdevice>
-        $<TARGET_FILE:libavfilter>
-        $<TARGET_FILE:libavformat>
-        $<TARGET_FILE:libswresample>
-        $<TARGET_FILE:libavutil>
-        $<TARGET_FILE:libswscale>
-        $<TARGET_FILE_DIR:LunaticVibes>
-    )
-endif()
