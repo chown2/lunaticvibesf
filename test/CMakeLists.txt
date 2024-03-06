@@ -9,6 +9,7 @@ add_executable(apptest EXCLUDE_FROM_ALL
     test_main.cpp
     test_config.cpp
     test_db.cpp
+    common/test_encoding.cpp
     common/test_fraction.cpp
     common/test_chartformat_bms.cpp
     game/test_graphics.cpp

@@ -1,0 +1,2 @@
+¾È³ç
+Lorem ipsum, does LR2 really handle EUC-KR?
