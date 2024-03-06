@@ -33,11 +33,17 @@ eFileEncoding getFileEncoding(std::istream& is)
 
     UchardetPtr det{uchardet_new()};
     if (det == nullptr)
+    {
+        LOG_ERROR << "uchardet_new() error";
         return eFileEncoding::LATIN1;
+    }
     for (std::string buf; std::getline(is, buf);)
     {
         if (uchardet_handle_data(det.get(), buf.data(), buf.size()) != 0)
-            return eFileEncoding::LATIN1;
+        {
+            LOG_ERROR << "uchardet_handle_data() error";
+            break;
+        }
     }
     uchardet_data_end(det.get());
 
@@ -46,6 +52,11 @@ eFileEncoding getFileEncoding(std::istream& is)
 
     const std::string_view charset = uchardet_get_charset(det.get());
     if (charset.empty())
+    {
+        LOG_ERROR << "uchardet_get_charset() error";
+        return eFileEncoding::LATIN1;
+    }
+    if (charset == "ASCII")
         return eFileEncoding::LATIN1;
     if (charset == "SHIFT_JIS")
         return eFileEncoding::SHIFT_JIS;
@@ -53,7 +64,7 @@ eFileEncoding getFileEncoding(std::istream& is)
         return eFileEncoding::EUC_KR;
     if (charset == "UTF-8")
         return eFileEncoding::UTF8;
-    LOG_VERBOSE << "file has an unsupported charset: " << charset;
+    LOG_ERROR << "file has an unsupported charset: " << charset;
     return eFileEncoding::LATIN1;
 }
 
