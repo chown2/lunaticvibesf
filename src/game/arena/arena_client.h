@@ -1,8 +1,8 @@
 #pragma once
+#include <array>
 #include <string>
 #include <vector>
 #include <future>
-#include <boost/array.hpp>
 #include <boost/asio.hpp>
 
 #include "common/types.h"

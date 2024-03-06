@@ -1,8 +1,8 @@
 #pragma once
 
+#include <array>
 #include <future>
 #include <shared_mutex>
-#include <boost/array.hpp>
 #include <boost/asio.hpp>
 
 #include "common/asynclooper.h"
