@@ -20,6 +20,7 @@ int main(int argc, char** argv)
     ConfigMgr::init();
     ConfigMgr::load();
 
+    ::testing::InitGoogleTest(&argc, argv);
     ::testing::InitGoogleMock(&argc, argv);
     
     int n = RUN_ALL_TESTS();
