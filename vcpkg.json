@@ -4,7 +4,26 @@
   "version": "0.11.0",
   "builtin-baseline": "90542a476c8ef3288039e2443a775e48db279173",
   "dependencies": [
+    "cereal",
     "curl",
-    "openssl"
+    "ffmpeg",
+    {
+      "name": "imgui",
+      "features": ["sdl2-binding", "sdl2-renderer-binding"]
+    },
+    "gtest",
+    "openssl",
+    "plog",
+    "re2",
+    "sdl2",
+    "sdl2-gfx",
+    {
+      "name": "sdl2-image",
+      "features": ["libjpeg-turbo"]
+    },
+    "sdl2-ttf",
+    "sqlite3",
+    "taocpp-json",
+    "yaml-cpp"
   ]
 }

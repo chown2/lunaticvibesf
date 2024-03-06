@@ -15,8 +15,8 @@
 #include "config/config_mgr.h"
 #include "common/sysutil.h"
 #include "imgui.h"
-#include "backends/imgui_impl_sdl2.h"
-#include "backends/imgui_impl_sdlrenderer.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_sdlrenderer2.h"
 #include <game/graphics/SDL2/input.h>
 #include <game/graphics/graphics.h>
 
@@ -186,7 +186,7 @@ int graphics_init()
     // imgui
     LOG_INFO << "Initializing ImGui for SDL renderer...";
     if (!ImGui_ImplSDL2_InitForSDLRenderer(gFrameWindow, gFrameRenderer) ||
-        !ImGui_ImplSDLRenderer_Init(gFrameRenderer))
+        !ImGui_ImplSDLRenderer2_Init(gFrameRenderer))
     {
         LOG_FATAL << "ImGui init failed.";
         return 3;
@@ -229,7 +229,7 @@ void graphics_flush()
         auto pData = ImGui::GetDrawData();
         if (pData != NULL)
         {
-            ImGui_ImplSDLRenderer_RenderDrawData(pData);
+            ImGui_ImplSDLRenderer2_RenderDrawData(pData);
         }
         SDL_RenderPresent(gFrameRenderer);
 
@@ -257,7 +257,7 @@ void graphics_flush()
 int graphics_free()
 {
     LOG_INFO << "Shutting down ImGui module...";
-    ImGui_ImplSDLRenderer_Shutdown();
+    ImGui_ImplSDLRenderer2_Shutdown();
     ImGui_ImplSDL2_Shutdown();
 
     LOG_INFO << "Releasing SDL resources...";
@@ -502,7 +502,7 @@ void event_handle()
 void ImGuiNewFrame()
 {
     SDL_SetRenderTarget(gFrameRenderer, NULL);
-    ImGui_ImplSDLRenderer_NewFrame();
+    ImGui_ImplSDLRenderer2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
     SDL_SetRenderTarget(gFrameRenderer, gInternalRenderTarget);

@@ -1,3 +1,15 @@
+if (${GRAPHICS_BACKEND} STREQUAL SDL2)
+    find_package(SDL2 CONFIG REQUIRED)
+    find_package(SDL2_image CONFIG REQUIRED)
+    find_package(SDL2_ttf CONFIG REQUIRED)
+    find_package(sdl2-gfx CONFIG REQUIRED)
+endif()
+if (${VIDEO_ENABLED})
+    find_package(FFMPEG REQUIRED)
+endif()
+find_package(cereal CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
+find_package(re2 CONFIG REQUIRED)
 
 if (${GRAPHICS_BACKEND} STREQUAL SDL2)
     set(GRAPHICS_BACKEND_SRC
@@ -100,32 +112,30 @@ set_target_properties(gamelib PROPERTIES
     CXX_STANDARD 17
 )
 
-
 target_link_libraries(gamelib 
     PUBLIC common
     PUBLIC config
     PUBLIC db
     PUBLIC fmod
-    PUBLIC imgui
-    PUBLIC re2
-    PUBLIC cereal
+    PUBLIC imgui::imgui
+    PUBLIC re2::re2
+    PUBLIC cereal::cereal
 )
 
 if (${GRAPHICS_BACKEND} STREQUAL SDL2)
     target_link_libraries(gamelib
-        PUBLIC SDL2::SDL2
+        PUBLIC $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
+        PUBLIC $<IF:$<TARGET_EXISTS:SDL2_image::SDL2_image>,SDL2_image::SDL2_image,SDL2_image::SDL2_image-static>
+        PUBLIC $<IF:$<TARGET_EXISTS:SDL2_ttf::SDL2_ttf>,SDL2_ttf::SDL2_ttf,SDL2_ttf::SDL2_ttf-static>
+        PUBLIC SDL2::SDL2_gfx
         PUBLIC SDL2::SDL2main
-        PUBLIC SDL2_gfx
-        PUBLIC SDL2_ttf
-        PUBLIC SDL2_image
     )
 endif()
 
 if (${VIDEO_ENABLED})
-    target_link_libraries(gamelib
-        PUBLIC
-        ${FFMPEG_LIBS}
-    )
+    target_include_directories(gamelib PUBLIC ${FFMPEG_INCLUDE_DIRS})
+    target_link_directories(gamelib PUBLIC ${FFMPEG_LIBRARY_DIRS})
+    target_link_libraries(gamelib PUBLIC ${FFMPEG_LIBRARIES})
 else()
     target_compile_definitions(gamelib PUBLIC -DVIDEO_DISABLED)
 endif()

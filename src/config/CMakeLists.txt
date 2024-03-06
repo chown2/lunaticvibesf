@@ -1,3 +1,5 @@
+find_package(yaml-cpp CONFIG REQUIRED)
+
 add_library(config STATIC
     config.cpp
     config_mgr.cpp
@@ -15,7 +17,7 @@ set_target_properties(config PROPERTIES
     CXX_STANDARD 17)
 
 target_link_libraries(config 
-    PUBLIC yaml-cpp
+    PUBLIC yaml-cpp::yaml-cpp
     PUBLIC common
 )
 

@@ -1,5 +1,9 @@
-enable_testing()
+find_package(plog CONFIG REQUIRED)
+find_package(GTest CONFIG REQUIRED)
+
 include(GoogleTest)
+
+enable_testing()
 
 add_executable(apptest EXCLUDE_FROM_ALL
     test_main.cpp
@@ -22,7 +26,7 @@ set_target_properties(apptest PROPERTIES
     
 target_link_libraries(apptest 
     PUBLIC gamelib
-    PUBLIC plog
+    PUBLIC plog::plog
 )
 target_include_directories(apptest PRIVATE
     ${PROJECT_INCLUDE_DIR}

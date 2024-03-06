@@ -1,3 +1,7 @@
+find_package(plog CONFIG REQUIRED)
+find_package(re2 CONFIG REQUIRED)
+find_package(taocpp-json CONFIG REQUIRED)
+
 add_library(common STATIC
     asynclooper.cpp
     encoding.cpp
@@ -22,10 +26,10 @@ target_include_directories(common PRIVATE
 
 set_target_properties(common PROPERTIES
     CXX_STANDARD 17)
-    
+
 target_link_libraries(common 
-    PUBLIC plog
-    PUBLIC re2
+    PUBLIC plog::plog
+    PUBLIC re2::re2
     PUBLIC taocpp::json
 )
 
