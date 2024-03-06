@@ -176,8 +176,6 @@ HashMD5 md5(const std::string& str)
 
 #ifdef WIN32
 
-// XXX: something here is wrong.
-
 HashMD5 md5(const char* str, size_t len)
 {
     HCRYPTPROV hProv = 0;
