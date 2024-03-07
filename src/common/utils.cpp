@@ -20,7 +20,7 @@
 #include <Windows.h>
 #include <wincrypt.h>
 #else
-#include <openssl/md5.h>
+#include <openssl/evp.h>
 #endif
 
 static const std::pair<RE2, re2::StringPiece> path_replace_pattern[]
@@ -243,34 +243,61 @@ static HashMD5 format_hash(const unsigned char* digest, size_t digest_size)
     return ret;
 }
 
-HashMD5 md5(std::string_view s)
+template <typename DigestUpdater> HashMD5 md5_impl(DigestUpdater updater)
 {
-    unsigned char digest[MD5_DIGEST_LENGTH] { 0 };
-    MD5((const unsigned char*)s.data(), s.size(), digest);
-    return format_hash(digest, MD5_DIGEST_LENGTH);
+    struct MdCtxDeleter
+    {
+        void operator()(EVP_MD_CTX *ctx)
+        {
+            EVP_MD_CTX_free(ctx);
+        }
+    };
+    auto ctx = std::unique_ptr<EVP_MD_CTX, MdCtxDeleter>(EVP_MD_CTX_new());
+    unsigned char digest[EVP_MAX_MD_SIZE];
+    unsigned int digest_len;
+
+    if (!EVP_DigestInit_ex2(ctx.get(), EVP_md5(), NULL))
+    {
+        LOG_ERROR << "EVP_DigestInit_ex2() failed";
+        return {};
+    };
+    if (!updater(ctx.get()))
+    {
+        LOG_ERROR << "digest updating failed";
+        return {};
+    }
+    if (!EVP_DigestFinal_ex(ctx.get(), digest, &digest_len))
+    {
+        LOG_ERROR << "EVP_DigestFinal_ex() failed";
+        return {};
+    };
+
+    return format_hash(digest, digest_len);
 }
 
-HashMD5 md5file(const Path& filePath)
+// TODO(C++20): take std::span instead
+HashMD5 md5(std::string_view s)
+{
+    return md5_impl([&](EVP_MD_CTX *context) { return EVP_DigestUpdate(context, s.data(), s.size()) != 0; });
+}
+
+HashMD5 md5file(const Path &filePath)
 {
     if (!fs::exists(filePath) || !fs::is_regular_file(filePath))
     {
         return {};
     }
     std::ifstream ifs{filePath, std::ios::binary};
-
-    MD5_CTX mdContext;
-
-    unsigned char digest[MD5_DIGEST_LENGTH] { 0 };
-    MD5_Init(&mdContext);
-    std::array<char, 1024> buf;
-    while (!ifs.eof())
-    {
-        ifs.read(buf.data(), buf.size());
-        MD5_Update(&mdContext, buf.data(), ifs.gcount());
-    }
-    MD5_Final(digest, &mdContext);
-
-    return format_hash(digest, MD5_DIGEST_LENGTH);
+    return md5_impl([&](EVP_MD_CTX *context) {
+        std::array<char, 1024> buf;
+        while (!ifs.eof())
+        {
+            ifs.read(buf.data(), buf.size());
+            if (!EVP_DigestUpdate(context, buf.data(), ifs.gcount()))
+                return false;
+        }
+        return true;
+    });
 }
 
 #endif
