@@ -1,0 +1,42 @@
+name: cool-workflow
+on: [push, workflow_dispatch]
+
+jobs:
+  job:
+    name: ${{ matrix.os }}-${{ github.workflow }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # TODO: add Windows builds to CI.
+        os: [ubuntu-22.04]
+
+    steps:
+      - name: Install apt dependencies
+        # nasm - ffmpeg build
+        run: sudo apt-get install nasm
+        if: startsWith(matrix.os, 'ubuntu')
+
+      - name: Install Python dependencies
+        # ninja - our build system
+        run: pip install ninja
+        if: startsWith(matrix.os, 'ubuntu')
+
+      - uses: actions/checkout@v4
+
+      - uses: lukka/get-cmake@v3.28.3
+
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+
+      - name: Configure project
+        run: cmake --preset linux-vcpkg -B ./build -DCMAKE_CXX_FLAGS="-fsanitize=address"
+
+      - name: Build (Debug)
+        run: cmake --build build --config=Debug
+
+      - name: Build (Release)
+        run: cmake --build build --config=Release
+
+        # TODO: run tests.
+
+        # TODO: archive and send to GitHub.

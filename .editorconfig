@@ -7,3 +7,7 @@ indent_style = space
 [vcpkg.json]
 indent_size = 2
 indent_style = space
+
+[.github/workflows/*.yml]
+indent_size = 2
+indent_style = space
