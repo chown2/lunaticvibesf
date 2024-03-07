@@ -15,7 +15,9 @@ add_executable(apptest
 target_link_libraries(apptest PUBLIC
     GTest::gtest GTest::gmock)
 
-gtest_discover_tests(apptest)
+gtest_discover_tests(apptest
+    WORKING_DIRECTORY "$<TARGET_FILE_DIR:apptest>"
+)
 
 set_target_properties(apptest PROPERTIES
     CXX_STANDARD 17
