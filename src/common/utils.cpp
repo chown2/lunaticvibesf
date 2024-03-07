@@ -112,7 +112,6 @@ int toInt(std::string_view str, int defVal) noexcept
     else
         return defVal;
 }
-int toInt(const std::string& str, int defVal) noexcept { return toInt(std::string_view(str)); }
 
 // string to double
 double toDouble(std::string_view str, double defVal) noexcept
@@ -123,7 +122,6 @@ double toDouble(std::string_view str, double defVal) noexcept
     else
         return defVal;
 }
-double toDouble(const std::string& str, double defVal) noexcept { return toDouble(std::string_view(str), defVal); }
 
 // strcasecmp
 bool strEqual(std::string_view str1, std::string_view str2, bool icase) noexcept
@@ -138,7 +136,6 @@ bool strEqual(std::string_view str1, std::string_view str2, bool icase) noexcept
         return str1 == str2;
     }
 }
-bool strEqual(const std::string& str1, std::string_view str2, bool icase) noexcept { return strEqual(std::string_view(str1), str2, icase); }
 
 // TODO(C++20): use std::span.
 std::string bin2hex(const void* bin, size_t size)
@@ -286,7 +283,6 @@ std::string toLower(std::string_view s)
 			c = c - 'A' + 'a';
 	return ret;
 }
-std::string toLower(const std::string& s) { return toLower(std::string_view(s)); }
 
 std::string toUpper(std::string_view s)
 {
@@ -296,7 +292,6 @@ std::string toUpper(std::string_view s)
 			c = c - 'a' + 'A';
 	return ret;
 }
-std::string toUpper(const std::string& s) { return toUpper(std::string_view(s)); }
 
 #ifndef WIN32
 

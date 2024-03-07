@@ -20,13 +20,10 @@ std::vector<Path> findFiles(Path path, bool recursive = false);
 bool isParentPath(Path parent, Path dir);
 
 // string to int
-int toInt(const std::string& str, int defVal = 0) noexcept;
 int toInt(std::string_view str, int defVal = 0) noexcept;
 // string to double
-double toDouble(const std::string& str, double defVal = 0.0) noexcept;
 double toDouble(std::string_view str, double defVal = 0.0) noexcept;
 // strcasecmp
-bool strEqual(const std::string& str1, std::string_view str2, bool icase = false) noexcept;
 bool strEqual(std::string_view str1, std::string_view str2, bool icase = false) noexcept;
 
 constexpr unsigned base36(char c)
@@ -63,9 +60,7 @@ std::string bin2hex(const void* bin, size_t size);
 std::string hex2bin(std::string_view hex);
 
 std::string toLower(std::string_view s);
-std::string toLower(const std::string& s);
 std::string toUpper(std::string_view s);
-std::string toUpper(const std::string& s);
 
 std::string convertLR2Path(const std::string& lr2path, const Path& relative_path);
 std::string convertLR2Path(const std::string& lr2path, const std::string& relative_path_utf8);
