@@ -29,7 +29,7 @@ set_target_properties(common PROPERTIES
     CXX_STANDARD 17)
 
 target_link_libraries(common 
-    PRIVATE uchardet::libuchardet
+    PUBLIC uchardet::libuchardet
     PUBLIC plog::plog
     PUBLIC re2::re2
     PUBLIC taocpp::json
