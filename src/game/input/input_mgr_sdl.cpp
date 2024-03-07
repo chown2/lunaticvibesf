@@ -1,4 +1,4 @@
-#ifndef WIN32
+#ifndef _WIN32
 #ifdef RENDER_SDL2
 
 #include "game/graphics/SDL2/input.h"
@@ -56,4 +56,4 @@ short getLastMouseWheelState()
 }
 
 #endif // RENDER_SDL2
-#endif // WIN32
+#endif // _WIN32

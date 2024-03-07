@@ -1,4 +1,4 @@
-#ifdef WIN32
+#ifdef _WIN32
 
 #include "input_dinput8.h"
 #include "common/log.h"

@@ -3274,7 +3274,7 @@ int SkinLR2::parseHeader(const Tokens& raw)
     {
         parseParamBuf[idx] = raw[idx + 1];
 
-#ifdef WIN32
+#ifdef _WIN32
         static const auto localeUTF8 = std::locale(".65001");
 #else
         static const auto localeUTF8 = std::locale("en_US.UTF-8");
@@ -3416,7 +3416,7 @@ int SkinLR2::parseBody(const Tokens &raw)
     {
         parseParamBuf[idx] = raw[idx + 1];
 
-#ifdef WIN32
+#ifdef _WIN32
         static const auto localeUTF8 = std::locale(".65001");
 #else
         static const auto localeUTF8 = std::locale("en_US.UTF-8");
