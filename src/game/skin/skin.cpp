@@ -171,7 +171,6 @@ void SkinBase::draw() const
 
 void SkinBase::startSpriteVideoPlayback()
 {
-#ifndef VIDEO_DISABLED
     for (auto& p : _sprites)
     {
         if (p->type() == SpriteTypes::VIDEO)
@@ -180,12 +179,10 @@ void SkinBase::startSpriteVideoPlayback()
             v->startPlaying();
         }
     }
-#endif
 }
 
 void SkinBase::stopSpriteVideoPlayback()
 {
-#ifndef VIDEO_DISABLED
     for (auto& p : _sprites)
     {
         if (p->type() == SpriteTypes::VIDEO)
@@ -194,7 +191,6 @@ void SkinBase::stopSpriteVideoPlayback()
             v->stopPlaying();
         }
     }
-#endif
 }
 
 bool SkinBase::textEditSpriteClicked() const

@@ -49,7 +49,6 @@ endif()
 
 # SDL2, 
 set(GRAPHICS_BACKEND SDL2 CACHE STRING "Graphics backend" )
-set(VIDEO_ENABLED TRUE CACHE BOOL "Build the app with video playback support")
 
 if (${GRAPHICS_BACKEND} STREQUAL SDL2)
     add_definitions(-DRENDER_SDL2)

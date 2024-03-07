@@ -1,6 +1,11 @@
 #pragma once
 
+#include <future>
 #include <set>
+#include <shared_mutex>
+
+#include "common/types.h"
+#include "graphics.h"
 
 inline const std::set<std::string> video_file_extensions =
 {
@@ -22,13 +27,6 @@ inline const std::set<std::string> video_file_extensions =
 	".mov",
 	".m1v",
 };
-
-#ifndef VIDEO_DISABLED
-
-#include <shared_mutex>
-#include <future>
-#include "common/types.h"
-#include "graphics.h"
 
 extern "C"
 {
@@ -107,14 +105,3 @@ public:
 	void seek(int64_t second, bool backwards = false);
 	
 };
-
-#else
-
-class sVideo
-{
-public:
-	sVideo() = default;
-	virtual ~sVideo() = default;
-};
-
-#endif

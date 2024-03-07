@@ -803,12 +803,8 @@ int SkinLR2::IMAGE()
 
         if (video_file_extensions.find(toLower(pathFile.extension().u8string())) != video_file_extensions.end())
         {
-#ifndef VIDEO_DISABLED
             videoNameMap[textureMapKey] = std::make_shared<sVideo>(pathFile, 1.0, true);
             textureNameMap[textureMapKey] = textureNameMap["White"];
-#else
-            textureNameMap[textureMapKey] = textureNameMap["Black"];
-#endif
         }
         else
         {
@@ -1354,14 +1350,12 @@ ParseRet SkinLR2::SRC_IMAGE()
 {
     lr2skin::s_basic d(parseParamBuf, csvLineNumber);
 
-#ifndef VIDEO_DISABLED
     if (useVideo && videoBuf && videoBuf->haveVideo)
     {
         auto psv = std::make_shared<SpriteVideo>(d.w, d.h, videoBuf, csvLineNumber);
         _sprites.push_back(psv);
     }
     else
-#endif
     {
         SpriteAnimated::SpriteAnimatedBuilder builder;
         builder.srcLine = csvLineNumber;

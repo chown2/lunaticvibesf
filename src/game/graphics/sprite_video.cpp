@@ -1,5 +1,3 @@
-#ifndef VIDEO_DISABLED
-
 #include <thread>
 #include <chrono>
 #include "sprite_video.h"
@@ -37,5 +35,3 @@ void SpriteVideo::stopPlaying()
 	if (!pVid) return;
 	pVid->stop();
 }
-
-#endif

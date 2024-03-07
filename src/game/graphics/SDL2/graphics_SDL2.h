@@ -1,18 +1,16 @@
 #pragma once
 
-#ifndef VIDEO_DISABLED
-#include "SDL_video.h"
-#endif
+#include <SDL_filesystem.h>
+#include <SDL_image.h>
+#include <SDL_render.h>
+#include <SDL_ttf.h>
+#include <SDL_video.h>
 
-#include "SDL_render.h"
-#include "SDL_image.h"
-#include "SDL_filesystem.h"
-#include "SDL_ttf.h"
-#include <vector>
-#include <memory>
-#include <string>
 #include <filesystem>
+#include <memory>
 #include <shared_mutex>
+#include <string>
+#include <vector>
 
 // global control pointer, do not modify
 inline SDL_Renderer* gFrameRenderer;

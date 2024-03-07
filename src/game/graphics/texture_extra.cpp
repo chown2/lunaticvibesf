@@ -9,8 +9,6 @@
 #include "common/utils.h"
 #include "common/log.h"
 
-#ifndef VIDEO_DISABLED
-
 extern "C"
 {
 #include "libavcodec/avcodec.h"
@@ -158,8 +156,6 @@ void TextureVideo::updateAll()
 	}
 }
 
-#endif
-
 bool TextureBmsBga::addBmp(size_t idx, Path pBmp)
 {
 	if (idx == size_t(-1)) return false;
@@ -177,15 +173,10 @@ bool TextureBmsBga::addBmp(size_t idx, Path pBmp)
 	{
 		if (video_file_extensions.find(toLower(pBmp.extension().u8string())) != video_file_extensions.end())
 		{
-#ifndef VIDEO_DISABLED
 			objs[idx].type = obj::Ty::VIDEO;
 			objs[idx].pt = std::make_shared<TextureVideo>(std::make_shared<sVideo>(pBmp, gSelectContext.pitchSpeed, false));
 			LOG_DEBUG << "[TextureBmsBga] added video: " << pBmp.u8string();
 			return true;
-#else
-			LOG_DEBUG << "[TextureBmsBga] video support is disabled: " << pBmp.u8string();
-			return false;
-#endif
 		}
 		else
 		{
@@ -267,11 +258,9 @@ void TextureBmsBga::seek(const lunaticvibes::Time& t)
 				slotIt = it;
 				if (objs[idx].type == obj::Ty::VIDEO)
 				{
-#ifndef VIDEO_DISABLED
 					auto pt = std::reinterpret_pointer_cast<TextureVideo>(objs[idx].pt);
 					pt->seek((t - time).norm() / 1000);
 					pt->update();
-#endif
 				}
 				return;
 			}
@@ -301,14 +290,12 @@ void TextureBmsBga::update(const lunaticvibes::Time& t, bool poor)
 				slotIdx = idx;
 				slotIt = it;
 
-#ifndef VIDEO_DISABLED
 				if (it != slot.end() && slotIdx != INDEX_INVALID && objs[slotIdx].type == obj::Ty::VIDEO)
 				{
 					auto pt = std::reinterpret_pointer_cast<TextureVideo>(objs[it->second].pt);
 					pt->start();
 					//pt->update();	// Do NOT call update here; videos are updated in main thread with TextureVideo::updateAll()
 				}
-#endif
 			}
 		}
 
@@ -440,11 +427,9 @@ void TextureBmsBga::reset()
 			auto[time, idx] = *it;
 			if (objs[idx].type == obj::Ty::VIDEO)
 			{
-#ifndef VIDEO_DISABLED
 				auto pt = std::reinterpret_pointer_cast<TextureVideo>(objs[idx].pt);
 				pt->stopUpdate();
 				pt->stop();
-#endif
 			}
 		}
 		//slotIt = slot.end();	// not found
@@ -475,7 +460,6 @@ void TextureBmsBga::setLoaded()
 
 void TextureBmsBga::stopUpdate()
 {
-#ifndef VIDEO_DISABLED
 	auto resetSub = [this](decltype(baseSlot)& slot)
 	{
 		for (auto it = slot.begin(); it != slot.end(); ++it)	// search from beginning
@@ -493,12 +477,10 @@ void TextureBmsBga::stopUpdate()
 	resetSub(baseSlot);
 	resetSub(layerSlot);
 	resetSub(poorSlot);
-#endif
 }
 
 void TextureBmsBga::setVideoSpeed()
 {
-#ifndef VIDEO_DISABLED
 	auto setSpeed = [this](decltype(baseSlot)& slot)
 	{
 		for (auto it = slot.begin(); it != slot.end(); ++it)	// search from beginning
@@ -516,7 +498,6 @@ void TextureBmsBga::setVideoSpeed()
 	setSpeed(baseSlot);
 	setSpeed(layerSlot);
 	setSpeed(poorSlot);
-#endif
 }
 
 TextureDynamic::TextureDynamic() : Texture(nullptr, 0, 0)

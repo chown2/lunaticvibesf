@@ -176,10 +176,8 @@ int graphics_init()
         LOG_INFO << "[SDL2] SDL2_TTF init finished. Version " << SDL_TTF_MAJOR_VERSION << '.' << SDL_TTF_MINOR_VERSION << "." << SDL_TTF_PATCHLEVEL;
     }
 
-#ifndef VIDEO_DISABLED
 	// libav
 	video_init();
-#endif
 
     // imgui
     LOG_INFO << "Initializing ImGui for SDL renderer...";

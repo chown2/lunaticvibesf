@@ -169,10 +169,8 @@ void SceneBase::update()
 
         }
 
-#ifndef VIDEO_DISABLED
         // update videos
         TextureVideo::updateAll();
-#endif
     }
 
     // ImGui

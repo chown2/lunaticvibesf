@@ -1,5 +1,4 @@
 #pragma once
-#ifndef VIDEO_DISABLED
 
 #include "sprite.h"
 #include "game/graphics/texture_extra.h"
@@ -23,23 +22,3 @@ public:
 	void startPlaying();
 	void stopPlaying();
 };
-
-/*
-class SpriteBmsBga : public SpriteStatic
-{
-protected:
-	int w, h;
-	size_t prevIdx = INDEX_INVALID;
-	unsigned prevDecodedFrames;
-
-public:
-	SpriteBmsBga(int w, int h, std::shared_ptr<TextureBmsBga> pt) : SpriteStatic(pt, { 0, 0, w, h }), w(w), h(h) { _type = SpriteTypes::BMS_BGA; }
-	virtual ~SpriteBmsBga() = default;
-
-public:
-	//virtual bool update(timestamp t) override;
-	//virtual void draw() const override;
-};
-*/
-
-#endif
