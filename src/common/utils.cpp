@@ -140,6 +140,7 @@ bool strEqual(std::string_view str1, std::string_view str2, bool icase) noexcept
 }
 bool strEqual(const std::string& str1, std::string_view str2, bool icase) noexcept { return strEqual(std::string_view(str1), str2, icase); }
 
+// TODO(C++20): use std::span.
 std::string bin2hex(const void* bin, size_t size)
 {
     std::string res;
@@ -153,7 +154,7 @@ std::string bin2hex(const void* bin, size_t size)
     }
     return res;
 }
-std::string hex2bin(const std::string& hex)
+std::string hex2bin(std::string_view hex)
 {
     std::string res;
     res.resize(hex.length() / 2 + 1);

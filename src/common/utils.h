@@ -60,7 +60,7 @@ constexpr unsigned base16(const char* c)
 }
 
 std::string bin2hex(const void* bin, size_t size);
-std::string hex2bin(const std::string& hex);
+std::string hex2bin(std::string_view hex);
 
 std::string toLower(std::string_view s);
 std::string toLower(const std::string& s);
