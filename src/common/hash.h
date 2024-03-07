@@ -81,6 +81,5 @@ struct std::hash<Hash<_Len>>
 typedef Hash<16> HashMD5;
 typedef Hash<32> HashSHA1;
 
-HashMD5 md5(const std::string& str);
-HashMD5 md5(const char* str, size_t len);
+HashMD5 md5(std::string_view str);
 HashMD5 md5file(const Path& filePath);

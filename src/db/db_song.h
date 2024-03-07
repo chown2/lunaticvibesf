@@ -8,7 +8,8 @@
 #include "common/entry/entry_folder.h"
 #include "common/entry/entry_song.h"
 
-inline const HashMD5 ROOT_FOLDER_HASH = md5("", 0);
+// FIXME: use "__root_folder" or something, currently something somewhere assumes empty string here.
+inline const HashMD5 ROOT_FOLDER_HASH = md5({});
 
 /* TABLE folder:
     md5(TEXT), parent(TEXT), path(TEXT), name(TEXT), type(INTEGER), removed(INTEGER)
