@@ -13,15 +13,15 @@ eChartFormat analyzeChartType(const Path& p)
     auto extension = p.extension().u8string();
     if (extension.length() == 4)
     {
-        if (strEqual(extension, ".bms", true) ||
-            strEqual(extension, ".bme", true) ||
-            strEqual(extension, ".bml", true) ||
-            strEqual(extension, ".pms", true))
+        if (lunaticvibes::iequals(extension, ".bms") ||
+            lunaticvibes::iequals(extension, ".bme") ||
+            lunaticvibes::iequals(extension, ".bml") ||
+            lunaticvibes::iequals(extension, ".pms"))
             fmt = eChartFormat::BMS;
     }
     else if (extension.length() == 6)
     {
-        if (strEqual(extension, ".bmson", true))
+        if (lunaticvibes::iequals(extension, ".bmson"))
             fmt = eChartFormat::BMSON;
     }
 

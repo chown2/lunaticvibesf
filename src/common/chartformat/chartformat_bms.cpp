@@ -8,6 +8,8 @@
 #include <filesystem>
 #include <numeric>
 #include <random>
+
+#include "common/utils.h"
 #include "db/db_song.h"
 #include "re2/re2.h"
 #include <boost/algorithm/string.hpp>
@@ -16,15 +18,15 @@ class noteLineException : public std::exception {};
 
 bool ChartFormatBMS::getExtendedProperty(const std::string& key, void* ret)
 {
-    if (strEqual(key, "PLAYER", true))
+    if (lunaticvibes::iequals(key, "PLAYER"))
     {
         *(int*)ret = player;
     }
-    else if (strEqual(key, "RANK", true))
+    else if (lunaticvibes::iequals(key, "RANK"))
     {
         *(int*)ret = rank;
     }
-    else if (strEqual(key, "TOTAL", true))
+    else if (lunaticvibes::iequals(key, "TOTAL"))
     {
         *(int*)ret = total;
     }
@@ -79,7 +81,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
 
     LOG_DEBUG << "[BMS] File (" << getFileEncodingName(encoding) << "): " << absolutePath.u8string();
 
-    if (toLower(filePath.extension().u8string()) == u8".pms")
+    if (lunaticvibes::iequals(filePath.extension().u8string(), ".pms"))
     {
         isPMS = true;
     }
@@ -129,9 +131,9 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
             {
                 StringContentView v = buf;
                 if (ifValue.empty() && !v.empty() && v[0] == '#' &&
-                    !strEqual(v.substr(0, 3), "#IF", true) && 
-                    !strEqual(v.substr(0, 6), "#ENDIF", true) && 
-                    !strEqual(v.substr(0, 10), "#ENDRANDOM", true))
+                    !lunaticvibes::iequals(v.substr(0, 3), "#IF") &&
+                    !lunaticvibes::iequals(v.substr(0, 6), "#ENDIF") &&
+                    !lunaticvibes::iequals(v.substr(0, 10), "#ENDRANDOM"))
                 {
                     LOG_WARNING << "[BMS] definition found after all IF blocks finished, assuming #ENDRANDOM is missing. " << absolutePath.u8string() << "@" << srcLine;
                     randomValueMax.pop();
@@ -141,7 +143,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
                 }
             }
 
-            if (spacePos > 1 && strEqual(buf.substr(0, 7), "#RANDOM", true))
+            if (spacePos > 1 && lunaticvibes::iequals(buf.substr(0, 7), "#RANDOM"))
             {
                 StringContentView value = spacePos < buf.length() ? buf.substr(spacePos + 1) : "";
                 int iValue = toInt(value);
@@ -171,7 +173,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
                 {
                     StringContentView key = buf.substr(1, spacePos - 1);
                     StringContentView value = spacePos < buf.length() ? buf.substr(spacePos + 1) : "";
-                    if (strEqual(key, "IF", true))
+                    if (lunaticvibes::iequals(key, "IF"))
                     {
                         int ifBlockValue = toInt(value);
                         if (randomUsedValues.top().find(ifBlockValue) != randomUsedValues.top().end())
@@ -189,7 +191,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
 
                         ifValue.push(ifBlockValue);
                     }
-                    else if (strEqual(key, "ENDIF", true))
+                    else if (lunaticvibes::iequals(key, "ENDIF"))
                     {
                         if (!ifValue.empty())
                         {
@@ -201,7 +203,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
                             LOG_WARNING << "[BMS] unexpected #ENDIF found. " << absolutePath.u8string() << "@" << srcLine;
                         }
                     }
-                    else if (strEqual(key, "ENDRANDOM", true))
+                    else if (lunaticvibes::iequals(key, "ENDRANDOM"))
                     {
                         if (!ifValue.empty())
                         {
@@ -272,41 +274,41 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
                 if (value.empty()) continue;
 
                 // digits
-                if (strEqual(key, "PLAYER", true))
+                if (lunaticvibes::iequals(key, "PLAYER"))
                     player = toInt(value);
-                else if (strEqual(key, "RANK", true))
+                else if (lunaticvibes::iequals(key, "RANK"))
                     rank = toInt(value);
-                else if (strEqual(key, "TOTAL", true))
+                else if (lunaticvibes::iequals(key, "TOTAL"))
                     total = toInt(value);
-                else if (strEqual(key, "PLAYLEVEL", true))
+                else if (lunaticvibes::iequals(key, "PLAYLEVEL"))
                 {
                     playLevel = toInt(value);
                     levelEstimated = double(playLevel);
                 }
-                else if (strEqual(key, "DIFFICULTY", true))
+                else if (lunaticvibes::iequals(key, "DIFFICULTY"))
                 {
                     difficulty = toInt(value);
                     hasDifficulty = true;
                 }
-                else if (strEqual(key, "BPM", true))
+                else if (lunaticvibes::iequals(key, "BPM"))
                     bpm = toDouble(value);
 
                 // strings
-                else if (strEqual(key, "TITLE", true))
+                else if (lunaticvibes::iequals(key, "TITLE"))
                     title.assign(value.begin(), value.end());
-                else if (strEqual(key, "SUBTITLE", true))
+                else if (lunaticvibes::iequals(key, "SUBTITLE"))
                     title2.assign(value.begin(), value.end());
-                else if (strEqual(key, "ARTIST", true))
+                else if (lunaticvibes::iequals(key, "ARTIST"))
                     artist.assign(value.begin(), value.end());
-                else if (strEqual(key, "SUBARTIST", true))
+                else if (lunaticvibes::iequals(key, "SUBARTIST"))
                     artist2.assign(value.begin(), value.end());
-                else if (strEqual(key, "GENRE", true))
+                else if (lunaticvibes::iequals(key, "GENRE"))
                     genre.assign(value.begin(), value.end());
-                else if (strEqual(key, "STAGEFILE", true))
+                else if (lunaticvibes::iequals(key, "STAGEFILE"))
                     stagefile.assign(value.begin(), value.end());
-                else if (strEqual(key, "BANNER", true))
+                else if (lunaticvibes::iequals(key, "BANNER"))
                     banner.assign(value.begin(), value.end());
-                else if (strEqual(key, "LNOBJ", true) && value.length() >= 2)
+                else if (lunaticvibes::iequals(key, "LNOBJ") && value.length() >= 2)
                 {
                     if (!lnobjSet.empty())
                     {

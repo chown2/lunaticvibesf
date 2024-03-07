@@ -2881,7 +2881,7 @@ void SceneSelect::updatePreview()
                 // check if #PREVIEW is valid
                 for (auto& [key, val] : bms->extraCommands)
                 {
-                    if (strEqual(key, "PREVIEW", true) && !val.empty())
+                    if (lunaticvibes::iequals(key, "PREVIEW") && !val.empty())
                     {
                         Path pWav = fs::u8path(val);
                         if (!pWav.is_absolute())
@@ -2897,7 +2897,7 @@ void SceneSelect::updatePreview()
                 {
                     for (auto& f : fs::directory_iterator(bms->getDirectory()))
                     {
-                        if (strEqual(f.path().filename().u8string().substr(0, 7), "preview", true))
+                        if (lunaticvibes::iequals(f.path().filename().u8string().substr(0, 7), "preview"))
                         {
                             Path pWav = f.path();
                             if (SoundMgr::loadNoteSample(pWav, 0) == 0)

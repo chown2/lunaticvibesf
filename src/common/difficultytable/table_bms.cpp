@@ -176,7 +176,7 @@ GetResult GET(const std::string& url, std::string& result)
 
 void DifficultyTableBMS::updateFromUrl(std::function<void(DifficultyTable::UpdateResult)> finishedCallback)
 {
-	if (!strEqual(url.substr(0, 7), "http://", true) && !strEqual(url.substr(0, 8), "https://", true) ||
+	if (!lunaticvibes::iequals(url.substr(0, 7), "http://") && !lunaticvibes::iequals(url.substr(0, 8), "https://") ||
 		url.substr(8).find('/') == url.npos)
 	{
 		LOG_ERROR << "[TableBMS] URL error: " << url;
@@ -189,7 +189,7 @@ void DifficultyTableBMS::updateFromUrl(std::function<void(DifficultyTable::Updat
 
 	// parse HTML
 	webUrl = url;
-	if (!strEqual(webUrl.substr(webUrl.length() - 5), ".json", true))
+	if (!lunaticvibes::iequals(webUrl.substr(webUrl.length() - 5), ".json"))
 	{
 		std::string headerFileName;
 		std::string body;
@@ -223,7 +223,7 @@ void DifficultyTableBMS::updateFromUrl(std::function<void(DifficultyTable::Updat
 
 		if (!headerFileName.empty())
 		{
-			if (strEqual(headerFileName.substr(0, 7), "http://", true) || strEqual(headerFileName.substr(0, 8), "https://", true))
+			if (lunaticvibes::iequals(headerFileName.substr(0, 7), "http://") || lunaticvibes::iequals(headerFileName.substr(0, 8), "https://"))
 				headerUrl = headerFileName;
 			else
 				headerUrl = remotePath + headerFileName;
@@ -276,7 +276,7 @@ void DifficultyTableBMS::updateFromUrl(std::function<void(DifficultyTable::Updat
 
 		if (!data_url.empty() && !name.empty())
 		{
-			if (strEqual(data_url.substr(0, 7), "http://", true) || strEqual(data_url.substr(0, 8), "https://", true))
+			if (lunaticvibes::iequals(data_url.substr(0, 7), "http://") || lunaticvibes::iequals(data_url.substr(0, 8), "https://"))
 				dataUrl = data_url;
 			else
 				dataUrl = remotePath + data_url;

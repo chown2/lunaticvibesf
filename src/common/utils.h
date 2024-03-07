@@ -23,8 +23,11 @@ bool isParentPath(Path parent, Path dir);
 int toInt(std::string_view str, int defVal = 0) noexcept;
 // string to double
 double toDouble(std::string_view str, double defVal = 0.0) noexcept;
+
+namespace lunaticvibes {
 // strcasecmp
-bool strEqual(std::string_view str1, std::string_view str2, bool icase = false) noexcept;
+bool iequals(std::string_view lhs, std::string_view rhs) noexcept;
+} // namespace lunaticvibes
 
 constexpr unsigned base36(char c)
 {

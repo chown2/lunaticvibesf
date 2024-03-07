@@ -63,11 +63,11 @@ int graphics_init()
         flags |= SDL_WINDOW_RESIZABLE;
 #endif
         auto mode = ConfigMgr::get("V", cfg::V_WINMODE, cfg::V_WINMODE_WINDOWED);
-        if (strEqual(mode, cfg::V_WINMODE_BORDERLESS, true))
+        if (lunaticvibes::iequals(mode, cfg::V_WINMODE_BORDERLESS))
         {
             flags |= SDL_WINDOW_BORDERLESS;
         }
-        else if (strEqual(mode, cfg::V_WINMODE_FULL, true))
+        else if (lunaticvibes::iequals(mode, cfg::V_WINMODE_FULL))
         {
             flags |= SDL_WINDOW_FULLSCREEN;
         }

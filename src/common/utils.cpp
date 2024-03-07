@@ -103,38 +103,26 @@ bool isParentPath(Path parent, Path dir)
     return pair.second == parent.end();
 }
 
-// string to int
 int toInt(std::string_view str, int defVal) noexcept
 {
     int val = 0;
     if (auto [p, ec] = std::from_chars(str.data(), str.data() + str.size(), val); ec == std::errc())
         return val;
-    else
-        return defVal;
+    return defVal;
 }
 
-// string to double
 double toDouble(std::string_view str, double defVal) noexcept
 {
     double val = 0;
     if (auto [p, ec] = std::from_chars(str.data(), str.data() + str.size(), val); ec == std::errc())
         return val;
-    else
-        return defVal;
+    return defVal;
 }
 
-// strcasecmp
-bool strEqual(std::string_view str1, std::string_view str2, bool icase) noexcept
+bool lunaticvibes::iequals(std::string_view lhs, std::string_view rhs) noexcept
 {
-    if (icase)
-    {
-        return std::equal(std::execution::seq, str1.begin(), str1.end(), str2.begin(), str2.end(),
-            [](char c1, char c2) { return std::tolower(c1) == std::tolower(c2); });
-    }
-    else
-    {
-        return str1 == str2;
-    }
+    return std::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(),
+        [](unsigned char l, unsigned char r) { return std::tolower(l) == std::tolower(r); });
 }
 
 // TODO(C++20): use std::span.
@@ -381,7 +369,7 @@ static std::string resolveCaseInsensitivePath(std::string input)
 
         for (const auto& dir_entry : std::filesystem::directory_iterator(out)) {
             const auto dir_entry_name = dir_entry.path().filename().u8string();
-            if (strEqual(dir_entry_name, segment, true)) {
+            if (lunaticvibes::iequals(dir_entry_name, segment)) {
                 found_entry = true;
                 out += dir_entry_name;
                 break;
@@ -452,7 +440,7 @@ std::string convertLR2Path(const std::string& lr2path, std::string_view relative
     }
     prefix = raw.substr(0, 8);
     std::string out_path;
-    if (strEqual(prefix, "LR2files", true))
+    if (lunaticvibes::iequals(prefix, "LR2files"))
     {
         Path path = PathFromUTF8(lr2path);
         path /= PathFromUTF8(raw);

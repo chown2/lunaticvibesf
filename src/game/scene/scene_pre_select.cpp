@@ -329,7 +329,8 @@ void ScenePreSelect::updateLoadCourses()
             LOG_INFO << "[List] Loading courses from courses/*.lr2crs...";
             for (auto& courseFile : fs::recursive_directory_iterator(coursePath))
             {
-                if (!(fs::is_regular_file(courseFile) && strEqual(courseFile.path().extension().u8string(), ".lr2crs", true)))
+                if (!(fs::is_regular_file(courseFile)
+                        && lunaticvibes::iequals(courseFile.path().extension().u8string(), ".lr2crs")))
                     continue;
 
                 Path coursePath = courseFile.path();

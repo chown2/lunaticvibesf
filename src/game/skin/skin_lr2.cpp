@@ -577,7 +577,7 @@ int SkinLR2::setExtendedProperty(std::string&& key, void* value)
 bool matchToken(const StringContent& str1, std::string_view str2) noexcept
 {
     if (str1.length() >= str2.length()) 
-        return strEqual(std::string_view(str1.c_str(), str2.length()), str2, true); 
+        return lunaticvibes::iequals(std::string_view(str1.c_str(), str2.length()), str2);
     else
         return false;
 }
@@ -761,14 +761,14 @@ Tokens SkinLR2::csvLineTokenize(const std::string& raw)
     }
 
     // #ELSE
-    if (res.size() == 1 && strEqual(res[0], "#ELSE", true))
+    if (res.size() == 1 && lunaticvibes::iequals(res[0], "#ELSE"))
     {
         LOG_DEBUG << "[Skin] Ignored #ELSE without trailing comma. Line: " << csvLineNumber;
         res.clear();
     }
 
     // last param
-    if (!res.empty() && (strEqual(res[0], "#IF", true) || strEqual(res[0], "#ELSEIF", true)) && res.back().length() == 1)
+    if (!res.empty() && (lunaticvibes::iequals(res[0], "#IF") || lunaticvibes::iequals(res[0], "#ELSEIF")) && res.back().length() == 1)
     {
         LOG_DEBUG << "[Skin] Ignored last parameter with 1 character long. Don't forget the trailing comma! Line: " << csvLineNumber;
         res.pop_back();
@@ -782,7 +782,7 @@ int SkinLR2::IMAGE()
 {
     if (!matchToken(parseKeyBuf, "#IMAGE")) return 0;
 
-    if (strEqual(parseParamBuf[0], "CONTINUE", true))
+    if (lunaticvibes::iequals(parseParamBuf[0], "CONTINUE"))
     {
         std::string textureMapKey = std::to_string(imageCount);
         if (prevSkinTextureNameMap.find(textureMapKey) != prevSkinTextureNameMap.end())
@@ -833,7 +833,7 @@ int SkinLR2::LR2FONT()
         return 1;
     }
 
-    if (strEqual(parseParamBuf[0], "CONTINUE", true))
+    if (lunaticvibes::iequals(parseParamBuf[0], "CONTINUE"))
     {
         // create a blank texture if not exist
         std::string fontNameKey = std::to_string(LR2FontNameMap.size());
@@ -3497,7 +3497,7 @@ void SkinLR2::IF(const Tokens &t, std::istream& lr2skin, eFileEncoding enc, bool
     }
 
     bool ifStmtTrue = false;
-    if (ifUnsatisfied && strEqual(t[0], "#ELSE", true))
+    if (ifUnsatisfied && lunaticvibes::iequals(t[0], "#ELSE"))
     {
         ifStmtTrue = true;
     }

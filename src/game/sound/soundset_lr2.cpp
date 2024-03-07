@@ -131,7 +131,7 @@ bool SoundSetLR2::parseHeader(const std::vector<StringContent>& tokens)
 {
     StringContentView key = tokens[0];
 
-    if (strEqual(key, "#INFORMATION", true))
+    if (lunaticvibes::iequals(key, "#INFORMATION"))
     {
         if (tokens.size() > 2) name = tokens[2];
         if (tokens.size() > 3) maker = tokens[3];
@@ -139,7 +139,7 @@ bool SoundSetLR2::parseHeader(const std::vector<StringContent>& tokens)
 
         return true;
     }
-    else if (strEqual(key, "#CUSTOMFILE", true))
+    else if (lunaticvibes::iequals(key, "#CUSTOMFILE"))
     {
         auto& title(tokens[1]);
         auto& path(tokens[2]);
@@ -207,7 +207,7 @@ bool SoundSetLR2::parseBody(const std::vector<StringContent>& tokens)
     };
     for (auto& k : soundKeys)
     {
-        if (strEqual(k, key, true))
+        if (lunaticvibes::iequals(k, key))
         {
             loadPath(k, tokens[1]);
 
