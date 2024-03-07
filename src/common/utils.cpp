@@ -139,11 +139,12 @@ std::string bin2hex(const void* bin, size_t size)
     }
     return res;
 }
+
 std::string hex2bin(std::string_view hex)
 {
     std::string res;
     res.resize(hex.length() / 2 + 1);
-    for (size_t i = 0, j = 0; i < hex.length(); i += 2, j++)
+    for (size_t i = 0, j = 0; i < hex.length() - 1; i += 2, j++)
     {
         unsigned char &c = ((unsigned char&)res[j]);
         char c1 = tolower(hex[i]);
@@ -154,7 +155,6 @@ std::string hex2bin(std::string_view hex)
     res[res.length() - 1] = '\0';
     return res;
 }
-
 
 #ifdef WIN32
 
