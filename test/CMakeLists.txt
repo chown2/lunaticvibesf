@@ -3,8 +3,6 @@ find_package(GTest CONFIG REQUIRED)
 
 include(GoogleTest)
 
-enable_testing()
-
 add_executable(apptest EXCLUDE_FROM_ALL
     test_main.cpp
     test_config.cpp

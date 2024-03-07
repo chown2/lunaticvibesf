@@ -73,5 +73,6 @@ add_subdirectory(src)
 
 option(BUILD_TEST "Enable building gtest targets" YES)
 if (${BUILD_TEST})
+    enable_testing()
     add_subdirectory(test)
 endif()
