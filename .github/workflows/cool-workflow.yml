@@ -37,6 +37,7 @@ jobs:
       - name: Build (Release)
         run: cmake --build build --config=Release
 
-        # TODO: run tests.
+      - name: Run tests
+        run: ctest --test-dir build
 
         # TODO: archive and send to GitHub.
