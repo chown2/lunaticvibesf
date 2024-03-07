@@ -8,6 +8,10 @@
 #include <string>
 #include <thread>
 
+#include <unistd.h>
+
+#include "common/utils.h"
+
 static std::thread::id s_main_thread {};
 
 void SetThreadAsMainThread()

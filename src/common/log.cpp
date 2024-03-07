@@ -1,6 +1,9 @@
 #include "log.h"
 
-#include "common/log.h"
+#include <memory>
+#include <sstream>
+
+#include "common/utils.h"
 #include <plog/Init.h>
 #include <plog/Formatters/TxtFormatter.h>
 

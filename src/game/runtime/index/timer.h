@@ -1,5 +1,7 @@
 #pragma once
 
+#include <climits>
+
 /*
 * !!! WARNING !!!
 * These indices are currently DIRECTLY casted to LR2skin indices.

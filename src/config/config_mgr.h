@@ -1,12 +1,16 @@
 #pragma once
-#include "cfg_general.h"
-#include "cfg_profile.h"
-#include "cfg_input.h"
-#include "cfg_skin.h"
+
+#include <mutex>
 #include <string>
 #include <memory>
 #include <filesystem>
 #include <shared_mutex>
+
+#include "common/log.h"
+#include "config/cfg_general.h"
+#include "config/cfg_input.h"
+#include "config/cfg_profile.h"
+#include "config/cfg_skin.h"
 
 class ConfigMgr
 {

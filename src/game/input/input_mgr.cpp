@@ -1,4 +1,5 @@
 #include "common/log.h"
+#include "common/types.h"
 #include "input_mgr.h"
 #include "common/sysutil.h"
 #include "config/config_mgr.h"

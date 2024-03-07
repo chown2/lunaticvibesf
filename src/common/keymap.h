@@ -1,5 +1,9 @@
 #pragma once
 
+#include <cassert>
+#include <string_view>
+#include <string>
+
 #include <stddef.h>
 
 namespace Input

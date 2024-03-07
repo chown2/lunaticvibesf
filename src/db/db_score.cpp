@@ -1,6 +1,13 @@
 #include "db_score.h"
-#include "common/types.h"
+
+#include <any>
+#include <memory>
+#include <unordered_map>
+#include <vector>
+
 #include "common/log.h"
+#include "common/types.h"
+#include "common/hash.h"
 
 const char* CREATE_SCORE_BMS_TABLE_STR =
 "CREATE TABLE IF NOT EXISTS score_bms( "

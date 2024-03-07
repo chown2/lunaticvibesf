@@ -1,5 +1,9 @@
 #include "cfg_general.h"
-#include "config_mgr.h"
+
+#include "config/config_mgr.h"
+
+#include <vector>
+#include <string>
 
 void ConfigGeneral::setDefaults() noexcept
 {

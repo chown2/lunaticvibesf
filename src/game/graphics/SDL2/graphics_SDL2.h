@@ -49,7 +49,8 @@ enum class TTFHinting
     Normal,
     Light,
     Mono,
-    None,
+    // FIXME: something somewhere has #define None ... ?
+    None_,
 };
 
 // Used by SDL_RenderCopy().

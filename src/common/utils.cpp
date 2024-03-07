@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string>
 #include <string_view>
+#include <thread>
 #include <vector>
 
 #include <boost/algorithm/string.hpp>
@@ -22,8 +23,9 @@
 #include <openssl/evp.h>
 #endif
 
-#include "hash.h"
-#include "types.h"
+#include "common/log.h"
+#include "common/hash.h"
+#include "common/types.h"
 
 static const std::pair<RE2, re2::StringPiece> path_replace_pattern[]
 {

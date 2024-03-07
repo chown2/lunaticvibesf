@@ -1,7 +1,9 @@
 #pragma once
 #include <string>
 #include <vector>
+
 #include "common/types.h"
+#include "common/hash.h"
 
 class CourseLr2crs
 {

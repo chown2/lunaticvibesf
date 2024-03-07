@@ -1,10 +1,15 @@
 #include "encoding.h"
 
-#include <string_view>
-#include <string>
+#include <fstream>
+#include <istream>
 #include <memory>
+#include <string>
+#include <string_view>
 
 #include <uchardet.h>
+
+#include "common/log.h"
+#include "common/sysutil.h"
 
 eFileEncoding getFileEncoding(const Path& path)
 {

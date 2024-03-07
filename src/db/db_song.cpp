@@ -1,11 +1,16 @@
-#include <set>
-#include <regex>
-#include "common/utils.h"
 #include "db_song.h"
-#include "common/log.h"
+
+#include <regex>
+#include <set>
+#include <thread>
+
 #include "common/chartformat/chartformat_types.h"
+#include "common/log.h"
+#include "common/sysutil.h"
+#include "common/utils.h"
 #include "game/chart/chart_types.h"
-#include "re2/re2.h"
+
+#include <re2/re2.h>
 
 #define BOOST_ASIO_NO_EXCEPTIONS
 #include <boost/asio/post.hpp>

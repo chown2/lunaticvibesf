@@ -1,8 +1,13 @@
 #include "input_wrapper.h"
-#include "game/runtime/state.h"
-#include "game/runtime/generic_info.h"
-#include "common/log.h"
+
 #include <cassert>
+#include <mutex>
+
+#include "common/log.h"
+#include "common/sysutil.h"
+#include "common/utils.h"
+#include "game/runtime/generic_info.h"
+#include "game/runtime/state.h"
 
 InputWrapper::InputWrapper(unsigned rate, bool background) : 
     AsyncLooper("Input loop", std::bind(&InputWrapper::_loop, this), rate),

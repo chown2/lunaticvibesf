@@ -1,6 +1,7 @@
 #include "chart.h"
 #include "chart_types.h"
 #include "common/chartformat/chartformat.h"
+#include "common/log.h"
 #include "common/chartformat/chartformat_types.h"
 #include "game/runtime/state.h"
 #include "game/scene/scene_context.h"

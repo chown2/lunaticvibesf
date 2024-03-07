@@ -1,5 +1,11 @@
 #pragma once
-#include "config.h"
+
+#include <string>
+
+#include "common/meta.h"
+#include "common/types.h"
+#include "common/utils.h"
+#include "config/config.h"
 
 // Stores in player folder
 constexpr char CONFIG_FILE_PROFILE[] = "settings.yml";

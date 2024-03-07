@@ -1,10 +1,14 @@
 #pragma once
-#include <string>
-#include <vector>
-#include <memory>
+
 #include <map>
+#include <memory>
+#include <string>
+#include <unordered_map>
+#include <vector>
+
 #include "common/types.h"
-#include "db_conn.h"
+#include "common/hash.h"
+#include "db/db_conn.h"
 
 class ScoreBase;
 class ScoreBMS;

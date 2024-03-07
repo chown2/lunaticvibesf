@@ -1,6 +1,8 @@
 #include "sprite.h"
+
 #include <algorithm>
 
+#include "common/sysutil.h"
 
 constexpr double grad(int dst, int src, double t)
 {

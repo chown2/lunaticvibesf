@@ -1,9 +1,17 @@
 #include "table_bms.h"
-#include "../entry/entry_song.h"
-#include "tao/json.hpp"
-#include "re2/re2.h"
+
+#include <string>
+#include <fstream>
+
+#include <tao/json.hpp>
+#include <re2/re2.h>
 
 #include <curl/curl.h>
+
+#include "common/encoding.h"
+#include "common/entry/entry_song.h"
+#include "common/log.h"
+#include "common/meta.h"
 
 enum class GetResult
 {

@@ -1,10 +1,13 @@
 #pragma once
+
 #include <array>
 #include <vector>
 #include <list>
 #include <utility>
 #include <chrono>
+
 #include "common/beat.h"
+#include "common/chartformat/chartformat.h"
 #include "game/runtime/state.h"
 #include "game/input/input_mgr.h"
 

@@ -1,4 +1,8 @@
 #pragma once
+
+#include <memory>
+#include <vector>
+
 #include "chart.h"
 #include "common/chartformat/chartformat_bms.h"
 

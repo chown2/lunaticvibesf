@@ -1,5 +1,7 @@
-#include "common/log.h"
 #include "cfg_input.h"
+
+#include "common/log.h"
+#include "common/meta.h"
 
 ConfigInput::ConfigInput(const std::string& profile, GameModeKeys k) : keys(k),
     vConfig(profile, (k == 5 ? CONFIG_FILE_INPUT_5 : (k == 7 ? CONFIG_FILE_INPUT_7 : (k == 9 ? CONFIG_FILE_INPUT_9 : "")))) 

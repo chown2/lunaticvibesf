@@ -1,5 +1,9 @@
 #pragma once
-#include "config.h"
+
+#include <map>
+#include <string>
+
+#include "config/config.h"
 #include "common/keymap.h"
 
 constexpr char CONFIG_FILE_INPUT_5[] = "input5.yml";

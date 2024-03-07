@@ -1,5 +1,6 @@
 #pragma once
 
+#include "common/types.h"
 #include "index/bargraph.h"
 #include "index/number.h"
 #include "index/option.h"
@@ -8,6 +9,7 @@
 #include "index/text.h"
 #include "index/timer.h"
 
+#include <array>
 #include <string>
 #include <string_view>
 

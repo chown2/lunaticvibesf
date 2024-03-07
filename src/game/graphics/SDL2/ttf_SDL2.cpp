@@ -1,5 +1,9 @@
 #include "graphics_SDL2.h"
+
+#include <SDL_ttf.h>
+
 #include "common/log.h"
+#include "common/sysutil.h"
 
 TTFFont::TTFFont(const char* filePath, int ptsize): _filePath(filePath), _ptsize(ptsize)
 {
@@ -81,7 +85,7 @@ void TTFFont::setHinting(TTFHinting mode)
     case TTFHinting::Normal:    TTF_SetFontHinting(_pFont, TTF_HINTING_NORMAL); break;
     case TTFHinting::Light:     TTF_SetFontHinting(_pFont, TTF_HINTING_LIGHT);  break;
     case TTFHinting::Mono:      TTF_SetFontHinting(_pFont, TTF_HINTING_MONO);   break;
-    case TTFHinting::None:      TTF_SetFontHinting(_pFont, TTF_HINTING_NONE);   break;
+    case TTFHinting::None_:      TTF_SetFontHinting(_pFont, TTF_HINTING_NONE);   break;
     }
 }
 void TTFFont::setKerning(bool enabled)

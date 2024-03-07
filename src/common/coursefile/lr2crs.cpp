@@ -1,8 +1,15 @@
 #include "lr2crs.h"
+
 #include <fstream>
 #include <sstream>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
+
+#include "common/encoding.h"
+#include "common/hash.h"
+#include "common/log.h"
+#include "common/utils.h"
+#include "common/sysutil.h"
 
 CourseLr2crs::CourseLr2crs(const Path& filePath)
 {

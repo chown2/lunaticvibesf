@@ -15,7 +15,10 @@
 #include "SDL2/graphics_SDL2.h"
 #endif
 
+#include <functional>
 #include <vector>
+
+#include "common/types.h"
 #include <utility>
 
 int graphics_init();

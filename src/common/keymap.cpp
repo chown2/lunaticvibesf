@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "common/utils.h"
+
 std::string KeyMap::toString() const
 {
     switch (type)

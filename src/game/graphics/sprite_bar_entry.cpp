@@ -1,7 +1,9 @@
 #include "sprite_bar_entry.h"
-#include "game/scene/scene_context.h"
-#include "common/entry/entry_types.h"
+
 #include "common/chartformat/chartformat_bms.h"
+#include "common/entry/entry_types.h"
+#include "common/log.h"
+#include "game/scene/scene_context.h"
 
 int SpriteBarEntry::setBody(BarType type, const SpriteAnimated::SpriteAnimatedBuilder& builder)
 {

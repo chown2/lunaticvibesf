@@ -1,22 +1,26 @@
 #ifdef RENDER_SDL2
 
-#include "common/meta.h"
-#include "window_SDL2.h"
-#include "graphics_SDL2.h"
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
-#include "SDL_syswm.h"
-#include "game/graphics/video.h"
-#include "common/log.h"
 #include <climits>
 #include <cstdint>
 #include <string>
-#include "config/config_mgr.h"
+
+#include <SDL_syswm.h>
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+
+#include <imgui.h>
+#include <imgui_impl_sdl2.h>
+#include <imgui_impl_sdlrenderer2.h>
+
+#include "common/encoding.h"
+#include "common/log.h"
+#include "common/meta.h"
 #include "common/sysutil.h"
-#include "imgui.h"
-#include "imgui_impl_sdl2.h"
-#include "imgui_impl_sdlrenderer2.h"
+#include "config/config_mgr.h"
+#include "game/graphics/video.h"
+#include "graphics_SDL2.h"
+#include "window_SDL2.h"
 #include <game/graphics/SDL2/input.h>
 #include <game/graphics/graphics.h>
 

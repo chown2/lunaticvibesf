@@ -1,7 +1,10 @@
 #include "sysutil.h"
+
+#include <future>
 #include <queue>
 #include <shared_mutex>
-#include <future>
+
+#include "common/meta.h"
 
 std::shared_mutex mainThreadTaskQueueMutex;
 std::queue<std::function<void()>> mainThreadTaskQueue;

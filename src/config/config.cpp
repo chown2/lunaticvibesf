@@ -1,7 +1,11 @@
 #include "config.h"
-#include "common/log.h"
+
 #include <fstream>
 #include <filesystem>
+
+#include "common/log.h"
+#include "common/types.h"
+#include "common/meta.h"
 
 vConfig::vConfig()
 {

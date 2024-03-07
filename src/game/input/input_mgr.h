@@ -1,9 +1,12 @@
 #pragma once
-#include <vector>
+
 #include <array>
 #include <bitset>
-#include <map>
 #include <functional>
+#include <map>
+#include <vector>
+
+#include "common/beat.h"
 #include "common/keymap.h"
 
 ////////////////////////////////////////////////////////////////////////////////

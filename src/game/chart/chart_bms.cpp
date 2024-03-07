@@ -1,7 +1,10 @@
 #include "chart_bms.h"
-#include "game/scene/scene_context.h"
+
 #include <random>
+
+#include "common/log.h"
 #include "game/runtime/state.h"
+#include "game/scene/scene_context.h"
 
 static const size_t NOPE = -1;
 

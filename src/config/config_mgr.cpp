@@ -2,8 +2,12 @@
 
 #include <filesystem>
 #include <fstream>
-#include "common/log.h"
+#include <mutex>
+#include <string>
 
+#include "common/log.h"
+#include "common/meta.h"
+#include "common/utils.h"
 #include "game/runtime/state.h"
 
 namespace fs = std::filesystem;
