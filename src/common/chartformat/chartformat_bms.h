@@ -7,8 +7,8 @@
 #include <regex>
 
 #include "chartformat.h"
-#include "common/utils.h"
 #include "common/types.h"
+#include "common/utils.h"
 
 namespace bms
 {

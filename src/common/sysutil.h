@@ -1,5 +1,13 @@
 #pragma once
 
+#include <future>
+#include <string>
+#include <functional>
+
+#include <stdint.h>
+
+#include "common/types.h"
+
 void SetThreadAsMainThread();
 int64_t GetCurrentThreadID();
 bool IsMainThread();
@@ -19,13 +27,11 @@ void SetWindowForeground(bool foreground);
 #define SetDebugThreadName(x) do {} while(0)
 #endif
 
-#include <functional>
 void pushMainThreadTask(std::function<void()> f);
 void doMainThreadTask();
 void StopHandleMainThreadTask();
 bool CanHandleMainThreadTask();
 
-#include <future>
 template<typename T>
 inline T pushAndWaitMainThreadTask(std::function<T()> f)
 {

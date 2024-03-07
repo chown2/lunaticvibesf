@@ -1,19 +1,18 @@
-
 #include "utils.h"
-#include "types.h"
+
 #include <array>
-#include <string>
-#include <cstdio>
-#include <iostream>
-#include <fstream>
 #include <charconv>
 #include <chrono>
+#include <cstdio>
 #include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <string>
 #include <string_view>
 #include <vector>
 
 #include <boost/algorithm/string.hpp>
-#include "re2/re2.h"
+#include <re2/re2.h>
 
 #ifdef WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -22,6 +21,9 @@
 #else
 #include <openssl/evp.h>
 #endif
+
+#include "hash.h"
+#include "types.h"
 
 static const std::pair<RE2, re2::StringPiece> path_replace_pattern[]
 {

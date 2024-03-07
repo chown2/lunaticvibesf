@@ -1,11 +1,14 @@
 #pragma once
-#include <regex>
-#include <vector>
-#include <numeric>
+
 #include <cmath>
 #include <memory>
-#include "../types.h"
-#include "../beat.h"
+#include <numeric>
+#include <regex>
+#include <vector>
+
+#include "common/beat.h"
+#include "common/hash.h"
+#include "common/types.h"
 
 // Subset of chart formats.
 // Currently including BMS

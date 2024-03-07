@@ -1,7 +1,10 @@
 #pragma once
+
 #include <vector>
 #include <memory>
+
 #include "entry.h"
+#include "common/hash.h"
 
 class EntryFolderBase: public EntryBase
 {

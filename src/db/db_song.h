@@ -1,12 +1,14 @@
 #pragma once
+#include <memory>
+#include <shared_mutex>
 #include <string>
 #include <vector>
-#include <memory>
-#include "db_conn.h"
-#include "common/types.h"
-#include "common/utils.h"
+
 #include "common/entry/entry_folder.h"
 #include "common/entry/entry_song.h"
+#include "common/types.h"
+#include "common/utils.h"
+#include "db_conn.h"
 
 // FIXME: use "__root_folder" or something, currently something somewhere assumes empty string here.
 inline const HashMD5 ROOT_FOLDER_HASH = md5({});

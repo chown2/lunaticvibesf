@@ -7,7 +7,6 @@
 #include <utility>
 #include <memory>
 
-#include "hash.h"
 #include "types.h"
 
 namespace fs = std::filesystem;

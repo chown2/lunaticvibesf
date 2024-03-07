@@ -1,5 +1,7 @@
 #include "keymap.h"
 
+#include <string>
+
 std::string KeyMap::toString() const
 {
     switch (type)

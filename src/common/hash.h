@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstring>
 #include <string>
 
 #include "utils.h"
@@ -20,7 +21,7 @@ public:
             set = true;
             std::string bin = hex2bin(hex);
             unsigned char* ubin = (unsigned char*)bin.data();
-            memcpy(data, ubin, _Len);
+            std::memcpy(data, ubin, _Len);
         }
     }
     Hash(const Hash<_Len>& rhs)
@@ -29,7 +30,7 @@ public:
         if (!rhs.empty())
         {
             set = true;
-            memcpy(data, rhs.data, _Len);
+            std::memcpy(data, rhs.data, _Len);
         }
     }
 

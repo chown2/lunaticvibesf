@@ -9,6 +9,7 @@
 #include <numeric>
 #include <random>
 
+#include "common/encoding.h"
 #include "common/utils.h"
 #include "db/db_song.h"
 #include "re2/re2.h"

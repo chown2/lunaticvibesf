@@ -1,7 +1,9 @@
 // Song list entry definition
 
 #pragma once
+
 #include "common/types.h"
+#include "common/hash.h"
 
 enum eEntryType
 {
