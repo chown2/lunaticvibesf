@@ -83,7 +83,7 @@ void ConfigInput::setDefaults() noexcept
             keys == 9 ? CONFIG_FILE_INPUT_DEFAULT_9 : "";
     try
     {
-        _yaml = YAML::LoadFile(path.string());
+        _yaml = YAML::LoadFile(path.u8string());
         for (auto p = Input::Pad::S1L; p < Input::Pad::ESC; p = Input::Pad(int(p) + 1))
         {
             const char* mapKey = getBindingKey(p);
@@ -100,7 +100,7 @@ void ConfigInput::setDefaults() noexcept
     }
     catch (YAML::BadFile&)
     {
-        LOG_WARNING << "[Config] Bad file while loading default input config: " << path.string();
+        LOG_WARNING << "[Config] Bad file while loading default input config: " << path.u8string();
     }
 }
 

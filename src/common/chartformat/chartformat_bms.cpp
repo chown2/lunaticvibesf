@@ -79,7 +79,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
 
     LOG_DEBUG << "[BMS] File (" << getFileEncodingName(encoding) << "): " << absolutePath.u8string();
 
-    if (toLower(filePath.extension().u8string()) == ".pms")
+    if (toLower(filePath.extension().u8string()) == u8".pms")
     {
         isPMS = true;
     }

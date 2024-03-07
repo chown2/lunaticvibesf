@@ -254,7 +254,7 @@ bool SongDB::addChart(const HashMD5& folder, const Path& path)
         }
         catch (const std::exception& e)
         {
-            LOG_WARNING << "[SongDB] " << e.what() << ": " << path.filename().string();
+            LOG_WARNING << "[SongDB] " << e.what() << ": " << path.filename().u8string();
             return false;
         }
 
@@ -1000,7 +1000,8 @@ int SongDB::refreshExistingFolder(const HashMD5& hash, const Path& path, FolderT
                 {
                     if (!fs::exists(existedList->getEntry(i)->getPath()))
                     {
-                        LOG_DEBUG << "[SongDB] Deleting file-not-found folder: " << existedList->getEntry(i)->getPath().string();
+                        LOG_DEBUG << "[SongDB] Deleting file-not-found folder: "
+                                  << existedList->getEntry(i)->getPath().u8string();
                         deletedFiles.push_back(existedList->getEntry(i)->md5);
                     }
                 }

@@ -83,7 +83,7 @@ std::string GetExecutablePath()
         return {};
     }
 
-    return fs::path(fullpath).parent_path().string();
+    return fs::path(fullpath).parent_path().u8string();
 }
 
 static HWND hwnd = NULL;

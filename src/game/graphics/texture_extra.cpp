@@ -164,13 +164,13 @@ bool TextureBmsBga::addBmp(size_t idx, Path pBmp)
 {
 	if (idx == size_t(-1)) return false;
 
-	if (!fs::exists(pBmp) && pBmp.has_extension() && toLower(pBmp.extension().string()) == ".bmp")
+	if (!fs::exists(pBmp) && pBmp.has_extension() && toLower(pBmp.extension().u8string()) == u8".bmp")
 	{
-		pBmp = pBmp.parent_path() / PathFromUTF8(pBmp.filename().stem().u8string() + ".jpg");
+		pBmp = pBmp.parent_path() / PathFromUTF8(pBmp.filename().stem().u8string() + u8".jpg");
 
 		if (!fs::exists(pBmp))
 		{
-			pBmp = pBmp.parent_path() / PathFromUTF8(pBmp.filename().stem().u8string() + ".png");
+			pBmp = pBmp.parent_path() / PathFromUTF8(pBmp.filename().stem().u8string() + u8".png");
 		}
 	}
 	if (fs::exists(pBmp) && fs::is_regular_file(pBmp) && pBmp.has_extension())

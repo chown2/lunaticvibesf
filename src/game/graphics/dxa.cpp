@@ -552,9 +552,7 @@ int DecodeArchive(Path& path, DXArchive* output = NULL)
 	KeyCreate(NULL, Key);
 
 	// アーカイブファイルを開く
-	std::string ps(path.string());
-	const char* ArchiveName = ps.c_str();
-	std::ifstream ArcP(ArchiveName, std::ios_base::binary);
+	std::ifstream ArcP(path.u8string(), std::ios_base::binary);
 	if (!ArcP.is_open()) return {};
 
 	// ヘッダを解析する
