@@ -147,7 +147,9 @@ Image::Image(const char* path, std::shared_ptr<SDL_RWops>&& rw): _path(path), _p
     if (!_pRWop && !_path.empty())
     {
         if (_path != "dummy")
+        {
             LOG_WARNING << "[Image] Load image file error! " << SDL_GetError();
+        }
         return;
     }
     if (isTGA(path))

@@ -785,7 +785,9 @@ void SoundDriverFMOD::playNoteSample(SoundChannelType ch, size_t count, size_t i
         if (noteSamples[index[i]].objptr != nullptr)
             r = fmodSystem->playSound(noteSamples[index[i]].objptr, &*channelGroup[ch], false, 0);
         if (r != FMOD_OK)
+        {
             LOG_WARNING << "[FMOD] Playing Sample Error: " << r << ", " << FMOD_ErrorString(r);
+        }
     }
 }
 
@@ -875,7 +877,9 @@ void SoundDriverFMOD::playSysSample(SoundChannelType ch, size_t index)
     if (sysSamples[index].objptr != nullptr)
         r = fmodSystem->playSound(sysSamples[index].objptr, &*channelGroup[ch], false, 0);
     if (r != FMOD_OK)
+    {
         LOG_WARNING << "[FMOD] Playing Sample Error: " << r << ", " << FMOD_ErrorString(r);
+    }
 }
 
 void SoundDriverFMOD::stopSysSamples()
@@ -944,7 +948,9 @@ void SoundDriverFMOD::update()
 
     FMOD_RESULT r = fmodSystem->update();
     if (r != FMOD_OK)
+    {
         LOG_ERROR << "[FMOD] SoundDriverFMOD System Update Error: " << r << ", " << FMOD_ErrorString(r);
+    }
 }
 
 int SoundDriverFMOD::getChannelsPlaying()

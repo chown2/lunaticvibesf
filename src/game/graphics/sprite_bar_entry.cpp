@@ -39,11 +39,15 @@ int SpriteBarEntry::setLevel(BarLevelType type, const SpriteNumber::SpriteNumber
     }
 
     if (builder.maxDigits < 3 && type == BarLevelType::IRRANK)
+    {
         LOG_DEBUG << "[Sprite] BarEntry level digit (" << builder.maxDigits << ") not enough for IRRANK "
             << " (Line " << srcLine << ")";
+    }
     else if (builder.maxDigits < 2)
+    {
         LOG_DEBUG << "[Sprite] BarEntry level digit (" << builder.maxDigits << ") not enough for idx " << int(type)
             << " (Line " << srcLine << ")";
+    }
 
     SpriteNumber::SpriteNumberBuilder tmpBuilder = builder;
     tmpBuilder.numInd = IndexNumber(unsigned(IndexNumber::_SELECT_BAR_LEVEL_0) + index);
