@@ -48,7 +48,7 @@ int graphics_init()
         title += " Debug";
 #endif
 
-#if _WIN32
+#ifdef _WIN32
         // I have tested several renderers on Windows and each of them has its own issues.
         // direct3d (D3D9): skin "filter" parameters are affected by textures
         // direct3d11: such a simple 2D game should not be so picky about hardware...
@@ -133,7 +133,7 @@ int graphics_init()
         SDL_VERSION(&wmInfo.version);
         if (SDL_GetWindowWMInfo(gFrameWindow, &wmInfo) == SDL_TRUE)
         {
-#if _WIN32 || _WIN64
+#ifdef _WIN32
             setWindowHandle((void*)&wmInfo.info.win.window);
 #endif
         }
@@ -356,7 +356,7 @@ void graphics_resize_window(int x, int y)
 void graphics_change_vsync(int mode)
 {
     LOG_WARNING << "Setting vsync mode to " << mode;
-#if _WIN32
+#ifdef _WIN32
     SDL_RenderSetVSync(gFrameRenderer, mode);
 #else
     // codes below should work since we are explicitly indicated to use OpenGL backend

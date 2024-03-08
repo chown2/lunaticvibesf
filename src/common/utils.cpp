@@ -486,7 +486,7 @@ void preciseSleep(long long sleep_ns)
     using namespace std::chrono;
     using namespace std::chrono_literals;
 
-#if _WIN32
+#ifdef _WIN32
 
     static HANDLE timer = CreateWaitableTimer(NULL, FALSE, NULL);
 

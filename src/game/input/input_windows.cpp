@@ -1,4 +1,4 @@
-#if _WIN32 || _WIN64
+#ifdef _WIN32
 #include "input_mgr.h"
 #include "input_dinput8.h"
 #include <cmath>
@@ -277,4 +277,4 @@ short getLastMouseWheelState()
     return z == 0 ? 0 : z / WHEEL_DELTA;
 }
 
-#endif
+#endif // _WIN32

@@ -1013,7 +1013,7 @@ void window_mode(int plus)
 // 82
 void vsync(int plus)
 {
-#if _WIN32
+#ifdef _WIN32
     int val = (State::get(IndexOption::SYS_VSYNC) + 2 + plus) % 2;
 #else
     int val = (State::get(IndexOption::SYS_VSYNC) + 3 + plus) % 3;

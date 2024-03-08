@@ -87,7 +87,7 @@ void SceneSelect::imguiInit()
     old_video_mode = imgui_video_mode;
 
     imgui_video_vsync_index = ConfigMgr::get("V", cfg::V_VSYNC, 0);
-#if _WIN32
+#ifdef _WIN32
     if (imgui_video_vsync_index >= 2)
         imgui_video_vsync_index = 1;
 #endif
@@ -704,7 +704,7 @@ void SceneSelect::imguiPageOptionsVideo()
         {
             i18n::c(OFF),
             i18n::c(ON),
-#if _WIN32
+#ifdef _WIN32
 #else
             i18n::c(VIDEO_ADAPTIVE)
 #endif
@@ -794,7 +794,7 @@ void SceneSelect::imguiPageOptionsPlay()
             "8000 Hz",
             //"Unlimited (Not recommended)"
         };
-#if _WIN32
+#ifdef _WIN32
         int imgui_play_inputPollingRate_count = IsWindows10OrGreater() ? 2 : 1;
 #else
         int imgui_play_inputPollingRate_count = 4;
@@ -810,7 +810,7 @@ void SceneSelect::imguiPageOptionsPlay()
             case 4: ConfigMgr::set("P", cfg::P_INPUT_POLLING_RATE, 0); _input.setRate(0); break;
             }
         }
-#if _WIN32
+#ifdef _WIN32
         ImGui::SameLine();
         HelpMarker(i18n::c(INPUT_POLLING_RATE_WARNING_WINDOWS));
 #endif
@@ -1562,7 +1562,7 @@ bool SceneSelect::imguiApplyResolution()
         {
             {0, "OFF"},
             {1, "ON"},
-#if _WIN32
+#ifdef _WIN32
             {2, "ON"}
 #else
             {2, "ADAPTIVE"}

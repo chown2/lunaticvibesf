@@ -15,7 +15,7 @@ AsyncLooper::AsyncLooper(StringContentView tag, std::function<void()> func, unsi
 {
     _rate = rate_per_sec;
 
-#if _WIN32
+#ifdef _WIN32
     handler = CreateWaitableTimerExA(
         NULL,
         NULL,
@@ -30,7 +30,7 @@ AsyncLooper::~AsyncLooper()
 {
     assert(!_running);
 
-#if _WIN32
+#ifdef _WIN32
     if (handler)
     {
         CloseHandle(handler);
@@ -67,7 +67,7 @@ unsigned AsyncLooper::getRate()
     return _rate;
 }
 
-#if _WIN32
+#ifdef _WIN32
 
 void AsyncLooper::loopStart()
 {

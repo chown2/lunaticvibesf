@@ -5,7 +5,7 @@
 #include <map>
 #include "types.h"
 
-#if _WIN32
+#ifdef _WIN32
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -36,7 +36,7 @@ protected:
     int64_t _runThreadID = 0;
 #endif
 
-#if _WIN32
+#ifdef _WIN32
 protected:
     std::future<void> loopFuture;
     long long tStart = 0;
