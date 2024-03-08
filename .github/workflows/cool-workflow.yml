@@ -8,19 +8,27 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: "Ubuntu (Debug)"
+          - name: "Ubuntu (GCC, Debug)"
             os: ubuntu-22.04
             preset: linux-vcpkg-gcc
             build-args: "--config Debug"
-          - name: "Ubuntu (Release)"
+          - name: "Ubuntu (GCC, Release)"
             os: ubuntu-22.04
             preset: linux-vcpkg-gcc
             build-args: "--config Release"
-          - name: "Windows (Debug)"
+          - name: "Ubuntu (Clang, Debug)"
+            os: ubuntu-22.04
+            preset: linux-vcpkg-clang
+            build-args: "--config Debug"
+          - name: "Ubuntu (Clang, Release)"
+            os: ubuntu-22.04
+            preset: linux-vcpkg-clang
+            build-args: "--config Release"
+          - name: "Windows (MSVC, Debug)"
             os: windows-2022
             preset: x64-debug-vcpkg
             build-args: ""
-          - name: "Windows (Release)"
+          - name: "Windows (MSVC, Release)"
             os: windows-2022
             preset: x64-release-vcpkg
             build-args: ""
