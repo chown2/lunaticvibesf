@@ -38,10 +38,12 @@
             "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
         },
         {
-            "name": "linux",
+            "name": "linux-vcpkg",
             "generator": "Ninja Multi-Config",
-            "displayName": "Linux Multi-Config",
+            "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+            "displayName": "Linux Multi-Config +vcpkg",
             "cacheVariables": {
+                "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
             },
             "condition": {
@@ -51,14 +53,13 @@
             }
         },
         {
-            "name": "linux-vcpkg",
-            "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-            "displayName": "Linux Multi-Config +vcpkg",
+            "name": "linux-vcpkg-gcc",
+            "displayName": "Linux Multi-Config +vcpkg +GCC warnings",
+            "inherits": "linux-vcpkg",
             "cacheVariables": {
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "CMAKE_CONFIGURATION_TYPES": "Debug;Release"
-            },
-            "inherits": "linux"
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_CXX_FLAGS": "-fsanitize=address -pedantic -Werror=catch-value -Werror=reorder -Werror=sequence-point -Werror=switch"
+            }
         }
     ]
 }
