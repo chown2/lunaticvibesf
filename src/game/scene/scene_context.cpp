@@ -619,6 +619,7 @@ void setBarInfo()
         }
     };
     // FIXME
+    #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wsequence-point"
     for (size_t list_idx = idx, bar_index = cursor; bar_index > 0; list_idx = (--list_idx + e.size()) % e.size(), --bar_index)
     {
