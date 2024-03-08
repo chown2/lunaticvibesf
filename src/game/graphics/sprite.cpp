@@ -61,7 +61,7 @@ RenderParams& RenderParams::operator=(const MotionKeyFrameParams& rhs)
 ////////////////////////////////////////////////////////////////////////////////
 // virtual base class functions
 SpriteBase::SpriteBase(const SpriteBuilder& builder) :
-    srcLine(builder.srcLine), pTexture(builder.texture), _type(SpriteTypes::VIRTUAL), _current({0, MotionKeyFrameParams::CONSTANT, 0x00000000, BlendMode::NONE, false, 0}) {}
+    _type(SpriteTypes::VIRTUAL), pTexture(builder.texture), srcLine(builder.srcLine), _current({0, MotionKeyFrameParams::CONSTANT, 0x00000000, BlendMode::NONE, false, 0}) {}
 
 bool SpriteBase::updateMotion(const lunaticvibes::Time& rawTime)
 {

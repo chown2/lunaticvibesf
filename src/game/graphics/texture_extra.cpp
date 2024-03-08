@@ -17,10 +17,10 @@ extern "C"
 #include "libavutil/avutil.h"
 }
 
-TextureVideo::TextureVideo(std::shared_ptr<sVideo> pv) :
-	Texture(pv->getW(), pv->getH(), pv->getFormat(), false),
-	format(pv->getFormat()), 
-	pVideo(pv)
+TextureVideo::TextureVideo(std::shared_ptr<sVideo> pv)
+	: Texture(pv->getW(), pv->getH(), pv->getFormat(), false)
+	, pVideo(pv)
+	, format(pv->getFormat())
 {
 	textureRect.x = 0;
 	textureRect.y = 0;

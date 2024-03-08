@@ -13,7 +13,7 @@ TTFFont::TTFFont(const char* filePath, int ptsize): _filePath(filePath), _ptsize
     else loaded = true;
 }
 
-TTFFont::TTFFont(const char* filePath, int ptsize, int faceIndex) : _filePath(filePath), _ptsize(ptsize), _faceIndex(faceIndex)
+TTFFont::TTFFont(const char* filePath, int ptsize, int faceIndex) : _filePath(filePath), _faceIndex(faceIndex), _ptsize(ptsize)
 {
     pushAndWaitMainThreadTask<void>([&]() { _pFont = TTF_OpenFontIndex(_filePath.c_str(), ptsize, faceIndex); });
     if (!_pFont)
