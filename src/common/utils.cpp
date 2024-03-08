@@ -187,7 +187,7 @@ HashMD5 md5file(const Path& filePath)
 {
     if (!fs::exists(filePath) || !fs::is_regular_file(filePath))
     {
-        return "";
+        return {};
     }
 
     HCRYPTPROV hProv = 0;
