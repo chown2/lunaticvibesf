@@ -33,7 +33,9 @@ target_include_directories(apptest PRIVATE
     ${PROJECT_INCLUDE_DIR}
 )
 
-add_custom_command(TARGET apptest POST_BUILD
+# NOTE: we need to copy dependencies before gtest_discover_tests runs, as it will launch the executable, which will fail
+# as the libraries weren't installed yet..
+add_custom_command(TARGET apptest PRE_LINK
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     $<TARGET_FILE:fmod>
     $<TARGET_FILE_DIR:apptest>

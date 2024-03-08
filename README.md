@@ -40,9 +40,11 @@ automatically.
 ```sh
 # export VCPKG_ROOT=/path/to/vcpkg
 cmake --preset linux-vcpkg -B ./build
-cmake --build ./build --config=Debug -j
+cmake --build ./build --config=Debug
 ls build/bin/Debug
 ```
+
+To enable additional warnings when compiling with GCC change preset above to `linux-vcpkg-gcc`.
 
 ## License
 
