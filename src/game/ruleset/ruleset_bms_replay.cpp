@@ -2,6 +2,8 @@
 #include "game/scene/scene.h"
 #include "game/scene/scene_context.h"
 
+#include <cassert>
+
 RulesetBMSReplay::RulesetBMSReplay(
     std::shared_ptr<ChartFormatBase> format,
     std::shared_ptr<ChartObjectBase> chart,
@@ -51,6 +53,15 @@ RulesetBMSReplay::RulesetBMSReplay(
     case RulesetBMS::PlaySide::MYBEST:
         _judgeScratch = !(gPlayContext.mods[PLAYER_SLOT_MYBEST].assist_mask & PLAY_MOD_ASSIST_AUTOSCR);
         break;
+
+    case RulesetBMS::PlaySide::SINGLE:
+    case RulesetBMS::PlaySide::DOUBLE:
+    case RulesetBMS::PlaySide::BATTLE_1P:
+    case RulesetBMS::PlaySide::BATTLE_2P:
+    case RulesetBMS::PlaySide::RIVAL:
+    case RulesetBMS::PlaySide::NETWORK:
+        assert(false);
+        break;
     }
 }
 
@@ -88,6 +99,8 @@ void RulesetBMSReplay::update(const lunaticvibes::Time& t)
             case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_4:    cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_4; break;
             case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_5:    cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_5; break;
             case ReplayChart::Commands::Type::JUDGE_LEFT_LANDMINE:  cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LANDMINE; break;
+
+            default: break;
             }
         }
 
@@ -122,6 +135,8 @@ void RulesetBMSReplay::update(const lunaticvibes::Time& t)
                 case ReplayChart::Commands::Type::S1A_PLUS:  cmd = ReplayChart::Commands::Type::S2A_PLUS; break;
                 case ReplayChart::Commands::Type::S1A_MINUS: cmd = ReplayChart::Commands::Type::S2A_MINUS; break;
                 case ReplayChart::Commands::Type::S1A_STOP:  cmd = ReplayChart::Commands::Type::S2A_STOP; break;
+
+                default: break;
                 }
             }
 
@@ -156,6 +171,9 @@ void RulesetBMSReplay::update(const lunaticvibes::Time& t)
             case ReplayChart::Commands::Type::S2A_PLUS:  playerScratchAccumulator[PLAYER_SLOT_TARGET] = 0.0015; break;
             case ReplayChart::Commands::Type::S2A_MINUS: playerScratchAccumulator[PLAYER_SLOT_TARGET] = -0.0015; break;
             case ReplayChart::Commands::Type::S2A_STOP:  playerScratchAccumulator[PLAYER_SLOT_TARGET] = 0; break;
+
+        default:
+            break;
             }
         }
 
@@ -190,6 +208,8 @@ void RulesetBMSReplay::update(const lunaticvibes::Time& t)
         case ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_5:   updateJudge(t, NoteLaneIndex::_, JudgeArea::EARLY_KPOOR, PLAYER_SLOT_TARGET, true); break;
         case ReplayChart::Commands::Type::JUDGE_LEFT_LANDMINE:  updateJudge(t, NoteLaneIndex::_, JudgeArea::MINE_KPOOR, PLAYER_SLOT_PLAYER, true); break;
         case ReplayChart::Commands::Type::JUDGE_RIGHT_LANDMINE: updateJudge(t, NoteLaneIndex::_, JudgeArea::MINE_KPOOR, PLAYER_SLOT_TARGET, true); break;
+
+        default: break;
         }
 
         if (cmd >= ReplayChart::Commands::Type::JUDGE_LEFT_EXACT_0 && cmd <= ReplayChart::Commands::Type::JUDGE_RIGHT_LANDMINE)

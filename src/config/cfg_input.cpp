@@ -191,6 +191,8 @@ void ConfigInput::bind(Input::Pad ingame, const KeyMap& km)
         case Input::Pad::S2R:
             clearKey(Input::Pad::S2A);
             break;
+        default:
+            break;
         }
     }
 }

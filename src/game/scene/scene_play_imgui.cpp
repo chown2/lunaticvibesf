@@ -31,6 +31,7 @@ void ScenePlay::imguiInit()
     case SkinType::PLAY9_2:
         imguiAdjustHas2P = true;
         break;
+    default: break;
     }
 
 }

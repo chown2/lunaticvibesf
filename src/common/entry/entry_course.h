@@ -38,9 +38,9 @@ public:
 		md5 = lr2crs.getCourseHash();
 		_name = lr2crs.title;
 		_addTime = addTime;
-		switch (lr2crs.type)
+		if (lr2crs.type == CourseLr2crs::Course::COURSE_GRADE)
 		{
-		case 2: courseType = GRADE; break;
+			courseType = GRADE;
 		}
 		charts = lr2crs.chartHash;
 	}

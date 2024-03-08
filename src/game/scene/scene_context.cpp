@@ -523,6 +523,8 @@ void sortSongList()
                         if (l->version != r->version) return l->version < r->version;
                         break;
                     }
+
+                    case SongListSortType::TYPE_COUNT: break;
                     }
                 }
                 else
@@ -824,6 +826,7 @@ void setEntryInfo()
 
         switch (ps->courseType)
         {
+        case EntryCourse::CourseType::UNDEFINED: break;
         case EntryCourse::CourseType::GRADE:
             param["coursetype"] = Option::COURSE_GRADE; 
             text["genre"] = i18n::s(i18nText::CLASS_TITLE);
@@ -914,6 +917,19 @@ void setEntryInfo()
         case eEntryType::ARENA_FOLDER: 
         case eEntryType::ARENA_COMMAND: 
         case eEntryType::ARENA_LOBBY: text["genre"] = i18n::s(i18nText::ARENA_FOLDER_DESCRIPTION); break;
+
+        case eEntryType::UNKNOWN:
+        case eEntryType::NEW_SONG_FOLDER:
+        case eEntryType::SONG:
+        case eEntryType::CHART:
+        case eEntryType::RIVAL:
+        case eEntryType::RIVAL_SONG:
+        case eEntryType::RIVAL_CHART:
+        case eEntryType::NEW_COURSE:
+        case eEntryType::COURSE:
+        case eEntryType::RANDOM_COURSE:
+        case eEntryType::CHART_LINK:
+        case eEntryType::REPLAY: break;
         }
     }
 
@@ -1433,6 +1449,21 @@ void setDynamicTextures()
             gChartContext.texBanner.setPath(pf->getDirectory() / PathFromUTF8(pf->banner));
     }
     break;
+
+    case UNKNOWN:
+    case NEW_SONG_FOLDER:
+    case FOLDER:
+    case CUSTOM_FOLDER:
+    case COURSE_FOLDER:
+    case RIVAL:
+    case NEW_COURSE:
+    case COURSE:
+    case RANDOM_COURSE:
+    case ARENA_FOLDER:
+    case ARENA_COMMAND:
+    case ARENA_LOBBY:
+    case CHART_LINK:
+    case REPLAY: break;
     }
 }
 

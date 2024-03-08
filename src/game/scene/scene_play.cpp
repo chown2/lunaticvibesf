@@ -23,13 +23,7 @@
 
 bool ScenePlay::isPlaymodeDP() const
 {
-    switch (gPlayContext.mode)
-    {
-        case SkinType::PLAY10:
-        case SkinType::PLAY14:
-            return true;
-    }
-    return false;
+    return gPlayContext.mode == SkinType::PLAY10 || gPlayContext.mode == SkinType::PLAY14;
 }
 
 
@@ -71,6 +65,10 @@ int getLanecoverTop(int slot)
     case Option::LANE_SUDDEN:
     case Option::LANE_SUDHID:
     case Option::LANE_LIFTSUD: return State::get(lcTopInd);
+
+    case Option::LANE_OFF:
+    case Option::LANE_HIDDEN:
+    case Option::LANE_LIFT: break;
     }
     return 0;
 }
@@ -92,10 +90,13 @@ int getLanecoverBottom(int slot)
     }
     switch ((Option::e_lane_effect_type)State::get(lcTypeInd))
     {
-    case Option::LANE_SUDHID:  return State::get(lcTopInd);
+    case Option::LANE_SUDHID:  return State::get(lcTopInd); // FIXME: why is this here?
     case Option::LANE_HIDDEN:
     case Option::LANE_LIFT:
     case Option::LANE_LIFTSUD: return State::get(lcBottomInd);
+
+    case Option::LANE_OFF:
+    case Option::LANE_SUDDEN: break;
     }
     return 0;
 }
@@ -444,26 +445,12 @@ ScenePlay::ScenePlay(): SceneBase(gPlayContext.mode, 1000, true)
             hidden = ConfigMgr::get('P', cfgLanecoverBottom, 0) / 1000.0;
             switch (playerState[slot].origLanecoverType)
             {
-            case Option::LANE_OFF:
-                sudden = 0.;
-                hidden = 0.;
-                break;
-
-            case Option::LANE_SUDDEN:
-                hidden = 0.;
-                break;
-
-            case Option::LANE_HIDDEN:
-                sudden = 0.;
-                break;
-
-            case Option::LANE_SUDHID:
-                hidden = sudden;
-                break;
-
-            case Option::LANE_LIFT:
-                sudden = 0.;
-                break;
+            case Option::LANE_OFF: sudden = 0.; hidden = 0.; break;
+            case Option::LANE_SUDDEN: hidden = 0.; break;
+            case Option::LANE_HIDDEN: sudden = 0.; break;
+            case Option::LANE_SUDHID: hidden = sudden; break;
+            case Option::LANE_LIFT: sudden = 0.; break;
+            case Option::LANE_LIFTSUD: break; // FIXME
             }
             lcTop = int(sudden * 1000);
             lcBottom = int(hidden * 1000);
@@ -1461,6 +1448,7 @@ void ScenePlay::updateAsyncLanecover(const lunaticvibes::Time& t)
         int lc = 0;
         switch (lanecoverType)
         {
+        case Option::LANE_OFF: break;
         case Option::LANE_SUDDEN:
         case Option::LANE_SUDHID:
             lc = State::get(slot == PLAYER_SLOT_PLAYER ? IndexNumber::LANECOVER_TOP_1P : IndexNumber::LANECOVER_TOP_2P);
@@ -1479,14 +1467,7 @@ void ScenePlay::updateAsyncLanecover(const lunaticvibes::Time& t)
 
         bool lcHasChanged = false;
         int lcOld = lc;
-        bool inverted = false;
-        switch (lanecoverType)
-        {
-        case Option::LANE_HIDDEN:
-        case Option::LANE_LIFT:
-            inverted = true;
-            break;
-        }
+        const bool inverted = lanecoverType == Option::LANE_HIDDEN || lanecoverType == Option::LANE_LIFT;
         int units = playerState[slot].lanecoverAddPending > 0 ? (playerState[slot].lanecoverAddPending / lcThreshold) : -(-playerState[slot].lanecoverAddPending / lcThreshold);
         if (units != 0)
         {
@@ -1506,6 +1487,10 @@ void ScenePlay::updateAsyncLanecover(const lunaticvibes::Time& t)
                 State::set(slot == PLAYER_SLOT_PLAYER ? IndexNumber::LANECOVER_BOTTOM_1P : IndexNumber::LANECOVER_BOTTOM_2P, lc);
                 playerState[slot].lanecoverBottomHasChanged = true;
                 break;
+
+            case Option::LANE_OFF:
+            case Option::LANE_SUDDEN:
+            case Option::LANE_LIFTSUD: break;
             }
             switch (lanecoverType)
             {
@@ -1515,6 +1500,10 @@ void ScenePlay::updateAsyncLanecover(const lunaticvibes::Time& t)
                 State::set(slot == PLAYER_SLOT_PLAYER ? IndexNumber::LANECOVER_TOP_1P : IndexNumber::LANECOVER_TOP_2P, lc);
                 playerState[slot].lanecoverTopHasChanged = true;
                 break;
+
+            case Option::LANE_OFF:
+            case Option::LANE_HIDDEN:
+            case Option::LANE_LIFT: break;
             }
         }
 
@@ -2081,6 +2070,8 @@ void ScenePlay::updatePlaying()
                 case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_4:    cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_4; break;
                 case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_5:    cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_5; break;
                 case ReplayChart::Commands::Type::JUDGE_LEFT_LANDMINE:  cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LANDMINE; break;
+
+                default: break;
                 }
             }
 
@@ -2135,6 +2126,8 @@ void ScenePlay::updatePlaying()
                 State::set(slot == PLAYER_SLOT_PLAYER ? IndexSwitch::P1_LANECOVER_ENABLED : IndexSwitch::P2_LANECOVER_ENABLED, (bool)(int)itReplayCommand->value);
                 playerState[slot].lanecoverStateHasChanged = true;
                 break;
+
+            default: break;
             }
 
             // do not accept replay-requested ESC in battle mode

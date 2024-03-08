@@ -157,16 +157,12 @@ void config_player()
         default:                   ConfigMgr::set('P', P_LANE_EFFECT_OP_2P, P_LANE_EFFECT_OP_OFF); break;
         }
 
-        switch (State::get(IndexSwitch::PLAY_OPTION_AUTOSCR_1P))
-        {
-        case false: ConfigMgr::set('P', P_CHART_ASSIST_OP, P_CHART_ASSIST_OP_NONE); break;
-        case true:  ConfigMgr::set('P', P_CHART_ASSIST_OP, P_CHART_ASSIST_OP_AUTOSCR); break;
-        }
-        switch (State::get(IndexSwitch::PLAY_OPTION_AUTOSCR_2P))
-        {
-        case false: ConfigMgr::set('P', P_CHART_ASSIST_OP_2P, P_CHART_ASSIST_OP_NONE); break;
-        case true:  ConfigMgr::set('P', P_CHART_ASSIST_OP_2P, P_CHART_ASSIST_OP_AUTOSCR); break;
-        }
+        ConfigMgr::set('P', P_CHART_ASSIST_OP,
+                       State::get(IndexSwitch::PLAY_OPTION_AUTOSCR_1P) ? P_CHART_ASSIST_OP_AUTOSCR
+                                                                       : P_CHART_ASSIST_OP_NONE);
+        ConfigMgr::set('P', P_CHART_ASSIST_OP_2P,
+                       State::get(IndexSwitch::PLAY_OPTION_AUTOSCR_2P) ? P_CHART_ASSIST_OP_AUTOSCR
+                                                                       : P_CHART_ASSIST_OP_NONE);
 
         ConfigMgr::set('P', P_FLIP, State::get(IndexSwitch::PLAY_OPTION_DP_FLIP));
     }
@@ -1038,6 +1034,7 @@ void SceneSelect::updateSelect()
                 State::set(IndexSwitch::SYSTEM_AUTOPLAY, true);
                 decide();
                 break;
+            default: break;
             }
         }
     }
@@ -1053,14 +1050,13 @@ void SceneSelect::updateSelect()
             case eEntryType::RIVAL_SONG:
             case eEntryType::RIVAL_CHART:
             case eEntryType::COURSE:
-            {
                 if (State::get(IndexSwitch::CHART_HAVE_REPLAY))
                 {
                     gPlayContext.isReplay = true;
                     decide();
                 }
                 break;
-            }
+            default: break;
             }
         }
     }
@@ -2029,6 +2025,8 @@ void SceneSelect::decide()
         case SkinType::PLAY14:
             assert(!gPlayContext.isBattle);
             break;
+
+        default: break;
         }
 
         break;
@@ -2998,8 +2996,11 @@ void SceneSelect::updatePreview()
             }
             break;
         }
+
+        case eChartFormat::UNKNOWN:
+        case eChartFormat::BMSON: assert(false);
         }
-        
+
         break;
     }
 

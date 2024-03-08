@@ -997,10 +997,11 @@ void SoundDriverFMOD::setVolume(SampleChannel ch, float v)
 
 void SoundDriverFMOD::setDSP(DSPType type, int dspIndex, SampleChannel ch, float p1, float p2)
 {
-    FMOD_DSP_TYPE fmodType = FMOD_DSP_TYPE_UNKNOWN;
+    FMOD_DSP_TYPE fmodType;
     switch (type)
 	{
-	case DSPType::REVERB:     fmodType = FMOD_DSP_TYPE_SFXREVERB; break; // The DSP type LR2 used (FMOD_DSP_TYPE_REVERB) is long gone
+    case DSPType::OFF:        fmodType = FMOD_DSP_TYPE_UNKNOWN;
+    case DSPType::REVERB:     fmodType = FMOD_DSP_TYPE_SFXREVERB; break; // The DSP type LR2 used (FMOD_DSP_TYPE_REVERB) is long gone
 	case DSPType::DELAY:      fmodType = FMOD_DSP_TYPE_ECHO; break;
 	case DSPType::LOWPASS:    fmodType = FMOD_DSP_TYPE_LOWPASS; break;
 	case DSPType::HIGHPASS:   fmodType = FMOD_DSP_TYPE_HIGHPASS; break;
@@ -1076,6 +1077,8 @@ void SoundDriverFMOD::setDSP(DSPType type, int dspIndex, SampleChannel ch, float
                 case FMOD_DSP_TYPE_DISTORTION:
                     dsp->setParameterFloat(FMOD_DSP_DISTORTION_LEVEL, std::clamp(p1, 0.0f, 1.0f));
                     break;
+
+                default: break;
                 }
                 dsp->setBypass(false);
             }

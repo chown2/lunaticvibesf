@@ -301,6 +301,9 @@ bool SongDB::addChart(const HashMD5& folder, const Path& path)
 
         switch (c->type())
         {
+        case eChartFormat::UNKNOWN:
+            LOG_ERROR << "eChartFormat::UNKNOWN";
+            break;
         case eChartFormat::BMS:
         {
             auto bmsc = std::dynamic_pointer_cast<ChartFormatBMS>(c);
@@ -354,6 +357,9 @@ bool SongDB::addChart(const HashMD5& folder, const Path& path)
             }
             break;
         }
+        case eChartFormat::BMSON:
+            LOG_ERROR << "eChartFormat::BMSON";
+            break;
         }
 
         return false;
@@ -1192,6 +1198,7 @@ std::shared_ptr<EntryFolderRegular> SongDB::browse(HashMD5 root, bool recursive)
                 break;
             }
             case SONG_BMS:
+            {
                 auto bmsList = browseSong(md5);
                 // name is set inside browseSong
                 if (bmsList && !bmsList->empty())
@@ -1199,6 +1206,11 @@ std::shared_ptr<EntryFolderRegular> SongDB::browse(HashMD5 root, bool recursive)
                     bmsList->_addTime = modtime;
                     list->pushEntry(bmsList);
                 }
+                break;
+            }
+            case CUSTOM_FOLDER:
+            case COURSE:
+            case CLASS:
                 break;
             }
         }

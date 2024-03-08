@@ -1168,6 +1168,7 @@ void updateDstOpt()
 				using namespace Option;
 				switch (Option::getRankType(d.acc))
 				{
+				case RANK_NONE: break;
 				case RANK_0:
 				case RANK_1: set(1011 + offset); break;
 				case RANK_2: set(1012 + offset); break;
@@ -1180,6 +1181,7 @@ void updateDstOpt()
 				}
 				switch (Option::getRankType(d.total_acc))
 				{
+				case RANK_NONE: break;
 				case RANK_0:
 				case RANK_1: set(1021 + offset); break;
 				case RANK_2: set(1022 + offset); break;
@@ -1220,6 +1222,12 @@ void updateDstOpt()
 						case RulesetBMS::GaugeType::ASSIST:  set(1047 + offset); break;
 						case RulesetBMS::GaugeType::HARD:    set(1044 + offset); break;
 						case RulesetBMS::GaugeType::EXHARD:  set(1046 + offset); break;
+
+						case RulesetBMS::GaugeType::DEATH:
+						case RulesetBMS::GaugeType::P_ATK:
+						case RulesetBMS::GaugeType::G_ATK:
+						case RulesetBMS::GaugeType::GRADE:
+						case RulesetBMS::GaugeType::EXGRADE: break;
 						}
 					}
 				}

@@ -1083,6 +1083,7 @@ void key_config_pad(Input::Pad pad, bool force)
             case Input::Pad::S1R: pad = Input::Pad::S1A; break;
             case Input::Pad::S2L:
             case Input::Pad::S2R: pad = Input::Pad::S2A; break;
+            default: break;
             }
         }
     }

@@ -365,6 +365,10 @@ RulesetBMS::RulesetBMS(std::shared_ptr<ChartFormatBase> format, std::shared_ptr<
             ssModShort << "" << Option::s_assist_type_short[Option::ASSIST_AUTOSCR];
         }
         break;
+
+    case RulesetBMS::PlaySide::MYBEST:
+    case RulesetBMS::PlaySide::NETWORK:
+        break;
     }
     modifierText = ssMod.str();
     if (modifierText.empty())
@@ -702,6 +706,12 @@ void RulesetBMS::_judgePress(NoteLaneCategory cat, NoteLaneIndex idx, HitableNot
             updateJudge(t, idx, judge.area, slot);
             pushReplayCommand = true;
             break;
+
+        case JudgeArea::NOTHING:
+        case JudgeArea::MISS:
+        case JudgeArea::LATE_KPOOR:
+        case JudgeArea::MINE_KPOOR:
+            break;
         }
         break;
 
@@ -739,9 +749,21 @@ void RulesetBMS::_judgePress(NoteLaneCategory cat, NoteLaneIndex idx, HitableNot
                 updateJudge(t, idx, judge.area, slot);
                 pushReplayCommand = true;
                 break;
+
+            case JudgeArea::NOTHING:
+            case JudgeArea::MISS:
+            case JudgeArea::LATE_KPOOR:
+            case JudgeArea::MINE_KPOOR:
+                break;
             }
             break;
         }
+        break;
+
+    case NoteLaneCategory::_:
+    case NoteLaneCategory::Mine:
+    case NoteLaneCategory::EXTRA:
+    case NoteLaneCategory::NOTECATEGORY_COUNT:
         break;
     }
 
@@ -956,58 +978,50 @@ void RulesetBMS::_updateHp(double diff)
 {
     // TOTAL補正, totalnotes補正
     // ref: https://web.archive.org/web/20150226213104/http://2nd.geocities.jp/yoshi_65c816/bms/LR2.html
-    switch (_gauge)
+    if ((_gauge == RulesetBMS::GaugeType::HARD || _gauge == RulesetBMS::GaugeType::EXHARD) && diff < 0)
     {
-    case RulesetBMS::GaugeType::HARD:
-    case RulesetBMS::GaugeType::EXHARD:
-        if (diff < 0)
-        {
-            double pTotal = 1.0;
-            if (total >= 240);
-            else if (total >= 230) pTotal = 10.0 / 9;
-            else if (total >= 210) pTotal = 1.25;
-            else if (total >= 200) pTotal = 1.5;
-            else if (total >= 180) pTotal = 5.0 / 3;
-            else if (total >= 160) pTotal = 2.0;
-            else if (total >= 150) pTotal = 2.5;
-            else if (total >= 130) pTotal = 10.0 / 3;
-            else if (total >= 120) pTotal = 5.0;
-            else                   pTotal = 10.0;
+        double pTotal = 1.0;
+        if (total >= 240)
+            ;
+        else if (total >= 230) pTotal = 10.0 / 9;
+        else if (total >= 210) pTotal = 1.25;
+        else if (total >= 200) pTotal = 1.5;
+        else if (total >= 180) pTotal = 5.0 / 3;
+        else if (total >= 160) pTotal = 2.0;
+        else if (total >= 150) pTotal = 2.5;
+        else if (total >= 130) pTotal = 10.0 / 3;
+        else if (total >= 120) pTotal = 5.0;
+        else pTotal = 10.0;
 
-            double pNotes = 1.0;
-            int notes = getNoteCount();
-            if (notes >= 1000);
-            else if (notes >= 500) pNotes = (notes - 500) * 0.002;
-            else if (notes >= 250) pNotes = 1.0 + (notes - 250) * 0.004;
-            else if (notes >= 125) pNotes = 2.0 + (notes - 125) * 0.008;
-            else if (notes >= 62)  pNotes = 3.0 + (notes - 62) * (1.0 / 62);
-            else if (notes >= 31)  pNotes = 4.0 + (notes - 31) * (1.0 / 31);
-            else if (notes >= 16)  pNotes = 5.0 + (notes - 16) * 0.0625;
-            else if (notes >= 8)   pNotes = 6.0 + (notes - 8) * 0.125;
-            else if (notes >= 4)   pNotes = 7.0 + (notes - 4) * 0.25;
-            else if (notes >= 2)   pNotes = 8.0 + (notes - 2) * 0.50;
-            else if (notes == 1)   pNotes = 9.0;
-            else                   pNotes = 10.0;
+        double pNotes = 1.0;
+        unsigned notes = getNoteCount();
+        if (notes >= 1000)
+            ;
+        else if (notes >= 500) pNotes = (notes - 500) * 0.002;
+        else if (notes >= 250) pNotes = 1.0 + (notes - 250) * 0.004;
+        else if (notes >= 125) pNotes = 2.0 + (notes - 125) * 0.008;
+        else if (notes >= 62) pNotes = 3.0 + (notes - 62) * (1.0 / 62);
+        else if (notes >= 31) pNotes = 4.0 + (notes - 31) * (1.0 / 31);
+        else if (notes >= 16) pNotes = 5.0 + (notes - 16) * 0.0625;
+        else if (notes >= 8) pNotes = 6.0 + (notes - 8) * 0.125;
+        else if (notes >= 4) pNotes = 7.0 + (notes - 4) * 0.25;
+        else if (notes >= 2) pNotes = 8.0 + (notes - 2) * 0.50;
+        else if (notes == 1) pNotes = 9.0;
+        else pNotes = 10.0;
 
-            diff *= 1.0 * std::max(pTotal, pNotes);
-        }
+        diff *= 1.0 * std::max(pTotal, pNotes);
     }
 
     double tmp = _basic.health;
 
     // 30% buff
-    switch (_gauge)
+    if ((_gauge == RulesetBMS::GaugeType::HARD || _gauge == RulesetBMS::GaugeType::GRADE) && tmp < 0.32 && diff < 0.0)
     {
-    case RulesetBMS::GaugeType::HARD:
-    case RulesetBMS::GaugeType::GRADE:
-        if (tmp < 0.32 && diff < 0.0)
-            tmp += diff * 0.6;
-        else
-            tmp += diff;
-        break;
-    default:
+        tmp += diff * 0.6;
+    }
+    else
+    {
         tmp += diff;
-        break;
     }
 
     _basic.health = std::max(_minHealth, std::min(1.0, tmp));
@@ -1319,6 +1333,12 @@ void RulesetBMS::update(const lunaticvibes::Time& t)
                 if (n->flags & Note::LN_TAIL)
                     notesReached++;
                 break;
+
+            case NoteLaneCategory::_:
+            case NoteLaneCategory::Mine:
+            case NoteLaneCategory::Invs:
+            case NoteLaneCategory::EXTRA:
+            case NoteLaneCategory::NOTECATEGORY_COUNT: break;
             }
 
             n++;
@@ -1676,51 +1696,39 @@ void RulesetBMS::updateGlobals()
 
         if (showJudge)
         {
-            int fastslow = 0;   // 1:fast 2:slow
-            switch (_lastNoteJudge[PLAYER_SLOT_PLAYER].area)
-            {
-            case JudgeArea::EARLY_GREAT:
-            case JudgeArea::EARLY_GOOD:
-            case JudgeArea::EARLY_BAD:
-            case JudgeArea::EARLY_KPOOR:
-                fastslow = 1;
-                break;
+            // 1:fast 2:slow
+            auto get_fastslow = [](JudgeArea area) {
+                switch (area)
+                {
+                case JudgeArea::EARLY_GREAT:
+                case JudgeArea::EARLY_GOOD:
+                case JudgeArea::EARLY_BAD:
+                case JudgeArea::EARLY_KPOOR: return 1;
+                case JudgeArea::LATE_GREAT:
+                case JudgeArea::LATE_GOOD:
+                case JudgeArea::LATE_BAD:
+                case JudgeArea::MISS:
+                case JudgeArea::LATE_KPOOR: return 2;
+                case JudgeArea::NOTHING:
+                case JudgeArea::EARLY_PERFECT:
+                case JudgeArea::EXACT_PERFECT:
+                case JudgeArea::LATE_PERFECT:
+                case JudgeArea::MINE_KPOOR: return 0;
+                }
+                abort();
+            };
 
-            case JudgeArea::LATE_GREAT:
-            case JudgeArea::LATE_GOOD:
-            case JudgeArea::LATE_BAD:
-            case JudgeArea::MISS:
-            case JudgeArea::LATE_KPOOR:
-                fastslow = 2;
-                break;
-            }
-            State::set(IndexNumber::LR2IR_REPLACE_PLAY_1P_FAST_SLOW, fastslow);
-            State::set(IndexOption::PLAY_LAST_JUDGE_FASTSLOW_1P, fastslow);
+            const int fs_of_player = get_fastslow(_lastNoteJudge[PLAYER_SLOT_PLAYER].area);
+            State::set(IndexNumber::LR2IR_REPLACE_PLAY_1P_FAST_SLOW, fs_of_player);
+            State::set(IndexOption::PLAY_LAST_JUDGE_FASTSLOW_1P, fs_of_player);
             State::set(IndexNumber::LR2IR_REPLACE_PLAY_1P_JUDGE_TIME_ERROR_MS, _lastNoteJudge[PLAYER_SLOT_PLAYER].time.norm());
             State::set(IndexNumber::PLAY_1P_JUDGE_TIME_ERROR_MS, _lastNoteJudge[PLAYER_SLOT_PLAYER].time.norm());
 
             if (_side == PlaySide::DOUBLE || _side == PlaySide::AUTO_DOUBLE)
             {
-                fastslow = 0;   // 1:fast 2:slow
-                switch (_lastNoteJudge[PLAYER_SLOT_TARGET].area)
-                {
-                case JudgeArea::EARLY_GREAT:
-                case JudgeArea::EARLY_GOOD:
-                case JudgeArea::EARLY_BAD:
-                case JudgeArea::EARLY_KPOOR:
-                    fastslow = 1;
-                    break;
-
-                case JudgeArea::LATE_GREAT:
-                case JudgeArea::LATE_GOOD:
-                case JudgeArea::LATE_BAD:
-                case JudgeArea::MISS:
-                case JudgeArea::LATE_KPOOR:
-                    fastslow = 2;
-                    break;
-                }
-                State::set(IndexNumber::LR2IR_REPLACE_PLAY_2P_FAST_SLOW, fastslow);
-                State::set(IndexOption::PLAY_LAST_JUDGE_FASTSLOW_2P, fastslow);
+                const int fs_of_target = get_fastslow(_lastNoteJudge[PLAYER_SLOT_TARGET].area);
+                State::set(IndexNumber::LR2IR_REPLACE_PLAY_2P_FAST_SLOW, fs_of_target);
+                State::set(IndexOption::PLAY_LAST_JUDGE_FASTSLOW_2P, fs_of_target);
                 State::set(IndexNumber::LR2IR_REPLACE_PLAY_2P_JUDGE_TIME_ERROR_MS, _lastNoteJudge[PLAYER_SLOT_TARGET].time.norm());
                 State::set(IndexNumber::PLAY_2P_JUDGE_TIME_ERROR_MS, _lastNoteJudge[PLAYER_SLOT_TARGET].time.norm());
             }
@@ -1851,6 +1859,12 @@ void RulesetBMS::updateGlobals()
             case JudgeArea::MISS:
             case JudgeArea::LATE_KPOOR:
                 fastslow = 2;
+                break;
+            case JudgeArea::NOTHING:
+            case JudgeArea::EARLY_PERFECT:
+            case JudgeArea::EXACT_PERFECT:
+            case JudgeArea::LATE_PERFECT:
+            case JudgeArea::MINE_KPOOR:
                 break;
             }
             State::set(IndexNumber::LR2IR_REPLACE_PLAY_2P_FAST_SLOW, fastslow);

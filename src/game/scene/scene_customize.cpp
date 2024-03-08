@@ -1,12 +1,12 @@
 #include "scene_customize.h"
 
-#include "scene_context.h"
+#include "common/types.h"
 #include "config/config_mgr.h"
-#include "game/sound/sound_mgr.h"
-#include "game/skin/skin_mgr.h"
 #include "game/skin/skin_lr2.h"
+#include "game/skin/skin_mgr.h"
+#include "game/sound/sound_mgr.h"
 #include "game/sound/soundset_lr2.h"
-
+#include "scene_context.h"
 #include "scene_decide.h"
 
 SceneCustomize::SceneCustomize() : SceneBase(SkinType::THEME_SELECT, 240)
@@ -61,6 +61,7 @@ SceneCustomize::SceneCustomize() : SceneBase(SkinType::THEME_SELECT, 240)
         case SkinType::PLAY7:   skinList[SkinType::PLAY5].push_back(fs::absolute(p)); break;
         case SkinType::PLAY7_2: skinList[SkinType::PLAY5_2].push_back(fs::absolute(p)); break;
         case SkinType::PLAY14:  skinList[SkinType::PLAY10].push_back(fs::absolute(p)); break;
+        default: break;
         }
     }
 
@@ -122,6 +123,29 @@ void SceneCustomize::updateStart()
     }
 }
 
+static void reload_preview(SkinType selectedMode)
+{
+    if (gInCustomize)
+    {
+        switch (selectedMode)
+        {
+        case SkinType::PLAY5:
+        case SkinType::PLAY5_2:
+        case SkinType::PLAY7:
+        case SkinType::PLAY7_2:
+        case SkinType::PLAY9:
+        case SkinType::PLAY10:
+        case SkinType::PLAY14:
+            gPlayContext.mode = selectedMode;
+            gPlayContext.isAuto = true;
+            break;
+        default: break;
+        }
+        gNextScene = getSceneFromSkinType(selectedMode);
+        gCustomizeSceneChanged = true;
+    }
+}
+
 void SceneCustomize::updateMain()
 {
     lunaticvibes::Time t;
@@ -157,25 +181,7 @@ void SceneCustomize::updateMain()
             load(selectedMode);
             pSkin->setHandleMouseEvents(true);
 
-            // reload preview
-            if (gInCustomize)
-            {
-                switch (selectedMode)
-                {
-                case SkinType::PLAY5:
-                case SkinType::PLAY5_2:
-                case SkinType::PLAY7:
-                case SkinType::PLAY7_2:
-                case SkinType::PLAY9:
-                case SkinType::PLAY10:
-                case SkinType::PLAY14:
-                    gPlayContext.mode = selectedMode;
-                    gPlayContext.isAuto = true;
-                    break;
-                }
-                gNextScene = getSceneFromSkinType(selectedMode);
-                gCustomizeSceneChanged = true;
-            }
+            reload_preview(selectedMode);
         }
     }
 
@@ -298,6 +304,8 @@ void SceneCustomize::updateMain()
                     case SkinType::PLAY14:
                         ConfigMgr::set("S", cfg::S_PATH_PLAY_14, p.u8string());
                         break;
+
+                    default: break;
                     }
 
                     pSkin->setHandleMouseEvents(false);
@@ -308,25 +316,7 @@ void SceneCustomize::updateMain()
                     load(selectedMode);
                     pSkin->setHandleMouseEvents(true);
 
-                    // reload preview
-                    if (gInCustomize)
-                    {
-                        switch (selectedMode)
-                        {
-                        case SkinType::PLAY5:
-                        case SkinType::PLAY5_2:
-                        case SkinType::PLAY7:
-                        case SkinType::PLAY7_2:
-                        case SkinType::PLAY9:
-                        case SkinType::PLAY10:
-                        case SkinType::PLAY14:
-                            gPlayContext.mode = selectedMode;
-                            gPlayContext.isAuto = true;
-                            break;
-                        }
-                        gNextScene = getSceneFromSkinType(selectedMode);
-                        gCustomizeSceneChanged = true;
-                    }
+                    reload_preview(selectedMode);
                 }
             }
         }
@@ -370,25 +360,7 @@ void SceneCustomize::updateMain()
                 SoundMgr::playSysSample(SoundChannelType::BGM_SYS, eSoundSample::BGM_SELECT);
             }
 
-            // reload preview
-            if (gInCustomize)
-            {
-                switch (selectedMode)
-                {
-                case SkinType::PLAY5:
-                case SkinType::PLAY5_2:
-                case SkinType::PLAY7:
-                case SkinType::PLAY7_2:
-                case SkinType::PLAY9:
-                case SkinType::PLAY10:
-                case SkinType::PLAY14:
-                    gPlayContext.mode = selectedMode;
-                    gPlayContext.isAuto = true;
-                    break;
-                }
-                gNextScene = getSceneFromSkinType(selectedMode);
-                gCustomizeSceneChanged = true;
-            }
+            reload_preview(selectedMode);
         }
     }
     if (gCustomizeContext.optionDragging)

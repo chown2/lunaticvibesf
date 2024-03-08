@@ -165,6 +165,8 @@ std::string KeyMap::toStringJ() const
     ss << "J" << joystick.device + 1 << "_";
     switch (joystick.type)
     {
+    case Input::Joystick::Type::UNDEF:
+        break;
     case Input::Joystick::Type::BUTTON:        
         ss << "BTN_" << joystick.index + 1;
         break;

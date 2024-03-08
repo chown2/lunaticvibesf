@@ -1,32 +1,27 @@
 #include "skin_lr2.h"
-#include "common/log.h"
-#include "common/utils.h"
+
+#include <execution>
 #include <fstream>
-#include <sstream>
 #include <regex>
 #include <set>
+#include <sstream>
 #include <variant>
-#include <execution>
-#include "skin_lr2_button_callbacks.h"
-#include "skin_lr2_slider_callbacks.h"  
-#include "game/runtime/state.h"
-#include "game/graphics/video.h"
-#include "game/scene/scene_context.h"
-#include "skin_lr2_converters.h"
-#include "config/config_mgr.h"
-#include "game/scene/scene_customize.h"
-#include "game/graphics/dxa.h"
-#include "game/graphics/video.h"
-#include "re2/re2.h"
-#include "game/runtime/i18n.h"
 
 #include <boost/algorithm/string.hpp>
+#include <re2/re2.h>
 
-#ifdef _WIN32
-// For GetWindowsDirectory
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#endif
+#include "common/log.h"
+#include "common/utils.h"
+#include "config/config_mgr.h"
+#include "game/graphics/dxa.h"
+#include "game/graphics/video.h"
+#include "game/runtime/i18n.h"
+#include "game/runtime/state.h"
+#include "game/scene/scene_context.h"
+#include "game/scene/scene_customize.h"
+#include "skin_lr2_button_callbacks.h"
+#include "skin_lr2_converters.h"
+#include "skin_lr2_slider_callbacks.h"
 
 using namespace std::placeholders;
 
@@ -1152,6 +1147,7 @@ int SkinLR2::others()
             lr2skin::flipSide = (lr2skin::flipSideFlag || lr2skin::flipResultFlag) && !disableFlipResult;
             State::set(IndexSwitch::FLIP_RESULT, lr2skin::flipSide);
             break;
+        default: break;
         }
 
         return 4;
@@ -1167,6 +1163,7 @@ int SkinLR2::others()
             lr2skin::flipSide = (lr2skin::flipSideFlag || lr2skin::flipResultFlag) && !disableFlipResult;
             State::set(IndexSwitch::FLIP_RESULT, lr2skin::flipSide);
             break;
+        default: break;
         }
 
         return 5;
@@ -1338,7 +1335,11 @@ bool SkinLR2::SRC()
         case DefType::AUTO_LN_END:    
         case DefType::AUTO_LN_BODY:   
         case DefType::AUTO_LN_START:  SRC_NOTE(type); break;
-    };
+
+        case DefType::UNDEF:
+        case DefType::BAR_BODY_OFF:
+        case DefType::BAR_BODY_ON: break;
+        };
 
     return true;
 }
@@ -1426,6 +1427,8 @@ ParseRet SkinLR2::SRC_NUMBER()
     case IndexNumber::GREEN_NUMBER_MINBPM_2P:
         isSupportGreenNumber = true;
         break;
+
+    default: break;
     }
 
     return ParseRet::OK;
@@ -1456,6 +1459,7 @@ ParseRet SkinLR2::SRC_SLIDER()
     case IndexSlider::HID_2P:
         isSupportLift = true;
         break;
+    default: break;
     }
 
     return ParseRet::OK;
@@ -1983,15 +1987,12 @@ chart::NoteLaneIndex NoteIdxToLane(SkinType gamemode, int idx, unsigned scratchS
             };
             return (scratchSide1P == 1) ? lane[1][idx] : lane[0][idx];
         }
-        else
+        static const NoteLaneIndex lane[] =
         {
-            static const NoteLaneIndex lane[] =
-            {
-                Sc1, N11, N12, N13, N14, N15, N16, N17, _, _,
-                _, _, _, _, _, _, _, _, _, _,
-            };
-            return lane[idx];
-        }
+            Sc1, N11, N12, N13, N14, N15, N16, N17, _, _,
+            _, _, _, _, _, _, _, _, _, _,
+        };
+        return lane[idx];
     }
     case SkinType::PLAY9:
     {
@@ -2040,21 +2041,16 @@ chart::NoteLaneIndex NoteIdxToLane(SkinType gamemode, int idx, unsigned scratchS
             {
                 return (scratchSide2P == 1) ? lane[3][idx] : lane[2][idx];
             }
-            else
-            {
-                return (scratchSide2P == 1) ? lane[1][idx] : lane[0][idx];
-            }
+            return (scratchSide2P == 1) ? lane[1][idx] : lane[0][idx];
         }
-        else
+        static const NoteLaneIndex lane[] =
         {
-            static const NoteLaneIndex lane[] =
-            {
-                Sc1, N11, N12, N13, N14, N15, N16, N17, _, _,
-                Sc2, N21, N22, N23, N24, N25, N26, N27, _, _,
-            };
-            return lane[idx];
-        }
+            Sc1, N11, N12, N13, N14, N15, N16, N17, _, _,
+            Sc2, N21, N22, N23, N24, N25, N26, N27, _, _,
+        };
+        return lane[idx];
     }
+    default: break;
     }
     return _;
 }
@@ -2257,6 +2253,7 @@ ParseRet SkinLR2::SRC_NOTE(DefType type)
             pSpriteLane->buildNoteTail(noteBuilder);
             pSpriteNote = pSpriteLane->pNoteTail;
             break;
+        default: break;
         }
         break;
     }
@@ -2652,6 +2649,8 @@ bool SkinLR2::DST()
         case DefType::GAUGECHART_1P: typeMatch = sType == SpriteTypes::LINE; break;
         case DefType::GAUGECHART_2P: typeMatch = sType == SpriteTypes::LINE; break;
         case DefType::SCORECHART:    typeMatch = sType == SpriteTypes::LINE; break;
+
+        default: break;
         }
         if (!typeMatch)
         {
@@ -2692,6 +2691,7 @@ bool SkinLR2::DST()
                     default: break;
                     }
                     break;
+                    default: break;
                 }
             }
             else
@@ -2725,6 +2725,7 @@ bool SkinLR2::DST()
                     default: break;
                     }
                     break;
+                default: break;
                 }
             }
 
@@ -2739,6 +2740,7 @@ bool SkinLR2::DST()
                 case IndexNumber::MUSIC_HYPER_LEVEL:     opEx.push_back(dst_option::SELECT_HAVE_HYPER_IN_SAME_FOLDER);    break;
                 case IndexNumber::MUSIC_ANOTHER_LEVEL:   opEx.push_back(dst_option::SELECT_HAVE_ANOTHER_IN_SAME_FOLDER);  break;
                 case IndexNumber::MUSIC_INSANE_LEVEL:    opEx.push_back(dst_option::SELECT_HAVE_INSANE_IN_SAME_FOLDER);   break;
+                default: break;
                 }
             }
             drawQueue.push_back({ e, dst_option(d.op[0]), dst_option(d.op[1]), dst_option(d.op[2]), dst_option(d.op[3]), opEx });
@@ -3652,6 +3654,7 @@ SkinLR2::~SkinLR2()
     case SkinType::PLAY7:
     case SkinType::PLAY7_2:
     case SkinType::PLAY9:
+    case SkinType::PLAY9_2:
     case SkinType::PLAY10:
     case SkinType::PLAY14:
     {
@@ -3688,6 +3691,7 @@ SkinLR2::~SkinLR2()
         }
         break;
     }
+    default: break;
     }
 }
 

@@ -827,11 +827,15 @@ std::string ChartFormatBMS::getError()
     using err = ErrorCode;
     switch (errorCode)
     {
-    case err::OK:    return "No errors.";
-        //TODO return translated strings 
+    // TODO: i18n
+    case err::OK: return "OK";
+    case bms::ErrorCode::FILE_ERROR: return "File error";
+    case bms::ErrorCode::ALREADY_INITIALIZED: return "Already initialized";
+    case bms::ErrorCode::VALUE_ERROR: return "Value error";
+    case bms::ErrorCode::TYPE_MISMATCH: return "Type mismatch";
+    case bms::ErrorCode::NOTE_LINE_ERROR: return "Note line error";
     }
-
-    return "?";
+    abort();
 }
 
 int ChartFormatBMS::seqToLane36(channel& ch, StringContentView str, unsigned flags)

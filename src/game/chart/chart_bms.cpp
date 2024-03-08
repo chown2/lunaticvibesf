@@ -110,6 +110,13 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
                 std::reverse(gameLaneMap.begin() + laneRightStart, gameLaneMap.begin() + laneRightEnd + 1);
             break;
         }
+
+        case PlayModifierRandomType::NONE:
+        case PlayModifierRandomType::SRAN:
+        case PlayModifierRandomType::HRAN:
+        case PlayModifierRandomType::ALLSCR:
+        case PlayModifierRandomType::DB_SYNCHRONIZE:
+        case PlayModifierRandomType::DB_SYMMETRY: break;
         }
     }
     else
@@ -136,6 +143,13 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
                 std::reverse(gameLaneMap.begin() + laneLeftStart, gameLaneMap.begin() + laneLeftEnd + 1);
             break;
         }
+
+        case PlayModifierRandomType::NONE:
+        case PlayModifierRandomType::SRAN:
+        case PlayModifierRandomType::HRAN:
+        case PlayModifierRandomType::ALLSCR:
+        case PlayModifierRandomType::DB_SYNCHRONIZE:
+        case PlayModifierRandomType::DB_SYMMETRY: break;
         }
         if (isChartDP || gChartContext.isDoubleBattle)
         {
@@ -196,6 +210,10 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
                 break;
             }
 
+            case PlayModifierRandomType::NONE:
+            case PlayModifierRandomType::SRAN:
+            case PlayModifierRandomType::HRAN:
+            case PlayModifierRandomType::ALLSCR: break;
             }
         }
     }
@@ -786,6 +804,7 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
                     break;
 
                 case eLanePriority::STOP:
+                {
                     lastBarIdx = m;
                     double noteStopMetre = objBms.stop[val] / 192.0;
                     if (noteStopMetre <= 0) break;
@@ -796,6 +815,14 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
                     stopMetre += noteStopMetre;
                     basetime += noteStopTime;
                     break;
+                }
+
+                case eLanePriority::NOTE:
+                case eLanePriority::LNHEAD:
+                case eLanePriority::LNTAIL:
+                case eLanePriority::INV:
+                case eLanePriority::MINE:
+                case eLanePriority::BGM: break;
                 }
             }
         }

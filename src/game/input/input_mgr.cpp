@@ -120,6 +120,7 @@ std::bitset<KEY_COUNT> InputMgr::_detect()
         {
 			switch (b.getType())
 			{
+            case KeyMap::DeviceType::UNDEF: break;
             case KeyMap::DeviceType::KEYBOARD:
                 if (isKeyPressed(b.getKeyboard()))
                 {

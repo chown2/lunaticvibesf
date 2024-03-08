@@ -29,6 +29,14 @@ RulesetBMSAuto::RulesetBMSAuto(
     case RulesetBMS::PlaySide::RIVAL:
         _judgeScratch = !(gPlayContext.mods[PLAYER_SLOT_TARGET].assist_mask & PLAY_MOD_ASSIST_AUTOSCR);
         break;
+
+    case RulesetBMS::PlaySide::SINGLE:
+    case RulesetBMS::PlaySide::DOUBLE:
+    case RulesetBMS::PlaySide::BATTLE_1P:
+    case RulesetBMS::PlaySide::BATTLE_2P:
+    case RulesetBMS::PlaySide::MYBEST:
+    case RulesetBMS::PlaySide::NETWORK:
+        assert(false);
     }
 
     setTargetRate(1.0);

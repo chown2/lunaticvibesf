@@ -1,15 +1,20 @@
 #include "scene_pre_select.h"
-#include "config/config_mgr.h"
-#include "scene_context.h"
-#include "common/coursefile/lr2crs.h"
-#include "common/entry/entry_table.h"
-#include "common/entry/entry_course.h"
-#include "common/entry/entry_arena.h"
-#include "imgui.h"
+
+#include <cstdlib>
 #include <future>
+#include <string_view>
+
 #include <boost/format.hpp>
+#include <imgui.h>
+
+#include "common/coursefile/lr2crs.h"
+#include "common/entry/entry_arena.h"
+#include "common/entry/entry_course.h"
+#include "common/entry/entry_table.h"
+#include "config/config_mgr.h"
 #include "game/runtime/i18n.h"
 #include "git_version.h"
+#include "scene_context.h"
 
 ScenePreSelect::ScenePreSelect(): SceneBase(SkinType::PRE_SELECT, 240)
 {
@@ -199,6 +204,27 @@ void ScenePreSelect::updateLoadSongs()
     }
 }
 
+static const std::string_view to_str(const DifficultyTable::UpdateResult result) 
+{
+    switch (result) {
+    case DifficultyTable::UpdateResult::OK: return "OK";
+    case DifficultyTable::UpdateResult::INTERNAL_ERROR: return "INTERNAL_ERROR";
+    case DifficultyTable::UpdateResult::WEB_PATH_ERROR: return "WEB_PATH_ERROR";
+    case DifficultyTable::UpdateResult::WEB_CONNECT_ERR: return "WEB_CONNECT_ERR";
+    case DifficultyTable::UpdateResult::WEB_TIMEOUT: return "WEB_TIMEOUT";
+    case DifficultyTable::UpdateResult::WEB_PARSE_FAILED: return "WEB_PARSE_FAILED";
+    case DifficultyTable::UpdateResult::HEADER_PATH_ERROR: return "HEADER_PATH_ERROR";
+    case DifficultyTable::UpdateResult::HEADER_CONNECT_ERR: return "HEADER_CONNECT_ERR";
+    case DifficultyTable::UpdateResult::HEADER_TIMEOUT: return "HEADER_TIMEOUT";
+    case DifficultyTable::UpdateResult::HEADER_PARSE_FAILED: return "HEADER_PARSE_FAILED";
+    case DifficultyTable::UpdateResult::DATA_PATH_ERROR: return "DATA_PATH_ERROR";
+    case DifficultyTable::UpdateResult::DATA_CONNECT_ERR: return "DATA_CONNECT_ERR";
+    case DifficultyTable::UpdateResult::DATA_TIMEOUT: return "DATA_TIMEOUT";
+    case DifficultyTable::UpdateResult::DATA_PARSE_FAILED: return "DATA_PARSE_FAILED";
+    }
+    abort();
+}
+
 void ScenePreSelect::updateLoadTables()
 {
     if (!startedLoadTable)
@@ -273,22 +299,7 @@ void ScenePreSelect::updateLoadTables()
                             }
                             else
                             {
-                                switch (result)
-                                {
-                                case DifficultyTable::UpdateResult::INTERNAL_ERROR:         LOG_WARNING << "[List] Update table " << tableUrl << " failed: INTERNAL_ERROR";      break;
-                                case DifficultyTable::UpdateResult::WEB_PATH_ERROR:         LOG_WARNING << "[List] Update table " << tableUrl << " failed: WEB_PATH_ERROR";      break;
-                                case DifficultyTable::UpdateResult::WEB_CONNECT_ERR:        LOG_WARNING << "[List] Update table " << tableUrl << " failed: WEB_CONNECT_ERR";     break;
-                                case DifficultyTable::UpdateResult::WEB_TIMEOUT:            LOG_WARNING << "[List] Update table " << tableUrl << " failed: WEB_TIMEOUT";         break;
-                                case DifficultyTable::UpdateResult::WEB_PARSE_FAILED:       LOG_WARNING << "[List] Update table " << tableUrl << " failed: WEB_PARSE_FAILED";    break;
-                                case DifficultyTable::UpdateResult::HEADER_PATH_ERROR:      LOG_WARNING << "[List] Update table " << tableUrl << " failed: HEADER_PATH_ERROR";   break;
-                                case DifficultyTable::UpdateResult::HEADER_CONNECT_ERR:     LOG_WARNING << "[List] Update table " << tableUrl << " failed: HEADER_CONNECT_ERR";  break;
-                                case DifficultyTable::UpdateResult::HEADER_TIMEOUT:         LOG_WARNING << "[List] Update table " << tableUrl << " failed: HEADER_TIMEOUT";      break;
-                                case DifficultyTable::UpdateResult::HEADER_PARSE_FAILED:    LOG_WARNING << "[List] Update table " << tableUrl << " failed: HEADER_PARSE_FAILED"; break;
-                                case DifficultyTable::UpdateResult::DATA_PATH_ERROR:        LOG_WARNING << "[List] Update table " << tableUrl << " failed: DATA_PATH_ERROR";     break;
-                                case DifficultyTable::UpdateResult::DATA_CONNECT_ERR:       LOG_WARNING << "[List] Update table " << tableUrl << " failed: DATA_CONNECT_ERR";    break;
-                                case DifficultyTable::UpdateResult::DATA_TIMEOUT:           LOG_WARNING << "[List] Update table " << tableUrl << " failed: DATA_TIMEOUT";        break;
-                                case DifficultyTable::UpdateResult::DATA_PARSE_FAILED:      LOG_WARNING << "[List] Update table " << tableUrl << " failed: DATA_PARSE_FAILED1";  break;
-                                }
+                                LOG_WARNING << "[List] Update table " << tableUrl << " failed: " << to_str(result);
                             }
                         });
                     tableIndex += 1;
@@ -357,6 +368,7 @@ void ScenePreSelect::updateLoadCourses()
                 std::string folderTitle2 = i18n::s(i18nText::COURSE_SUBTITLE);
                 switch (type)
                 {
+                case EntryCourse::CourseType::UNDEFINED: break;
                 case EntryCourse::CourseType::GRADE:
                     folderTitle = i18n::s(i18nText::CLASS_TITLE);
                     folderTitle2 = i18n::s(i18nText::CLASS_SUBTITLE);

@@ -1,6 +1,13 @@
 #include "arena_data.h"
+
+#include <algorithm>
+#include <memory>
+#include <string>
+#include <vector>
+
 #include "game/arena/arena_client.h"
 #include "game/arena/arena_host.h"
+#include "game/ruleset/ruleset.h"
 #include "game/ruleset/ruleset_bms_network.h"
 #include "game/scene/scene_context.h"
 
@@ -82,6 +89,7 @@ void ArenaData::initPlaying(RulesetType rulesetType)
 	{
 		switch (rulesetType)
 		{
+		case RulesetType::SOUND_ONLY: break;
 		case RulesetType::BMS: d.ruleset = std::make_shared<RulesetBMSNetwork>(keys, idx++); break;
 		}
 		

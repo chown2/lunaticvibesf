@@ -596,15 +596,15 @@ void SpriteNumber::updateNumber(int n)
     // symbol
     switch (numberType)
     {
-    /*
     case NUM_TYPE_NORMAL:
-        for (unsigned i = digitCount; i < maxDigits; ++i)
+        /* for (unsigned i = digitCount; i < maxDigits; ++i)
         {
             _digit[i] = 0;
         }
-        digitCount = maxDigits;
+        digitCount = maxDigits; */
         break;
-    */
+    case NUM_TYPE_BLANKZERO:
+        break;
 	/*
     case NUM_SYMBOL:
     {
@@ -646,15 +646,17 @@ void SpriteNumber::updateNumberByInd()
     case IndexNumber::ZERO:
         n = 0;
         break;
-	case (IndexNumber)10220:
-		n = int(lunaticvibes::Time().norm() & 0xFFFFFFFF);
-		break;
     default:
+        // FIXME: wtf is this for
+        if ((unsigned)numInd == 10220) {
+            n = int(lunaticvibes::Time().norm() & 0xFFFFFFFF);
+        } else {
 #ifdef _DEBUG
-		n = (int)numInd >= 10000 ? (int)State::get((IndexTimer)((int)numInd - 10000)) : State::get(numInd);
+            n = (int)numInd >= 10000 ? (int)State::get((IndexTimer)((int)numInd - 10000)) : State::get(numInd);
 #else
-        n = State::get(numInd);
+            n = State::get(numInd);
 #endif
+        }
         break;
     }
     updateNumber(n);
@@ -952,6 +954,9 @@ SpriteOption::SpriteOption(const SpriteOptionBuilder& builder): SpriteAnimated(b
 
     switch (builder.optionType)
     {
+    case opType::UNDEF:
+        break;
+
     case opType::OPTION:
         indType = opType::OPTION;
         ind.op = (IndexOption)builder.optionInd;
