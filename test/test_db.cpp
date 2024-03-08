@@ -1,29 +1,12 @@
 #include "gmock/gmock.h"
 #include "db/db_song.h"
 
-const StringPath pathSongDB = "song.db"_p;
-
-TEST(SongDB, init)
-{
-    //std::filesystem::current_path("F:\\banshao_test");
-    SongDB db{ Path(pathSongDB) };
-    ASSERT_TRUE(std::filesystem::exists(pathSongDB));
-}
-
-TEST(SongDB, table_folder)
-{
-    //std::filesystem::current_path("F:\\banshao_test");
-    SongDB db{ Path(pathSongDB) };
-    ASSERT_TRUE(std::filesystem::exists(pathSongDB));
-
-    // TODO
-}
+static constexpr auto&& pathSongDB = ":memory:";
 
 TEST(SongDB, table_song)
 {
     //std::filesystem::current_path("F:\\banshao_test");
-    SongDB db{ Path(pathSongDB) };
-    ASSERT_TRUE(std::filesystem::exists(pathSongDB));
+    SongDB db{ pathSongDB };
 
     // TODO
 
@@ -39,7 +22,7 @@ TEST(SongDB, table_song)
 TEST(SongDB, remove_table)
 {
     //std::filesystem::current_path("F:\\banshao_test");
-    SongDB db{ Path(pathSongDB) };
+    SongDB db{ pathSongDB };
 
     // TODO 
     // 
