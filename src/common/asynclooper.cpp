@@ -83,7 +83,7 @@ void AsyncLooper::loopStart()
                     long long reset_threshold = us * 4;
 
                     LARGE_INTEGER dueTime = { 0 };
-                    dueTime.QuadPart = -(long long(us) * 10);
+                    dueTime.QuadPart = -(static_cast<long long>(us) * 10);
 
                     using namespace std::chrono;
                     using namespace std::chrono_literals;
@@ -115,7 +115,7 @@ void AsyncLooper::loopStart()
 
                             if (us > (t2 - tStart))
                             {
-                                dueTime.QuadPart = -(long long(us - (t2 - tStart)) * 10);
+                                dueTime.QuadPart = -(static_cast<long long>(us - (t2 - tStart)) * 10);
                             }
                             else
                             {
