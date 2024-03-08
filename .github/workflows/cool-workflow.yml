@@ -2,7 +2,7 @@ name: cool-workflow
 on: [push, workflow_dispatch]
 
 jobs:
-  job:
+  build:
     name: ${{ matrix.os }}-${{ github.workflow }}
     runs-on: ${{ matrix.os }}
     strategy:
