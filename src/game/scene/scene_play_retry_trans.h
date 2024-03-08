@@ -5,9 +5,9 @@ class ScenePlayRetryTrans : public SceneBase
 {
 public:
     ScenePlayRetryTrans();
-    virtual ~ScenePlayRetryTrans() = default;
+    ~ScenePlayRetryTrans() override = default;
 
 protected:
     // Looper callbacks
-    virtual void _updateAsync() override {}
+    void _updateAsync() override {}
 };

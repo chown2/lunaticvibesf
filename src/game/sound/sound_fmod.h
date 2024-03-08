@@ -54,13 +54,13 @@ protected:
 
 public:
 	SoundDriverFMOD();
-	virtual ~SoundDriverFMOD();
+	~SoundDriverFMOD() override;
 	void createChannelGroups();
 
 public:
-	virtual std::vector<std::pair<int, std::string>> getDeviceList();
-	virtual int setDevice(size_t index);
-	virtual std::pair<int, int> getDSPBufferSize();
+	std::vector<std::pair<int, std::string>> getDeviceList() override;
+	int setDevice(size_t index) override;
+	std::pair<int, int> getDSPBufferSize() override;
 private:
 	int findDriver(const std::string& name, int driverIDUnknown);
 
@@ -73,28 +73,28 @@ public:
     int setAsyncIO(bool async = true);
 
 public:
-	virtual int loadNoteSample(const Path& path, size_t index);
-	virtual void playNoteSample(SoundChannelType ch, size_t count, size_t index[]);
-	virtual void stopNoteSamples();
-	virtual void freeNoteSamples();
-	virtual long long getNoteSampleLength(size_t index);
+	int loadNoteSample(const Path& path, size_t index) override;
+	void playNoteSample(SoundChannelType ch, size_t count, size_t index[]) override;
+	void stopNoteSamples() override;
+	void freeNoteSamples() override;
+	long long getNoteSampleLength(size_t index) override;
 	virtual void update();
 
 public:
-	virtual int loadSysSample(const Path& path, size_t index, bool isStream = false, bool loop = false);
-	virtual void playSysSample(SoundChannelType ch, size_t index);
-	virtual void stopSysSamples();
-	virtual void freeSysSamples();
+	int loadSysSample(const Path& path, size_t index, bool isStream = false, bool loop = false) override;
+	void playSysSample(SoundChannelType ch, size_t index) override;
+	void stopSysSamples() override;
+	void freeSysSamples() override;
 	int getChannelsPlaying();
 
 public:
-	virtual void setSysVolume(float v, int gradientTime = 0);
-	virtual void setNoteVolume(float v, int gradientTime = 0);
-	virtual void setVolume(SampleChannel ch, float v);
-	virtual void setDSP(DSPType type, int index, SampleChannel ch, float p1, float p2);
-	virtual void setFreqFactor(double f);
-	virtual void setSpeed(double speed);
-	virtual void setPitch(double pitch);
-	virtual void setEQ(EQFreq freq, int gain);
+	void setSysVolume(float v, int gradientTime = 0) override;
+	void setNoteVolume(float v, int gradientTime = 0) override;
+	void setVolume(SampleChannel ch, float v) override;
+	void setDSP(DSPType type, int index, SampleChannel ch, float p1, float p2) override;
+	void setFreqFactor(double f) override;
+	void setSpeed(double speed) override;
+	void setPitch(double pitch) override;
+	void setEQ(EQFreq freq, int gain) override;
 
 };

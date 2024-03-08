@@ -97,7 +97,7 @@ public:
 
 public:
     ChartFormatBMSMeta() { _type = eChartFormat::BMS; }
-    virtual ~ChartFormatBMSMeta() = default;
+    ~ChartFormatBMSMeta() override = default;
 };
 
 // the size of parsing result is kinda large..
@@ -107,12 +107,12 @@ class ChartFormatBMS: public ChartFormatBMSMeta
     friend class SongDB;
 
 public:
-    virtual bool getExtendedProperty(const std::string& key, void* ret) override;
+    bool getExtendedProperty(const std::string& key, void* ret) override;
 
 public:
     ChartFormatBMS();
     ChartFormatBMS(const Path& absolutePath, uint64_t randomSeed = 0);
-    virtual ~ChartFormatBMS() = default;
+    ~ChartFormatBMS() override = default;
 
 protected:
     int initWithFile(const Path& absolutePath, uint64_t randomSeed = 0);

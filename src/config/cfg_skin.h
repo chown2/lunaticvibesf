@@ -55,7 +55,7 @@ class ConfigSkin : public vConfig
 {
 public:
     ConfigSkin(const std::string& profile) : vConfig(profile, CONFIG_FILE_SKIN) {}
-    virtual ~ConfigSkin() = default;
+    ~ConfigSkin() override = default;
 
-    virtual void setDefaults() noexcept override;
+    void setDefaults() noexcept override;
 };

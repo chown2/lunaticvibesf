@@ -82,7 +82,7 @@ protected:
 
 public:
     InputWrapper(unsigned rate = 1000, bool background = false);
-    virtual ~InputWrapper();
+    ~InputWrapper() override;
 
 public:
     void setRate(unsigned rate_per_sec);

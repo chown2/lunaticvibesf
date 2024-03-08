@@ -19,7 +19,7 @@ public:
 	Metre() : fraction() {}
 	Metre(long long division_level, long long multiple_level) : fraction(division_level, multiple_level, false) {}
 	Metre(double value) : fraction(static_cast<long long>(value * 1e12), 1e12, true) {}
-	virtual ~Metre() {}
+	~Metre() override {}
 
 	double toDouble() const { return operator double(); }
 	bool operator==(const Metre& rhs) const { return fraction(division_level(), multiple_level(), true) == fraction(rhs.division_level(), rhs.multiple_level(), true); }

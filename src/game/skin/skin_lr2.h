@@ -1331,7 +1331,7 @@ struct setDst { dst_option dst; bool set; };
 class SkinLR2: public SkinBase
 {
 public:
-    virtual int setExtendedProperty(std::string&& key, void* value);
+    int setExtendedProperty(std::string&& key, void* value) override;
 
 protected:
     static bool customizeDst[100];  // temporary workaround
@@ -1406,7 +1406,7 @@ public:
 public:
     SkinLR2() = delete;
     SkinLR2(Path p, int loadMode = 0);
-    virtual ~SkinLR2();
+    ~SkinLR2() override;
 
 protected:
     bool loadCSV(Path p);
@@ -1635,17 +1635,17 @@ protected:
     };
     std::vector<element> drawQueue;
 public:
-    virtual void update();
-    virtual void reset_bar_animation();
-    virtual void start_bar_animation() override;
-    virtual void draw() const;
+    void update() override;
+    void reset_bar_animation() override;
+    void start_bar_animation() override;
+    void draw() const override;
 
-    virtual size_t getCustomizeOptionCount() const;
-    virtual CustomizeOption getCustomizeOptionInfo(size_t idx) const;
+    size_t getCustomizeOptionCount() const override;
+    CustomizeOption getCustomizeOptionInfo(size_t idx) const override;
 
-    virtual StringContent getName() const;
-    virtual StringContent getMaker() const;
-    virtual StringPath getFilePath() const;
+    StringContent getName() const override;
+    StringContent getMaker() const override;
+    StringPath getFilePath() const override;
 };
 
 

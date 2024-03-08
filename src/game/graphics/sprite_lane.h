@@ -38,21 +38,21 @@ public:
 public:
     SpriteLaneVertical() = delete;
     SpriteLaneVertical(const SpriteLaneVerticalBuilder& builder);
-    virtual ~SpriteLaneVertical() = default;
+    ~SpriteLaneVertical() override = default;
     void buildNote(const SpriteAnimated::SpriteAnimatedBuilder& builder);
 
 public:
     void setHeight(int h) { _noteAreaHeight = h; }
-    virtual void setMotionLoopTo(int t);
-    virtual void setMotionStartTimer(IndexTimer t);
-    virtual void appendMotionKeyFrame(const MotionKeyFrame& f);
+    void setMotionLoopTo(int t) override;
+    void setMotionStartTimer(IndexTimer t) override;
+    void appendMotionKeyFrame(const MotionKeyFrame& f) override;
 
     std::pair<chart::NoteLaneCategory, chart::NoteLaneIndex> getLane() const;
     void getRectSize(int& w, int& h);
-	virtual bool update(const lunaticvibes::Time& t);
+    bool update(const lunaticvibes::Time& t) override;
     virtual void updateNoteRect(const lunaticvibes::Time& t);
-    virtual void draw() const;
-    virtual void adjustAfterUpdate(int x, int y, int w = 0, int h = 0) override;
+    void draw() const override;
+    void adjustAfterUpdate(int x, int y, int w = 0, int h = 0) override;
 
 protected:
     bool _hiddenCompatible = false;
@@ -87,15 +87,15 @@ public:
 public:
     SpriteLaneVerticalLN() = delete;
     SpriteLaneVerticalLN(const SpriteLaneVerticalLNBuilder& builder);
-    virtual ~SpriteLaneVerticalLN() = default;
+    ~SpriteLaneVerticalLN() override = default;
     void buildNoteHead(const SpriteAnimated::SpriteAnimatedBuilder& builder);
     void buildNoteBody(const SpriteAnimated::SpriteAnimatedBuilder& builder);
     void buildNoteTail(const SpriteAnimated::SpriteAnimatedBuilder& builder);
 
 public:
-    virtual void setMotionStartTimer(IndexTimer t);
+    void setMotionStartTimer(IndexTimer t) override;
 
-    virtual void updateNoteRect(const lunaticvibes::Time& t) override;
-    virtual void draw() const;
-    virtual void adjustAfterUpdate(int x, int y, int w = 0, int h = 0) override;
+    void updateNoteRect(const lunaticvibes::Time& t) override;
+    void draw() const override;
+    void adjustAfterUpdate(int x, int y, int w = 0, int h = 0) override;
 };

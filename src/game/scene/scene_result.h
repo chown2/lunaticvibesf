@@ -29,11 +29,11 @@ protected:
 
 public:
     SceneResult();
-    virtual ~SceneResult();
+    ~SceneResult() override;
 
 protected:
     // Looper callbacks
-    virtual void _updateAsync() override;
+    void _updateAsync() override;
     void updateDraw();
     void updateStop();
     void updateRecord();

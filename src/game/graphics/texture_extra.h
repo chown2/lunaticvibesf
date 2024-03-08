@@ -19,7 +19,7 @@ protected:
 
 public:
 	TextureVideo(std::shared_ptr<sVideo> pv);
-	virtual ~TextureVideo();
+	~TextureVideo() override;
 	void start();
 	void stop();
 	void seek(int64_t sec);
@@ -27,14 +27,14 @@ public:
 	void update();
 	void reset();
 
-	virtual void draw(RectF dstRect,
-		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees) const;
-	virtual void draw(RectF dstRect,
-		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees, const Point& center) const;
-	virtual void draw(const Rect& srcRect, RectF dstRect,
-		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees) const;
-	virtual void draw(const Rect& srcRect, RectF dstRect,
-		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees, const Point& center) const;
+	void draw(RectF dstRect,
+		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees) const override;
+	void draw(RectF dstRect,
+		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees, const Point& center) const override;
+	void draw(const Rect& srcRect, RectF dstRect,
+		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees) const override;
+	void draw(const Rect& srcRect, RectF dstRect,
+		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees, const Point& center) const override;
 
 	void stopUpdate();
 
@@ -95,7 +95,7 @@ public:
 		layerIt = layerSlot.begin();
 		poorIt = poorSlot.begin();
 	}
-	virtual ~TextureBmsBga()
+	~TextureBmsBga() override
 	{
 		stopUpdate();
 	}
@@ -108,9 +108,9 @@ public:
 	virtual void seek(const lunaticvibes::Time& t);
 
 	virtual void update(const lunaticvibes::Time& t, bool poor);
-	virtual void draw(const Rect& srcRect, RectF dstRect,
+	void draw(const Rect& srcRect, RectF dstRect,
 		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees) const override;
-	virtual void draw(const Rect& srcRect, RectF dstRect,
+	void draw(const Rect& srcRect, RectF dstRect,
 		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees,
 		const Point& center) const override;
 
@@ -133,17 +133,17 @@ protected:
 
 public:
 	TextureDynamic();
-	virtual ~TextureDynamic() = default;
+	~TextureDynamic() override = default;
 
 public:
 	void setPath(const Path& path);
 
-	virtual void draw(RectF dstRect,
-		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees) const;
-	virtual void draw(RectF dstRect,
-		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees, const Point& center) const;
-	virtual void draw(const Rect& srcRect, RectF dstRect,
-		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees) const;
-	virtual void draw(const Rect& srcRect, RectF dstRect,
-		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees, const Point& center) const;
+	void draw(RectF dstRect,
+		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees) const override;
+	void draw(RectF dstRect,
+		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees, const Point& center) const override;
+	void draw(const Rect& srcRect, RectF dstRect,
+		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees) const override;
+	void draw(const Rect& srcRect, RectF dstRect,
+		const Color c, const BlendMode blend, const bool filter, const double angleInDegrees, const Point& center) const override;
 };

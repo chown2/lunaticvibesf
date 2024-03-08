@@ -30,7 +30,7 @@ class ArenaClient: public AsyncLooper
 
 public:
 	ArenaClient() : AsyncLooper("Arena Client", std::bind(&ArenaClient::update, this), 60) {}
-	virtual ~ArenaClient();
+	~ArenaClient() override;
 
 private:
 	using udp = boost::asio::ip::udp;

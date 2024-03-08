@@ -5,7 +5,7 @@ class mock_SkinLR2 : public SkinLR2
 {
 public:
 	mock_SkinLR2(Path p, int loadMode = 0) : SkinLR2(p, loadMode) {}
-	virtual ~mock_SkinLR2() = default;
+	~mock_SkinLR2() override = default;
 
 
 	std::vector<element> getDrawQueue() { return drawQueue; }

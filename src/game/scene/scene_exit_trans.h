@@ -5,9 +5,9 @@ class SceneExitTrans : public SceneBase
 {
 public:
     SceneExitTrans();
-    virtual ~SceneExitTrans() = default;
+    ~SceneExitTrans() override = default;
 
 protected:
     // Looper callbacks
-    virtual void _updateAsync() override {}
+    void _updateAsync() override {}
 };

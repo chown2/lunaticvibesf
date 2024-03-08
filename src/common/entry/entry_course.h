@@ -30,7 +30,7 @@ public:
 
 public:
 	EntryCourse() = default;
-	virtual ~EntryCourse() = default;
+	~EntryCourse() override = default;
 
 	EntryCourse(const CourseLr2crs::Course& lr2crs, long long addTime)
 	{

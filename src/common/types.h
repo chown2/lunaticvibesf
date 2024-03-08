@@ -212,7 +212,7 @@ public:
     double rival_rate = 0;
     Lamp rival_lamp = Lamp::NOPLAY;
 
-    virtual Type getType() const override { return Type::BMS; }
+    Type getType() const override { return Type::BMS; }
 };
 
 class AxisDir

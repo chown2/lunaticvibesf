@@ -17,7 +17,7 @@ class ArenaHost: public AsyncLooper
 
 public:
 	ArenaHost() : AsyncLooper("Arena Host", std::bind(&ArenaHost::update, this), 60) {}
-	virtual ~ArenaHost();
+	~ArenaHost() override;
 
 private:
 	using udp = boost::asio::ip::udp;

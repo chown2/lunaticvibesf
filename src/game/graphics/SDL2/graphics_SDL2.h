@@ -222,14 +222,14 @@ public:
 class TextureFull: public Texture
 {
 private:
-    virtual void draw(const Rect& srcRect, RectF dstRect, 
+    void draw(const Rect& srcRect, RectF dstRect,
         const Color c, const BlendMode blend, const bool filter, const double angleInDegrees) const override;
 public:
     TextureFull(const Color& srcColor);
     TextureFull(const Image& srcImage);
     TextureFull(const SDL_Surface* pSurface);
     TextureFull(const SDL_Texture* pTexture, int w, int h);
-    virtual ~TextureFull();
+    ~TextureFull() override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

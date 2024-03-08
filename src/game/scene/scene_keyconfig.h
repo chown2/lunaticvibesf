@@ -11,11 +11,11 @@ private:
 
 public:
     SceneKeyConfig();
-    virtual ~SceneKeyConfig();
+    ~SceneKeyConfig() override;
 
 protected:
     // Looper callbacks
-    virtual void _updateAsync() override;
+    void _updateAsync() override;
     std::function<void()> _updateCallback;
     void updateStart();
     void updateMain();

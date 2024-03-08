@@ -46,7 +46,7 @@ public:
     SongDB() = delete;
     SongDB(const char* path);
     SongDB(const Path& path) : SongDB(path.u8string().c_str()) {}
-    ~SongDB();
+    ~SongDB() override;
     SongDB(SongDB&) = delete;
     SongDB& operator= (SongDB&) = delete;
 

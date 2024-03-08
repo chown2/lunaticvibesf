@@ -9,7 +9,7 @@ class SoundSetLR2 : public vSoundSet
 public:
 	SoundSetLR2();
 	SoundSetLR2(Path p);
-	virtual ~SoundSetLR2() = default;
+	~SoundSetLR2() override = default;
 	void loadCSV(Path p);
 	bool parseHeader(const std::vector<StringContent>& tokens);
 	bool parseBody(const std::vector<StringContent>& tokens);
@@ -39,26 +39,26 @@ protected:
 	bool loadPath(const std::string& key, const std::string& rawpath);
 
 public:
-	virtual Path getPathBGMSelect() const;
-	virtual Path getPathBGMDecide() const;
+	Path getPathBGMSelect() const override;
+	Path getPathBGMDecide() const override;
 
-	virtual Path getPathSoundOpenFolder() const;
-	virtual Path getPathSoundCloseFolder() const;
-	virtual Path getPathSoundOpenPanel() const;
-	virtual Path getPathSoundClosePanel() const;
-	virtual Path getPathSoundOptionChange() const;
-	virtual Path getPathSoundDifficultyChange() const;
+	Path getPathSoundOpenFolder() const override;
+	Path getPathSoundCloseFolder() const override;
+	Path getPathSoundOpenPanel() const override;
+	Path getPathSoundClosePanel() const override;
+	Path getPathSoundOptionChange() const override;
+	Path getPathSoundDifficultyChange() const override;
 
-	virtual Path getPathSoundScreenshot() const;
+	Path getPathSoundScreenshot() const override;
 
-	virtual Path getPathBGMResultClear() const;
-	virtual Path getPathBGMResultFailed() const;
-	virtual Path getPathSoundFailed() const;
-	virtual Path getPathSoundLandmine() const;
-	virtual Path getPathSoundScratch() const;
+	Path getPathBGMResultClear() const override;
+	Path getPathBGMResultFailed() const override;
+	Path getPathSoundFailed() const override;
+	Path getPathSoundLandmine() const override;
+	Path getPathSoundScratch() const override;
 
-	virtual Path getPathBGMCourseClear() const;
-	virtual Path getPathBGMCourseFailed() const;
+	Path getPathBGMCourseClear() const override;
+	Path getPathBGMCourseFailed() const override;
 
 public:
 	virtual size_t getCustomizeOptionCount() const;

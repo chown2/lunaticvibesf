@@ -86,11 +86,11 @@ private:
 
 public:
     SceneSelect();
-    virtual ~SceneSelect();
+    ~SceneSelect() override;
 
 protected:
     // Looper callbacks
-    virtual void _updateAsync() override;
+    void _updateAsync() override;
     std::function<void()> _updateCallback;
     void updatePrepare();
     void updateSelect();
@@ -98,8 +98,8 @@ protected:
     void updatePanel(unsigned idx);
     void updateFadeout();
 
-    virtual void update() override;
-    virtual void updateImgui() override;
+    void update() override;
+    void updateImgui() override;
 
 protected:
     // Inner-state updates
@@ -131,9 +131,9 @@ private:
     bool closeAllPanels(const lunaticvibes::Time& t);
 
 protected:
-    virtual bool checkAndStartTextEdit() override;
+    bool checkAndStartTextEdit() override;
     void inputGamePressTextEdit(InputMask&, const lunaticvibes::Time&);
-    virtual void stopTextEdit(bool modify) override;
+    void stopTextEdit(bool modify) override;
     void resetJukeboxText();
     void searchSong(const std::string& text);
 

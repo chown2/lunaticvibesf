@@ -27,13 +27,13 @@ protected:
     size_t idx = 0;
 
 private:
-    virtual std::shared_ptr<EntryBase> getEntry(size_t idx) { return nullptr; }
-    virtual void pushEntry(std::shared_ptr<EntryBase> f) {}
+    std::shared_ptr<EntryBase> getEntry(size_t idx) override { return nullptr; }
+    void pushEntry(std::shared_ptr<EntryBase> f) override {}
 
 public:
-    virtual Path getPath() { return _path; }
-    virtual size_t getContentsCount() { return charts.size(); }
-    virtual bool empty() { return charts.empty(); }
+    Path getPath() override { return _path; }
+    size_t getContentsCount() override { return charts.size(); }
+    bool empty() override { return charts.empty(); }
 
     std::shared_ptr<ChartFormatBase> getChart(size_t idx);
     std::shared_ptr<ChartFormatBase> getCurrentChart();
@@ -86,7 +86,7 @@ protected:
     Path _path;
 
 public:
-    virtual Path getPath() { return _path; }
+    Path getPath() override { return _path; }
 };
 
 // entry for individual song, e.g. jukebox/bms/L9

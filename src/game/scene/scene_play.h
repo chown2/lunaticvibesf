@@ -101,7 +101,7 @@ private:
 
 public:
     ScenePlay();
-    virtual ~ScenePlay();
+    ~ScenePlay() override;
     void clearGlobalDatas();
     bool createChartObj();
     bool createRuleset();
@@ -148,7 +148,7 @@ protected:
 
 protected:
     // Looper callbacks
-    virtual void _updateAsync() override;
+    void _updateAsync() override;
     void updateAsyncLanecover(const lunaticvibes::Time& t);
     void updateAsyncGreenNumber(const lunaticvibes::Time& t);
     void updateAsyncGaugeUpTimer(const lunaticvibes::Time& t);
@@ -190,7 +190,7 @@ protected:
     bool imguiAdjustIsDP = false;
     bool imguiAdjustHas2P = false;
 
-    virtual void updateImgui() override;
+    void updateImgui() override;
     void imguiInit();
     void imguiAdjustMenu();
 };

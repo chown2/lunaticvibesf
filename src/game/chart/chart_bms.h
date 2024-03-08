@@ -20,8 +20,8 @@ public:
     unsigned constexpr getScratchLnCount() const { return _noteCount_scratch_ln; }
 
 public:
-    virtual chart::NoteLaneIndex getLaneFromKey(chart::NoteLaneCategory cat, Input::Pad input);
-    virtual std::vector<Input::Pad> getInputFromLane(size_t channel);
+    chart::NoteLaneIndex getLaneFromKey(chart::NoteLaneCategory cat, Input::Pad input) override;
+    std::vector<Input::Pad> getInputFromLane(size_t channel) override;
 
     enum class eNoteExt : unsigned
     {
@@ -53,6 +53,6 @@ protected:
 
 public:
     //virtual void update(hTime t);
-    virtual void preUpdate(const lunaticvibes::Time& t) override;
-    virtual void postUpdate(const lunaticvibes::Time& t) override;
+    void preUpdate(const lunaticvibes::Time& t) override;
+    void postUpdate(const lunaticvibes::Time& t) override;
 };

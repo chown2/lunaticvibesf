@@ -5,16 +5,16 @@ class DifficultyTableBMS: public DifficultyTable
 {
 public:
 	DifficultyTableBMS() = default;
-	virtual ~DifficultyTableBMS() = default;
+	~DifficultyTableBMS() override = default;
 
 protected:
 	std::string symbol;
 	std::string data_url;
 
 public:
-	virtual void updateFromUrl(std::function<void(UpdateResult)> finishedCallback) override;
+	void updateFromUrl(std::function<void(UpdateResult)> finishedCallback) override;
 
-	virtual bool loadFromFile() override;
+	bool loadFromFile() override;
 
 	Path getFolderPath() const;
 

@@ -229,15 +229,15 @@ private:
     void _updateHp(JudgeArea judge);
 public:
     // Register to InputWrapper
-    virtual void updatePress(InputMask& pg, const lunaticvibes::Time& t) override;
+    void updatePress(InputMask& pg, const lunaticvibes::Time& t) override;
     // Register to InputWrapper
-    virtual void updateHold(InputMask& hg, const lunaticvibes::Time& t) override;
+    void updateHold(InputMask& hg, const lunaticvibes::Time& t) override;
     // Register to InputWrapper
-    virtual void updateRelease(InputMask& rg, const lunaticvibes::Time& t) override;
+    void updateRelease(InputMask& rg, const lunaticvibes::Time& t) override;
     // Register to InputWrapper
-    virtual void updateAxis(double s1, double s2, const lunaticvibes::Time& t) override;
+    void updateAxis(double s1, double s2, const lunaticvibes::Time& t) override;
     // Called by ScenePlay
-    virtual void update(const lunaticvibes::Time& t);
+    void update(const lunaticvibes::Time& t) override;
 
 public:
     //constexpr auto getJudge() const { return _count; }
@@ -254,17 +254,17 @@ public:
     std::string getModifierText() const;
     std::string getModifierTextShort() const;
 
-    virtual bool isNoScore() const { return moneyScore == 0.0; }
-    virtual bool isCleared() const { return !isFailed() && isFinished() && _basic.health >= getClearHealth(); }
-    virtual bool isFailed() const { return _isFailed; }
+    bool isNoScore() const override { return moneyScore == 0.0; }
+    bool isCleared() const override { return !isFailed() && isFinished() && _basic.health >= getClearHealth(); }
+    bool isFailed() const override { return _isFailed; }
 
-    virtual unsigned getCurrentMaxScore() const { return notesReached * 2; }
-    virtual unsigned getMaxScore() const { return getNoteCount() * 2; }
+    unsigned getCurrentMaxScore() const override { return notesReached * 2; }
+    unsigned getMaxScore() const override { return getNoteCount() * 2; }
 
-    virtual unsigned getNoteCount() const;
-    virtual unsigned getMaxCombo() const;
+    unsigned getNoteCount() const override;
+    unsigned getMaxCombo() const override;
 
-    virtual void fail();
+    void fail() override;
 
-    virtual void updateGlobals();
+    void updateGlobals() override;
 };

@@ -37,12 +37,12 @@ public:
 public:
     SpriteImageText() = delete;
     SpriteImageText(const SpriteImageTextBuilder& builder);
-    virtual ~SpriteImageText() = default;
+    ~SpriteImageText() override = default;
 
 public:
-    virtual void updateTextRect();
-    virtual bool update(const lunaticvibes::Time& t);
-    virtual void draw() const;
+    void updateTextRect() override;
+    bool update(const lunaticvibes::Time& t) override;
+    void draw() const override;
 
 private:
     void updateTextTexture(std::string&& text);

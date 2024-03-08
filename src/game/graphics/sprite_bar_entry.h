@@ -147,7 +147,7 @@ protected:
 
 public:
     SpriteBarEntry(size_t idx) : SpriteBase(SpriteTypes::BAR_ENTRY, -1), index(idx) {}
-    virtual ~SpriteBarEntry() = default;
+    ~SpriteBarEntry() override = default;
     int setBody(BarType type, const SpriteAnimated::SpriteAnimatedBuilder& builder);
     int setFlash(const SpriteAnimated::SpriteAnimatedBuilder& builder);
 	int setLevel(BarLevelType type, const SpriteNumber::SpriteNumberBuilder& builder);
@@ -163,10 +163,10 @@ public:
 
 public:
     virtual bool update(lunaticvibes::Time time);
-    virtual void setMotionLoopTo(int t);
-    virtual void setMotionStartTimer(IndexTimer t);
-    virtual void appendMotionKeyFrame(const MotionKeyFrame& f) override;
-    virtual void draw() const;
+    void setMotionLoopTo(int t) override;
+    void setMotionStartTimer(IndexTimer t) override;
+    void appendMotionKeyFrame(const MotionKeyFrame& f) override;
+    void draw() const override;
 
 public:
     auto getSpriteBodyOff(BarType type) { return sBodyOff[static_cast<size_t>(type)]; }
@@ -185,7 +185,7 @@ public:
 
 public:
     void setAvailable(bool c) { available = c; }
-    virtual void OnMouseMove(int x, int y) {}
-    virtual bool OnClick(int x, int y);
-    virtual bool OnDrag(int x, int y) { return false; }
+    void OnMouseMove(int x, int y) override {}
+    bool OnClick(int x, int y) override;
+    bool OnDrag(int x, int y) override { return false; }
 };

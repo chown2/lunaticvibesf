@@ -23,18 +23,18 @@ public:
     RulesetBMSNetwork(GameModeKeys keys, unsigned playerIndex);
 
 public:
-    virtual bool isFinished() const override { return _isFinished; }
+    bool isFinished() const override { return _isFinished; }
 
     // Register to InputWrapper
-    virtual void updatePress(InputMask& pg, const lunaticvibes::Time& t) override {}
+    void updatePress(InputMask& pg, const lunaticvibes::Time& t) override {}
     // Register to InputWrapper
-    virtual void updateHold(InputMask& hg, const lunaticvibes::Time& t) override {}
+    void updateHold(InputMask& hg, const lunaticvibes::Time& t) override {}
     // Register to InputWrapper
-    virtual void updateRelease(InputMask& rg, const lunaticvibes::Time& t) override {}
+    void updateRelease(InputMask& rg, const lunaticvibes::Time& t) override {}
     // Register to InputWrapper
-    virtual void updateAxis(double s1, double s2, const lunaticvibes::Time& t) override {}
+    void updateAxis(double s1, double s2, const lunaticvibes::Time& t) override {}
     // Called by ScenePlay
-    virtual void update(const lunaticvibes::Time& t) override;
+    void update(const lunaticvibes::Time& t) override;
 
 public:
     struct PayloadInit
@@ -64,7 +64,7 @@ public:
         }
     };
     static std::vector<unsigned char> packInit(std::shared_ptr<RulesetBMS> local);
-    virtual bool unpackInit(const std::vector<unsigned char>& payload);
+    bool unpackInit(const std::vector<unsigned char>& payload) override;
 
     struct PayloadFrame
     {
@@ -100,6 +100,6 @@ public:
         }
     };
     static std::vector<unsigned char> packFrame(std::shared_ptr<RulesetBMS> local);
-    virtual bool unpackFrame(std::vector<unsigned char>& payload);
+    bool unpackFrame(std::vector<unsigned char>& payload) override;
 };
 

@@ -28,15 +28,15 @@ public:
     void setTargetRate(double rate);
 
     // Register to InputWrapper
-    virtual void updatePress(InputMask& pg, const lunaticvibes::Time& t) override {}
+    void updatePress(InputMask& pg, const lunaticvibes::Time& t) override {}
     // Register to InputWrapper
-    virtual void updateHold(InputMask& hg, const lunaticvibes::Time& t) override {}
+    void updateHold(InputMask& hg, const lunaticvibes::Time& t) override {}
     // Register to InputWrapper
-    virtual void updateRelease(InputMask& rg, const lunaticvibes::Time& t) override {}
+    void updateRelease(InputMask& rg, const lunaticvibes::Time& t) override {}
     // Register to InputWrapper
-    virtual void updateAxis(double s1, double s2, const lunaticvibes::Time& t) override {}
+    void updateAxis(double s1, double s2, const lunaticvibes::Time& t) override {}
 	// Called by ScenePlay
-	virtual void update(const lunaticvibes::Time& t) override;
+	void update(const lunaticvibes::Time& t) override;
 
-    virtual void fail();
+    void fail() override;
 };

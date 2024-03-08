@@ -74,7 +74,7 @@ protected:
 public:
     SceneBase() = delete;
     SceneBase(SkinType skinType, unsigned rate = 240, bool backgroundInput = false);
-    virtual ~SceneBase();
+    ~SceneBase() override;
     void inputLoopStart() { _input.loopStart(); }
     void inputLoopEnd() { _input.loopEnd(); }
     void disableMouseInput() { pSkin->setHandleMouseEvents(false); }

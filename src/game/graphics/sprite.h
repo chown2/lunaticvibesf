@@ -160,7 +160,7 @@ protected:
 
 public:
     SpriteGlobal(size_t globalSpriteIndex, int srcLine = -1) : SpriteBase(SpriteTypes::GLOBAL, srcLine), globalSpriteIndex(globalSpriteIndex) {}
-    virtual ~SpriteGlobal() = default;
+    ~SpriteGlobal() override = default;
 
     size_t getMyGlobalSpriteIndex() {
         return globalSpriteIndex;
@@ -171,7 +171,7 @@ public:
         srcLine = p->srcLine;
     }
 
-    virtual bool update(const lunaticvibes::Time& time) {
+    bool update(const lunaticvibes::Time& time) override {
         SpriteBase::update(time);
         if (getMyGlobalSpriteIndex()) 
             setSpriteReference(gSprites[getMyGlobalSpriteIndex()]);
@@ -179,22 +179,22 @@ public:
             return pSpriteRef->update(time);
         return false;
     }
-    virtual void setMotionLoopTo(int t) {
+    void setMotionLoopTo(int t) override {
         SpriteBase::setMotionLoopTo(t);
         if (pSpriteRef) 
             pSpriteRef->setMotionLoopTo(t);
     }
-    virtual void setMotionStartTimer(IndexTimer t) {
+    void setMotionStartTimer(IndexTimer t) override {
         SpriteBase::setMotionStartTimer(t);
         if (pSpriteRef) 
             pSpriteRef->setMotionStartTimer(t);
     }
-    virtual void appendMotionKeyFrame(const MotionKeyFrame& f) override {
+    void appendMotionKeyFrame(const MotionKeyFrame& f) override {
         SpriteBase::appendMotionKeyFrame(f);
         if (pSpriteRef) 
             pSpriteRef->appendMotionKeyFrame(f);
     }
-    virtual void draw() const {
+    void draw() const override {
         if (pSpriteRef) 
             pSpriteRef->draw();
     }
@@ -218,11 +218,11 @@ public:
 public:
     SpriteStatic() = delete;
     SpriteStatic(const SpriteStaticBuilder& builder);
-    virtual ~SpriteStatic() = default;
+    ~SpriteStatic() override = default;
 protected:
     SpriteStatic(std::shared_ptr<Texture> texture, const Rect& texRect, int srcLine = -1);
 public:
-    virtual void draw() const;
+    void draw() const override;
 
 };
 
@@ -250,11 +250,11 @@ public:
 public:
     SpriteSelection() = delete;
     SpriteSelection(const SpriteSelectionBuilder& builder);
-    virtual ~SpriteSelection() = default;
+    ~SpriteSelection() override = default;
 public:
-	virtual bool update(const lunaticvibes::Time& t);
+    bool update(const lunaticvibes::Time& t) override;
     virtual void updateSelection(size_t i);
-    virtual void draw() const;
+    void draw() const override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -285,11 +285,11 @@ public:
 public:
     SpriteAnimated() = delete;
     SpriteAnimated(const SpriteAnimatedBuilder& builder);
-    virtual ~SpriteAnimated() = default;
+    ~SpriteAnimated() override = default;
 public:
-	virtual bool update(const lunaticvibes::Time& t);
+    bool update(const lunaticvibes::Time& t) override;
     virtual void updateAnimation(const lunaticvibes::Time& t);
-    virtual void draw() const;
+    void draw() const override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -333,7 +333,7 @@ public:
 public:
     SpriteText() = delete;
     SpriteText(const SpriteTextBuilder& builder);
-    virtual ~SpriteText() = default;
+    ~SpriteText() override = default;
 
 public:
     virtual void updateText();
@@ -342,13 +342,13 @@ private:
     void updateTextTexture(std::string&& text, const Color& c);
 
 public:
-	virtual bool update(const lunaticvibes::Time& t);
-    virtual void draw() const;
+    bool update(const lunaticvibes::Time& t) override;
+    void draw() const override;
 
 public:
-    virtual void OnMouseMove(int x, int y) {}
-    virtual bool OnClick(int x, int y);
-    virtual bool OnDrag(int x, int y) { return false; }
+    void OnMouseMove(int x, int y) override {}
+    bool OnClick(int x, int y) override;
+    bool OnDrag(int x, int y) override { return false; }
 
     bool isEditing() const { return editing; }
     void startEditing(bool clear);
@@ -418,16 +418,16 @@ public:
 public:
     SpriteNumber() = delete;
     SpriteNumber(const SpriteNumberBuilder& builder);
-    virtual ~SpriteNumber() = default;
+    ~SpriteNumber() override = default;
 
 public:
     void updateNumber(int n);           // invoke updateSplit to change number
     void updateNumberByInd();
     void updateNumberRect();
-	virtual bool update(const lunaticvibes::Time& t);
-    virtual void appendMotionKeyFrame(const MotionKeyFrame& f) override;
-    virtual void draw() const;
-    virtual void adjustAfterUpdate(int x, int y, int w = 0, int h = 0) override;
+    bool update(const lunaticvibes::Time& t) override;
+    void appendMotionKeyFrame(const MotionKeyFrame& f) override;
+    void draw() const override;
+    void adjustAfterUpdate(int x, int y, int w = 0, int h = 0) override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -464,17 +464,17 @@ public:
 public:
     SpriteSlider() = delete;
     SpriteSlider(const SpriteSliderBuilder& builder);
-    virtual ~SpriteSlider() = default;
+    ~SpriteSlider() override = default;
 
 public:
     void updateVal(double v);
     void updateValByInd();
     void updatePos();
-	virtual bool update(const lunaticvibes::Time& t);
+	bool update(const lunaticvibes::Time& t) override;
 
-    virtual void OnMouseMove(int x, int y) {}
-    virtual bool OnClick(int x, int y);
-    virtual bool OnDrag(int x, int y);
+    void OnMouseMove(int x, int y) override {}
+    bool OnClick(int x, int y) override;
+    bool OnDrag(int x, int y) override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -506,13 +506,13 @@ public:
 public:
     SpriteBargraph() = delete;
     SpriteBargraph(const SpriteBargraphBuilder& builder);
-    virtual ~SpriteBargraph() = default;
+    ~SpriteBargraph() override = default;
 
 public:
     void updateVal(Ratio v);
     void updateValByInd();
     void updateSize();
-	virtual bool update(const lunaticvibes::Time& t);
+	bool update(const lunaticvibes::Time& t) override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -545,13 +545,13 @@ public:
 public:
     SpriteOption(const SpriteOptionBuilder& builder);
     SpriteOption() = delete;
-    virtual ~SpriteOption() = default;
+    ~SpriteOption() override = default;
 
 public:
 	bool setInd(opType type, unsigned ind);
     void updateVal(unsigned v);     // invoke SpriteSplit::updateSplit(v)
     void updateValByInd();
-	virtual bool update(const lunaticvibes::Time& t);
+	bool update(const lunaticvibes::Time& t) override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -576,12 +576,12 @@ public:
 public:
     SpriteButton() = delete;
     SpriteButton(const SpriteButtonBuilder& builder);
-    virtual ~SpriteButton() = default;
+    ~SpriteButton() override = default;
 
 public:
-    virtual void OnMouseMove(int x, int y) {}
-    virtual bool OnClick(int x, int y);
-    virtual bool OnDrag(int x, int y) { return false; }
+    void OnMouseMove(int x, int y) override {}
+    bool OnClick(int x, int y) override;
+    bool OnDrag(int x, int y) override { return false; }
 };
 
 
@@ -646,7 +646,7 @@ public:
 public:
     SpriteGaugeGrid() = delete;
     SpriteGaugeGrid(const SpriteGaugeGridBuilder& builder);
-    virtual ~SpriteGaugeGrid() = default;
+    ~SpriteGaugeGrid() override = default;
 
 public:
 	void setFlashType(FlashType t);
@@ -655,8 +655,8 @@ public:
 public:
     void updateVal(unsigned v);
     void updateValByInd();
-	virtual bool update(const lunaticvibes::Time& t);
-	virtual void draw() const;
+	bool update(const lunaticvibes::Time& t) override;
+	void draw() const override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -678,14 +678,14 @@ public:
 public:
     SpriteOnMouse() = delete;
     SpriteOnMouse(const SpriteOnMouseBuilder& builder);
-    virtual ~SpriteOnMouse() = default;
+    ~SpriteOnMouse() override = default;
 
 public:
-    virtual bool update(const lunaticvibes::Time& t);
+    bool update(const lunaticvibes::Time& t) override;
 
-    virtual void OnMouseMove(int x, int y);
-    virtual bool OnClick(int x, int y) { return false; }
-    virtual bool OnDrag(int x, int y) { return false; }
+    void OnMouseMove(int x, int y) override;
+    bool OnClick(int x, int y) override { return false; }
+    bool OnDrag(int x, int y) override { return false; }
 };
 
 
@@ -701,12 +701,12 @@ public:
 public:
     SpriteCursor() = delete;
     SpriteCursor(const SpriteCursorBuilder& builder);
-    virtual ~SpriteCursor() = default;
+     ~SpriteCursor() override = default;
 
 public:
-    virtual bool update(const lunaticvibes::Time& t);
+    bool update(const lunaticvibes::Time& t) override;
 
-    virtual void OnMouseMove(int x, int y);
-    virtual bool OnClick(int x, int y) { return false; }
-    virtual bool OnDrag(int x, int y) { return false; }
+    void OnMouseMove(int x, int y) override;
+    bool OnClick(int x, int y) override { return false; }
+    bool OnDrag(int x, int y) override { return false; }
 };

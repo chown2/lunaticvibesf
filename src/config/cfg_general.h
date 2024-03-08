@@ -88,9 +88,9 @@ class ConfigGeneral: public vConfig
 {
 public:
     ConfigGeneral(const char* file) : vConfig(file) {}
-    virtual ~ConfigGeneral() = default;
+    ~ConfigGeneral() override = default;
 
-	virtual void setDefaults() noexcept override;
+	void setDefaults() noexcept override;
 
     void setFolders(const std::vector<std::string>& path);
     void setTables(const std::vector<std::string>& urls);

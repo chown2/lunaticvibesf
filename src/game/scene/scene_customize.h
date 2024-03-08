@@ -9,7 +9,7 @@ private:
 
 public:
     SceneCustomize();
-    virtual ~SceneCustomize();
+    ~SceneCustomize() override;
 
 protected:
     struct Option
@@ -30,7 +30,7 @@ protected:
 
 protected:
     // Looper callbacks
-    virtual void _updateAsync() override;
+    void _updateAsync() override;
     std::function<void()> _updateCallback;
     void updateStart();
     void updateMain();
@@ -51,5 +51,5 @@ protected:
 protected:
     std::shared_ptr<SceneBase> pSubScene = nullptr;
 public:
-    virtual void draw() const override;
+    void draw() const override;
 };

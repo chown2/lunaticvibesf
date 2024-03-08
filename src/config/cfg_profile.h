@@ -292,10 +292,10 @@ public:
         Path p(_dirPath);
         if (!fs::exists(p)) fs::create_directories(p);
     }
-    virtual ~ConfigProfile() = default;
+    ~ConfigProfile() override = default;
 
     std::string getName() const;
     void setName(const std::string& name);
     Path getPath() const { return _dirPath; }
-    virtual void setDefaults() noexcept override;
+    void setDefaults() noexcept override;
 };

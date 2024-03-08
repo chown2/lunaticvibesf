@@ -94,10 +94,10 @@ private:
 public:
     ConfigInput() = delete;
     ConfigInput(const std::string& profile, GameModeKeys k);
-    virtual ~ConfigInput();
+    ~ConfigInput() override;
 
-    virtual void load() override;
-    virtual void setDefaults() noexcept override;
+    void load() override;
+    void setDefaults() noexcept override;
     void setDefaultsUSLayout() noexcept;
 
 public:

@@ -5,9 +5,9 @@ class ScenePlayCourseTrans : public SceneBase
 {
 public:
     ScenePlayCourseTrans();
-    virtual ~ScenePlayCourseTrans() = default;
+    ~ScenePlayCourseTrans() override = default;
 
 protected:
     // Looper callbacks
-    virtual void _updateAsync() override {}
+    void _updateAsync() override {}
 };

@@ -54,7 +54,7 @@ class SoundDriver: public AsyncLooper
 
 public:
     SoundDriver(std::function<void()> update) : AsyncLooper("Sound Driver", update, 1000, true) {}
-    virtual ~SoundDriver() = default;
+    ~SoundDriver() override = default;
 
 public:
     virtual std::vector<std::pair<int, std::string>> getDeviceList() = 0;

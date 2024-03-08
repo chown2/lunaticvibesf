@@ -10,7 +10,7 @@ public:
     tConfig() : vConfig() {}
     tConfig(StringPath path) : vConfig(path) {}
 
-    virtual void setDefaults() noexcept
+    void setDefaults() noexcept override
     {
         using namespace std::string_literals;
         set("ENTRY1", 1);

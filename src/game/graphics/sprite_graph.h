@@ -51,7 +51,7 @@ public:
 public:
     SpriteLine() = delete;
     SpriteLine(const SpriteLineBuilder& builder);
-    virtual ~SpriteLine() = default;
+    ~SpriteLine() override = default;
 
 public:
     void appendPoint(const ColorPoint&);
@@ -59,7 +59,7 @@ public:
 public:
     void updateProgress(const lunaticvibes::Time& t);
     void updateRects();
-    virtual bool update(const lunaticvibes::Time& t);
-    virtual void draw() const;
+    bool update(const lunaticvibes::Time& t) override;
+    void draw() const override;
 };
 
