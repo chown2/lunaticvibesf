@@ -518,22 +518,22 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
                 }
             }
         }
-        catch (noteLineException)
+        catch (const noteLineException&)
         {
             errorCode = err::NOTE_LINE_ERROR;
             throw;
         }
-        catch (std::invalid_argument)
+        catch (const std::invalid_argument&)
         {
             errorCode = err::TYPE_MISMATCH;
             throw;
         }
-        catch (std::out_of_range)
+        catch (const std::out_of_range&)
         {
             errorCode = err::VALUE_ERROR;
             throw;
         }
-        catch (std::exception)
+        catch (const std::exception&)
         {
             errorLine = srcLine;
             return 1;

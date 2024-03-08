@@ -3444,11 +3444,11 @@ int SkinLR2::parseBody(const Tokens &raw)
 
         LOG_DEBUG << "[Skin] " << csvLineNumber << ": Invalid def \"" << parseKeyBuf << "\" (Line " << csvLineNumber << ")";
     }
-    catch (std::invalid_argument e)
+    catch (const std::invalid_argument& e)
     {
         LOG_DEBUG << "[Skin] " << csvLineNumber << ": Invalid Argument: " << "(Line " << csvLineNumber << ")";
     }
-    catch (std::out_of_range e)
+    catch (const std::out_of_range& e)
     {
         LOG_DEBUG << "[Skin] " << csvLineNumber << ": Out of range: " << "(Line " << csvLineNumber << ")";
     }
