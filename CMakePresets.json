@@ -60,6 +60,15 @@
                 "CMAKE_CXX_COMPILER": "g++",
                 "CMAKE_CXX_FLAGS": "-fsanitize=address -pedantic -Werror=catch-value -Werror=reorder -Werror=sequence-point -Werror=switch"
             }
+        },
+        {
+            "name": "linux-vcpkg-clang",
+            "displayName": "Linux Multi-Config +vcpkg +clang warnings",
+            "inherits": "linux-vcpkg",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_CXX_FLAGS": "-fsanitize=address -pedantic"
+            }
         }
     ]
 }
