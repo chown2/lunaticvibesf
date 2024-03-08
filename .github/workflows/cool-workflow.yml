@@ -16,7 +16,6 @@ jobs:
             os: ubuntu-22.04
             preset: linux-vcpkg-gcc
             build-args: "--config Release"
-          # TODO: add ASAN ("/fsanitize=address").
           - name: "Windows (Debug)"
             os: windows-2022
             preset: x64-debug-vcpkg
