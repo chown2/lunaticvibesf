@@ -37,19 +37,19 @@ TEST(Fraction, inf)
 }
 TEST(Fraction, small)
 {
-    EXPECT_DOUBLE_EQ(1.0 / (LLONG_MAX), fraction(1, LLONG_MAX));
+    EXPECT_DOUBLE_EQ(1.0 / static_cast<double>(LLONG_MAX), fraction(1, LLONG_MAX));
 }
 TEST(Fraction, smalltrim)
 {
-    EXPECT_DOUBLE_EQ(2.0 / (LLONG_MAX), fraction(2, LLONG_MAX));
+    EXPECT_DOUBLE_EQ(2.0 / static_cast<double>(LLONG_MAX), fraction(2, LLONG_MAX));
 }
 TEST(Fraction, large)
 {
-    EXPECT_DOUBLE_EQ(1.0 * LLONG_MAX, fraction(LLONG_MAX, 1));
+    EXPECT_DOUBLE_EQ(1.0 * static_cast<double>(LLONG_MAX), fraction(LLONG_MAX, 1));
 }
 TEST(Fraction, largetrim)
 {
-    EXPECT_DOUBLE_EQ(0.5 * LLONG_MAX, fraction(LLONG_MAX, 2));
+    EXPECT_DOUBLE_EQ(0.5 * static_cast<double>(LLONG_MAX), fraction(LLONG_MAX, 2));
 }
 
 
