@@ -138,11 +138,15 @@ target_link_libraries(LunaticVibes PRIVATE gamelib)
 set_target_properties(LunaticVibes PROPERTIES
     CXX_STANDARD 17
 )
+install(TARGETS LunaticVibes)
 
 add_custom_command(TARGET LunaticVibes POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     $<TARGET_FILE:fmod>
     $<TARGET_FILE_DIR:LunaticVibes>
+)
+install(IMPORTED_RUNTIME_ARTIFACTS fmod
+    LIBRARY DESTINATION bin
 )
 
 add_custom_command(TARGET LunaticVibes POST_BUILD
@@ -150,9 +154,16 @@ add_custom_command(TARGET LunaticVibes POST_BUILD
     ${CMAKE_SOURCE_DIR}/res
     $<TARGET_FILE_DIR:LunaticVibes>/gamedata/resources
 )
+# NOTE: trailing slash is significant.
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/res/
+    DESTINATION bin/gamedata/resources
+)
 
 add_custom_command(TARGET LunaticVibes POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     ${CMAKE_SOURCE_DIR}/LICENSE_3RD_PARTY
     $<TARGET_FILE_DIR:LunaticVibes>/gamedata/resources/LICENSE_3RD_PARTY
+)
+install(FILES ${CMAKE_SOURCE_DIR}/LICENSE_3RD_PARTY
+    DESTINATION bin
 )
