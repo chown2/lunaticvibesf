@@ -3,11 +3,28 @@ on: [push, workflow_dispatch]
 
 jobs:
   build:
-    name: ${{ matrix.os }}-${{ github.workflow }}
+    name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-22.04, windows-2022]
+        include:
+          - name: "Ubuntu (Debug)"
+            os: ubuntu-22.04
+            preset: linux-vcpkg-gcc
+            build-args: "--config Debug"
+          - name: "Ubuntu (Release)"
+            os: ubuntu-22.04
+            preset: linux-vcpkg-gcc
+            build-args: "--config Release"
+          # TODO: add ASAN ("/fsanitize=address").
+          - name: "Windows (Debug)"
+            os: windows-2022
+            preset: x64-debug-vcpkg
+            build-args: ""
+          - name: "Windows (Release)"
+            os: windows-2022
+            preset: x64-release-vcpkg
+            build-args: ""
 
     steps:
       - name: Install apt dependencies
@@ -30,26 +47,11 @@ jobs:
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
 
-      - name: Configure project (Linux)
-        run: cmake --preset linux-vcpkg-gcc -B ./build
-        if: startsWith(matrix.os, 'ubuntu')
+      - name: Configure
+        run: cmake --preset ${{ matrix.preset }} -B ./build
 
-      - name: Build (Debug, Linux)
-        run: cmake --build build --config=Debug
-        if: startsWith(matrix.os, 'ubuntu')
-
-      - name: Build (Release, Linux)
-        run: cmake --build build --config=Release
-        if: startsWith(matrix.os, 'ubuntu')
-
-      # TODO: add ASAN ("/fsanitize=address").
-      - name: Configure project (Debug, Windows)
-        run: cmake --preset x64-debug-vcpkg -B ./build
-        if: startsWith(matrix.os, 'windows')
-
-      - name: Build (Windows)
-        run: cmake --build build
-        if: startsWith(matrix.os, 'windows')
+      - name: Build
+        run: cmake --build build ${{ matrix.build-args }}
 
       - name: Run tests
         run: ctest --test-dir build
