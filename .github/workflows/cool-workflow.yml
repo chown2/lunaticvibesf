@@ -7,8 +7,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # TODO: add Windows builds to CI.
-        os: [ubuntu-22.04]
+        os: [ubuntu-22.04, windows-2022]
 
     steps:
       - name: Install apt dependencies
@@ -23,19 +22,34 @@ jobs:
 
       - uses: actions/checkout@v4
 
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: startsWith(matrix.os, 'windows')
+
       - uses: lukka/get-cmake@v3.28.3
 
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
 
-      - name: Configure project
+      - name: Configure project (Linux)
         run: cmake --preset linux-vcpkg -B ./build -DCMAKE_CXX_FLAGS="-fsanitize=address"
+        if: startsWith(matrix.os, 'ubuntu')
 
-      - name: Build (Debug)
+      - name: Build (Debug, Linux)
         run: cmake --build build --config=Debug
+        if: startsWith(matrix.os, 'ubuntu')
 
-      - name: Build (Release)
+      - name: Build (Release, Linux)
         run: cmake --build build --config=Release
+        if: startsWith(matrix.os, 'ubuntu')
+
+      # TODO: add ASAN ("/fsanitize=address").
+      - name: Configure project (Debug, Windows)
+        run: cmake --preset x64-debug-vcpkg -B ./build
+        if: startsWith(matrix.os, 'windows')
+
+      - name: Build (Windows)
+        run: cmake --build build
+        if: startsWith(matrix.os, 'windows')
 
       - name: Run tests
         run: ctest --test-dir build
