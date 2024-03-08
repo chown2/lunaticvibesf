@@ -618,15 +618,17 @@ void setBarInfo()
             State::set(IndexText(int(IndexText::_SELECT_BAR_TITLE_FULL_0) + bar_index), entry->_name);
         }
     };
-    int list_idx, bar_index;
-    for (list_idx = idx, bar_index = cursor; bar_index > 0; list_idx = (--list_idx + e.size()) % e.size(), --bar_index)
+    // FIXME
+    #pragma GCC diagnostic ignored "-Wsequence-point"
+    for (size_t list_idx = idx, bar_index = cursor; bar_index > 0; list_idx = (--list_idx + e.size()) % e.size(), --bar_index)
     {
         setSingleBarInfo(list_idx, bar_index);
     }
-    for (list_idx = (idx + 1) % e.size(), bar_index = cursor + 1; bar_index < count; list_idx = (++list_idx) % e.size(), ++bar_index)
+    for (size_t list_idx = (idx + 1) % e.size(), bar_index = cursor + 1; bar_index < count; list_idx = (++list_idx) % e.size(), ++bar_index)
     {
         setSingleBarInfo(list_idx, bar_index);
     }
+    #pragma GCC diagnostic pop
 }
 
 void setEntryInfo()

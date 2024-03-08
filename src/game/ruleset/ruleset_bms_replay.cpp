@@ -85,20 +85,20 @@ void RulesetBMSReplay::update(const lunaticvibes::Time& t)
         {
             switch (itReplayCommand->type)
             {
-            case ReplayChart::Commands::Type::JUDGE_LEFT_EXACT_0:   cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_EXACT_0; break;
-            case ReplayChart::Commands::Type::JUDGE_LEFT_EARLY_0:   cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_EARLY_0; break;
-            case ReplayChart::Commands::Type::JUDGE_LEFT_EARLY_1:   cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_EARLY_1; break;
-            case ReplayChart::Commands::Type::JUDGE_LEFT_EARLY_2:   cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_EARLY_2; break;
-            case ReplayChart::Commands::Type::JUDGE_LEFT_EARLY_3:   cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_EARLY_3; break;
-            case ReplayChart::Commands::Type::JUDGE_LEFT_EARLY_4:   cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_EARLY_4; break;
-            case ReplayChart::Commands::Type::JUDGE_LEFT_EARLY_5:   cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_EARLY_5; break;
-            case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_0:    cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_0; break;
-            case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_1:    cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_1; break;
-            case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_2:    cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_2; break;
-            case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_3:    cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_3; break;
-            case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_4:    cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_4; break;
-            case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_5:    cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_5; break;
-            case ReplayChart::Commands::Type::JUDGE_LEFT_LANDMINE:  cmd = cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LANDMINE; break;
+            case ReplayChart::Commands::Type::JUDGE_LEFT_EXACT_0:   cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_EXACT_0; break;
+            case ReplayChart::Commands::Type::JUDGE_LEFT_EARLY_0:   cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_EARLY_0; break;
+            case ReplayChart::Commands::Type::JUDGE_LEFT_EARLY_1:   cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_EARLY_1; break;
+            case ReplayChart::Commands::Type::JUDGE_LEFT_EARLY_2:   cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_EARLY_2; break;
+            case ReplayChart::Commands::Type::JUDGE_LEFT_EARLY_3:   cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_EARLY_3; break;
+            case ReplayChart::Commands::Type::JUDGE_LEFT_EARLY_4:   cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_EARLY_4; break;
+            case ReplayChart::Commands::Type::JUDGE_LEFT_EARLY_5:   cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_EARLY_5; break;
+            case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_0:    cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_0; break;
+            case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_1:    cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_1; break;
+            case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_2:    cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_2; break;
+            case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_3:    cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_3; break;
+            case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_4:    cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_4; break;
+            case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_5:    cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_5; break;
+            case ReplayChart::Commands::Type::JUDGE_LEFT_LANDMINE:  cmd = ReplayChart::Commands::Type::JUDGE_RIGHT_LANDMINE; break;
 
             default: break;
             }
