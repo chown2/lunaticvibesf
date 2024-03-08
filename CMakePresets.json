@@ -2,7 +2,7 @@
     "version": 3,
     "configurePresets": [
         {
-            "name": "windows-base-vcpkg",
+            "name": "windows-vcpkg-base",
             "description": "Visual Studio + vcpkg",
             "hidden": true,
             "generator": "Ninja",
@@ -11,7 +11,11 @@
             "installDir": "${sourceDir}/out/install/${presetName}",
             "cacheVariables": {
                 "CMAKE_CXX_COMPILER": "cl.exe",
-                "CMAKE_CXX_FLAGS_INIT": "/fsanitize=address /permissive-"
+                "X_VCPKG_APPLOCAL_DEPS_INSTALL": "ON"
+            },
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
             },
             "condition": {
                 "type": "equals",
@@ -20,21 +24,18 @@
             }
         },
         {
-            "name": "x64-debug-vcpkg",
-            "displayName": "x64 Debug",
-            "description": "Target Windows (64-bit) with the Visual Studio development environment. (Debug)",
-            "inherits": "windows-base-vcpkg",
-            "architecture": {
-                "value": "x64",
-                "strategy": "external"
-            },
-            "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+            "name": "windows-vcpkg-debug",
+            "displayName": "Debug",
+            "inherits": "windows-vcpkg-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_FLAGS_INIT": "/fsanitize=address /permissive-"
+            }
         },
         {
-            "name": "x64-release-vcpkg",
-            "displayName": "x64 Release",
-            "description": "Target Windows (64-bit) with the Visual Studio development environment. (RelWithDebInfo)",
-            "inherits": "x64-debug-vcpkg",
+            "name": "windows-vcpkg-release",
+            "displayName": "Release",
+            "inherits": "windows-vcpkg-base",
             "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
         },
         {
