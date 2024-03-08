@@ -8,7 +8,7 @@
 struct DXArchiveSegment
 {
     size_t size;
-    std::shared_ptr<uint8_t> data;
+    std::shared_ptr<uint8_t[]> data;
 };
 
 using DXArchive = std::map<std::string, DXArchiveSegment>;

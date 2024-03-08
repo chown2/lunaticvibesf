@@ -375,8 +375,8 @@ int DirectoryDecode(u8* NameP, u8* DirP, u8* FileP, DARC_HEAD_VER5* Head, DARC_D
 
 						// 解凍
 						DestP.size = File->DataSize;
-						DestP.data = std::shared_ptr<uint8_t>(new uint8_t[DestP.size]);
-						Decompress(temp, &*DestP.data);
+						DestP.data = std::shared_ptr<uint8_t[]>(new uint8_t[DestP.size]);
+						Decompress(temp, DestP.data.get());
 
 						// メモリの解放
 						free(temp);
@@ -391,7 +391,7 @@ int DirectoryDecode(u8* NameP, u8* DirP, u8* FileP, DARC_HEAD_VER5* Head, DARC_D
 
 							WriteSize = 0;
 							DestP.size = File->DataSize;
-							DestP.data = std::shared_ptr<uint8_t>(new uint8_t[DestP.size]);
+							DestP.data = std::shared_ptr<uint8_t[]>(new uint8_t[DestP.size]);
 							while (WriteSize < File->DataSize)
 							{
 								MoveSize = File->DataSize - WriteSize > DXA_BUFFERSIZE_VER5 ? DXA_BUFFERSIZE_VER5 : File->DataSize - WriteSize;
@@ -399,11 +399,11 @@ int DirectoryDecode(u8* NameP, u8* DirP, u8* FileP, DARC_HEAD_VER5* Head, DARC_D
 								// ファイルの反転読み込み
 								if (Head->Version >= 0x0005)
 								{
-									KeyConvFileRead(&*DestP.data + WriteSize, MoveSize, ArcP, Key, File->DataSize + WriteSize);
+									KeyConvFileRead(DestP.data.get() + WriteSize, MoveSize, ArcP, Key, File->DataSize + WriteSize);
 								}
 								else
 								{
-									KeyConvFileRead(&*DestP.data + WriteSize, MoveSize, ArcP, Key);
+									KeyConvFileRead(DestP.data.get() + WriteSize, MoveSize, ArcP, Key);
 								}
 
 								WriteSize += MoveSize;
@@ -492,14 +492,14 @@ int DirectoryDecode(u8* NameP, u8* DirP, u8* FileP, DARC_HEAD_VER5* Head, DARC_D
 						}
 
 						// 解凍
-						auto buffer = std::shared_ptr<uint8_t>(new uint8_t[File->DataSize]);
-						Decompress(temp, &*buffer);
+						auto buffer = std::shared_ptr<uint8_t[]>(new uint8_t[File->DataSize]);
+						Decompress(temp, buffer.get());
 
 						// メモリの解放
 						free(temp);
 
 						std::ofstream ofs((DirPath / GetOriginalFileName(NameP + File->NameAddress)), std::ios_base::binary);
-						ofs.write((const char*)&*buffer, File->DataSize);
+						ofs.write((const char*)buffer.get(), File->DataSize);
 
 					}
 					else
@@ -512,7 +512,7 @@ int DirectoryDecode(u8* NameP, u8* DirP, u8* FileP, DARC_HEAD_VER5* Head, DARC_D
 
 							WriteSize = 0;
 
-							auto buffer = std::shared_ptr<uint8_t>(new uint8_t[DXA_BUFFERSIZE_VER5]);
+							auto buffer = std::shared_ptr<uint8_t[]>(new uint8_t[DXA_BUFFERSIZE_VER5]);
 
 							while (WriteSize < File->DataSize)
 							{
@@ -521,18 +521,18 @@ int DirectoryDecode(u8* NameP, u8* DirP, u8* FileP, DARC_HEAD_VER5* Head, DARC_D
 								// ファイルの反転読み込み
 								if (Head->Version >= 0x0005)
 								{
-									KeyConvFileRead(&*buffer + WriteSize, MoveSize, ArcP, Key, File->DataSize + WriteSize);
+									KeyConvFileRead(buffer.get() + WriteSize, MoveSize, ArcP, Key, File->DataSize + WriteSize);
 								}
 								else
 								{
-									KeyConvFileRead(&*buffer + WriteSize, MoveSize, ArcP, Key);
+									KeyConvFileRead(buffer.get() + WriteSize, MoveSize, ArcP, Key);
 								}
 
 								WriteSize += MoveSize;
 							}
 
 							std::ofstream ofs((DirPath / GetOriginalFileName(NameP + File->NameAddress)), std::ios_base::binary);
-							ofs.write((const char*)&*buffer, File->DataSize);
+							ofs.write((const char*)buffer.get(), File->DataSize);
 						}
 					}
 				}
