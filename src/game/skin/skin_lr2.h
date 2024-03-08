@@ -1621,14 +1621,6 @@ protected:
 
     void IF(const Tokens& t, std::istream&, eFileEncoding enc, bool ifUnsatisfied = false, bool skipOnly = false);
 
-    //std::vector<SkinLR2> _csvIncluded;
-
-
-private:
-    // generated sprite references
-    std::shared_ptr<SpriteBase> spriteLanecoverTop1P = nullptr;
-    std::shared_ptr<SpriteBase> spriteLanecoverTop2P = nullptr;
-
 ////////////////////////////////////////////////////////////////////////////////
 
 protected:

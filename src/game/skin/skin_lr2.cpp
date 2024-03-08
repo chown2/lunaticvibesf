@@ -1009,9 +1009,6 @@ int SkinLR2::INCLUDE()
         Path path = getCustomizePath(parseParamBuf[0]);
 
         LOG_DEBUG << "[Skin] " << csvLineNumber << ": INCLUDE: " << path.u8string();
-        //auto subCsv = SkinLR2(path);
-        //if (subCsv.loaded)
-        //    _csvIncluded.push_back(std::move(subCsv));
         loadCSV(path);
         LOG_DEBUG << "[Skin] " << csvLineNumber << ": INCLUDE END //" << path.u8string();
         return 1;
@@ -1455,13 +1452,6 @@ ParseRet SkinLR2::SRC_SLIDER()
 
     switch ((IndexSlider)d.type)
     {
-    case IndexSlider::SUD_1P:
-        spriteLanecoverTop1P = _sprites.back();
-        break;
-    case IndexSlider::SUD_2P:
-        spriteLanecoverTop1P = _sprites.back();
-        break;
-
     case IndexSlider::HID_1P:
     case IndexSlider::HID_2P:
         isSupportLift = true;
@@ -4622,10 +4612,6 @@ void SkinLR2::draw() const
     {
         e.ps->draw();
     }
-    //for (auto& c : _csvIncluded)
-    //{
-    //    c.draw();
-    //}
 }
 
 size_t SkinLR2::getCustomizeOptionCount() const
