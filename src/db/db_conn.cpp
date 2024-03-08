@@ -107,8 +107,8 @@ int SQLite::exec(const char* zsql, std::initializer_list<std::any> args)
 
     sqlite3_stmt* stmt = nullptr;
     const char* pzTail;
-    int ret;
-    if (ret = sqlite3_prepare_v3(_db, zsql, (int)strlen(zsql), 0, &stmt, &pzTail))
+    int ret = sqlite3_prepare_v3(_db, zsql, (int)strlen(zsql), 0, &stmt, &pzTail);
+    if (ret != 0)
     {
         LOG_ERROR << "[sqlite3] sql \"" << zsql << "\" prepare error: [" << ret << "] " << errmsg();
         return ret;
