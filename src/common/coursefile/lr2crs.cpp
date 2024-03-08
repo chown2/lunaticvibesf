@@ -37,7 +37,7 @@ CourseLr2crs::CourseLr2crs(const Path& filePath)
 	{
 		std::getline(ss, lineBuf);
 
-#ifdef WIN32
+#ifdef _WIN32
 		static const auto localeUTF8 = std::locale(".65001");
 #else
 		static const auto localeUTF8 = std::locale("en_US.UTF-8");

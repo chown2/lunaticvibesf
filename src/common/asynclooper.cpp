@@ -2,7 +2,7 @@
 #include <numeric>
 #include <chrono>
 
-#ifndef WIN32
+#ifndef _WIN32
 #include <ratio>
 #endif
 
@@ -15,7 +15,7 @@ AsyncLooper::AsyncLooper(StringContentView tag, std::function<void()> func, unsi
 {
     _rate = rate_per_sec;
 
-#if WIN32
+#if _WIN32
     handler = CreateWaitableTimerExA(
         NULL,
         NULL,
@@ -30,7 +30,7 @@ AsyncLooper::~AsyncLooper()
 {
     assert(!_running);
 
-#if WIN32
+#if _WIN32
     if (handler)
     {
         CloseHandle(handler);
@@ -67,7 +67,7 @@ unsigned AsyncLooper::getRate()
     return _rate;
 }
 
-#if WIN32
+#if _WIN32
 
 void AsyncLooper::loopStart()
 {

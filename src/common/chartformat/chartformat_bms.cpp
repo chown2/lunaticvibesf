@@ -109,7 +109,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
         if (lineBuf.length() <= 1) continue;
 
         // remove not needed spaces
-#ifdef WIN32
+#ifdef _WIN32
         static const auto localeUTF8 = std::locale(".65001");
 #else
         static const auto localeUTF8 = std::locale("en_US.UTF-8");

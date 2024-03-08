@@ -1,10 +1,11 @@
 #pragma once
+
 #include <functional>
 #include <shared_mutex>
 #include <map>
 #include "types.h"
 
-#if WIN32
+#if _WIN32
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -16,7 +17,7 @@ typedef HANDLE LooperHandler;
 #include <thread>
 typedef std::thread LooperHandler;
 
-#endif // WIN32
+#endif // _WIN32
 
 
 // Poll update function in background thread.
@@ -35,7 +36,7 @@ protected:
     int64_t _runThreadID = 0;
 #endif
 
-#if WIN32
+#if _WIN32
 protected:
     std::future<void> loopFuture;
     long long tStart = 0;

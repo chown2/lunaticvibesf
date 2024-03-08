@@ -23,7 +23,7 @@
 
 #include "imgui.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #pragma comment(lib, "winmm.lib")
@@ -261,7 +261,7 @@ int main(int argc, char* argv[])
 #endif
     */
 
-#ifdef WIN32
+#ifdef _WIN32
     timeBeginPeriod(1);
 
     HRESULT oleInitializeResult = OleInitialize(NULL);
@@ -295,7 +295,7 @@ int main(int argc, char* argv[])
         }
     }
 
-#ifdef WIN32
+#ifdef _WIN32
     if (oleInitializeResult >= 0)
     {
         OleUninitialize();

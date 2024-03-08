@@ -15,7 +15,7 @@
 #include <boost/algorithm/string.hpp>
 #include <re2/re2.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <wincrypt.h>
@@ -160,7 +160,7 @@ std::string hex2bin(std::string_view hex)
     return res;
 }
 
-#ifdef WIN32
+#ifdef _WIN32
 
 HashMD5 md5(std::string_view s)
 {
@@ -312,7 +312,7 @@ std::string toUpper(std::string_view s)
 	return ret;
 }
 
-#ifndef WIN32
+#ifndef _WIN32
 
 // Resolve case-insensitive path on case-sensitive file systems.
 // This does IO.
@@ -399,7 +399,7 @@ static std::string resolveCaseInsensitivePath(std::string input)
     return out;
 }
 
-#endif // WIN32
+#endif // _WIN32
 
 std::string convertLR2Path(const std::string& lr2path, const Path& relative_path)
 {
@@ -455,9 +455,9 @@ std::string convertLR2Path(const std::string& lr2path, std::string_view relative
         out_path = std::string(relative_path_utf8);
     }
 
-#ifndef WIN32
+#ifndef _WIN32
     out_path = resolveCaseInsensitivePath(out_path);
-#endif // WIN32
+#endif // _WIN32
 
     return out_path;
 }
@@ -486,7 +486,7 @@ void preciseSleep(long long sleep_ns)
     using namespace std::chrono;
     using namespace std::chrono_literals;
 
-#if WIN32
+#if _WIN32
 
     static HANDLE timer = CreateWaitableTimer(NULL, FALSE, NULL);
 

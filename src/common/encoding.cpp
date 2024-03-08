@@ -94,7 +94,7 @@ const char* getFileEncodingName(eFileEncoding enc)
 }
 
 
-#ifdef WIN32
+#ifdef _WIN32
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -238,7 +238,7 @@ std::string from_utf8(const std::string& input, eFileEncoding toEncoding)
     return convert(input, eFileEncoding::UTF8, toEncoding);
 }
 
-#endif // WIN32
+#endif // _WIN32
 
 std::u32string to_utf32(const std::string& input, eFileEncoding fromEncoding)
 {

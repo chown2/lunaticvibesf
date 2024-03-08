@@ -172,7 +172,7 @@ void SceneSelect::updateImgui()
 }
 
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <ShlObj.h>
 #include <ShlObj_core.h>
 #endif
@@ -794,7 +794,7 @@ void SceneSelect::imguiPageOptionsPlay()
             "8000 Hz",
             //"Unlimited (Not recommended)"
         };
-#if WIN32
+#if _WIN32
         int imgui_play_inputPollingRate_count = IsWindows10OrGreater() ? 2 : 1;
 #else
         int imgui_play_inputPollingRate_count = 4;
@@ -810,7 +810,7 @@ void SceneSelect::imguiPageOptionsPlay()
             case 4: ConfigMgr::set("P", cfg::P_INPUT_POLLING_RATE, 0); _input.setRate(0); break;
             }
         }
-#if WIN32
+#if _WIN32
         ImGui::SameLine();
         HelpMarker(i18n::c(INPUT_POLLING_RATE_WARNING_WINDOWS));
 #endif
@@ -1375,7 +1375,7 @@ bool SceneSelect::imguiAddFolder(const char* path)
 
     if (!path)
     {
-#ifdef WIN32
+#ifdef _WIN32
         // TODO replace with IFileDialog
         char szDisplayName[MAX_PATH] = { 0 };
         BROWSEINFOA lpbi = { 0 };
@@ -1446,7 +1446,7 @@ bool SceneSelect::imguiBrowseFolder()
 
     std::string pathstr = Path(imgui_folders_display[imgui_folder_index]).u8string();
 
-#ifdef WIN32
+#ifdef _WIN32
     ShellExecute(NULL, "open", pathstr.c_str(), NULL, NULL, SW_SHOWDEFAULT);
 #else
     int rc = system((boost::format("xdg-open \"%s\"") % pathstr).str().c_str());
