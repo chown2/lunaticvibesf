@@ -5,6 +5,9 @@
   "$when-upgrading-check": "https://github.com/microsoft/vcpkg/issues/37213",
   "$builtin-baseline-git-tag": "2024.02.14",
   "builtin-baseline": "fba75d09065fcc76a25dcf386b1d00d33f5175af",
+  "vcpkg-configuration": {
+    "overlay-ports": ["./vcpkg-overlays"]
+  },
   "dependencies": [
     "boost-algorithm",
     "boost-asio",
