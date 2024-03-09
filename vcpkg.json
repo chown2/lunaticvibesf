@@ -34,7 +34,6 @@
     "sdl2-ttf",
     "sqlite3",
     "taocpp-json",
-    "uchardet",
     "yaml-cpp"
   ]
 }

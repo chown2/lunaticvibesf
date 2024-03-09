@@ -6,10 +6,127 @@
 #include <string>
 #include <string_view>
 
-#include <uchardet.h>
-
 #include "common/log.h"
 #include "common/sysutil.h"
+
+bool is_ascii(const std::string_view str)
+{
+    for (auto it = str.begin(); it != str.end(); ++it)
+    {
+        uint8_t c = *it;
+        if (c > 0x7f)
+            return false;
+    }
+    return true;
+}
+
+bool is_shiftjis(const std::string_view str)
+{
+    for (auto it = str.begin(); it != str.end(); ++it)
+    {
+        uint8_t c = *it;
+        int bytes = 0;
+
+        // ascii
+        if (c <= 0x7f)
+            continue;
+
+        // hankaku gana
+        if ((c >= 0xa1 && c <= 0xdf))
+            continue;
+
+        // JIS X 0208
+        else if ((c >= 0x81 && c <= 0x9f) || (c >= 0xe0 && c <= 0xef))
+        {
+            if (++it == str.end()) return false;
+            uint8_t cc = *it;
+            if ((c >= 0x40 && c <= 0x7e) || (c >= 0x80 && c <= 0xfc))
+                continue;
+        }
+
+        // user defined
+        else if (c >= 0xf0 && c <= 0xfc)
+        {
+            if (++it == str.end()) return false;
+            uint8_t cc = *it;
+            if ((c >= 0x40 && c <= 0x7e) || (c >= 0x80 && c <= 0xfc))
+                continue;
+        }
+
+        else return false;
+    }
+
+    return true;
+}
+
+bool is_euckr(const std::string_view str)
+{
+    for (auto it = str.begin(); it != str.end(); ++it)
+    {
+        uint8_t c = *it;
+        int bytes = 0;
+
+        // ascii
+        if (c <= 0x7f)
+            continue;
+
+        // euc-jp
+        if (c == 0x8e || c == 0x8f)
+            return false;
+
+        // gbk
+        else if (0 /* nobody write bms in gbk */)
+            return false;
+
+        // shared range
+        else if (c >= 0xa1 && c <= 0xfe)
+        {
+            if (++it == str.end()) return false;
+            uint8_t cc = *it;
+            if (c >= 0xa1 && c <= 0xfe)
+                continue;
+        }
+
+        else return false;
+    }
+
+    return true;
+}
+
+bool is_utf8(const std::string_view str)
+{
+    for (auto it = str.begin(); it != str.end(); ++it)
+    {
+        uint8_t c = *it;
+        int bytes = 0;
+
+        // invalid
+        if ((c & 0b1100'0000) == 0b1000'0000 || (c & 0b1111'1110) == 0b1111'1110)
+            return false;
+
+        // 1 byte (ascii)
+        else if ((c & 0b1000'0000) == 0)
+            continue;
+
+        // 2~6 bytes
+        else if ((c & 0b1110'0000) == 0b1100'0000) bytes = 2;
+        else if ((c & 0b1111'0000) == 0b1110'0000) bytes = 3;
+        else if ((c & 0b1111'1000) == 0b1111'0000) bytes = 4;
+        else if ((c & 0b1111'1100) == 0b1111'1000) bytes = 5;
+        else if ((c & 0b1111'1110) == 0b1111'1100) bytes = 6;
+        else return false;
+
+        while (--bytes)
+        {
+            if (++it == str.end()) return false;
+            uint8_t cc = *it;
+            if ((cc & 0b1100'0000) != 0b10000000) return false;
+        }
+    }
+
+    return true;
+}
+
 
 eFileEncoding getFileEncoding(const Path& path)
 {
@@ -21,14 +138,6 @@ eFileEncoding getFileEncoding(const Path& path)
     return getFileEncoding(fs);
 }
 
-struct UchardetDeleter {
-    void operator()(uchardet_t det)
-    {
-        uchardet_delete(det);
-    }
-};
-using UchardetPtr = std::unique_ptr<std::remove_pointer<uchardet_t>::type, UchardetDeleter>;
-
 eFileEncoding getFileEncoding(std::istream& is)
 {
     std::streampos oldPos = is.tellg();
@@ -36,44 +145,35 @@ eFileEncoding getFileEncoding(std::istream& is)
     is.clear();
     is.seekg(0);
 
-    UchardetPtr det{uchardet_new()};
-    if (det == nullptr)
+    std::string buf;
+    eFileEncoding enc = eFileEncoding::LATIN1;
+    while (!is.eof())
     {
-        LOG_ERROR << "uchardet_new() error";
-        return eFileEncoding::LATIN1;
-    }
-    for (std::string buf; std::getline(is, buf);)
-    {
-        if (uchardet_handle_data(det.get(), buf.data(), buf.size()) != 0)
+        std::getline(is, buf, '\n');
+
+        if (is_ascii(buf)) continue;
+
+        if (is_utf8(buf))
         {
-            LOG_ERROR << "uchardet_handle_data() error";
+            enc = eFileEncoding::UTF8;
+            break;
+        }
+        if (is_euckr(buf))
+        {
+            enc = eFileEncoding::EUC_KR;
+            break;
+        }
+        if (is_shiftjis(buf))
+        {
+            enc = eFileEncoding::SHIFT_JIS;
             break;
         }
     }
-    uchardet_data_end(det.get());
 
     is.clear();
     is.seekg(oldPos);
 
-    const std::string_view charset = uchardet_get_charset(det.get());
-    if (charset.empty())
-    {
-        LOG_ERROR << "uchardet_get_charset() error";
-        return eFileEncoding::LATIN1;
-    }
-    if (charset == "ASCII")
-        return eFileEncoding::LATIN1;
-    if (charset == "SHIFT_JIS")
-        return eFileEncoding::SHIFT_JIS;
-    if (charset == "EUC_KR")
-    {
-        LOG_WARNING << "EUC_KR file encoding detected; this messages is here to gauge how often it appears in BMS";
-        return eFileEncoding::EUC_KR;
-    }
-    if (charset == "UTF-8")
-        return eFileEncoding::UTF8;
-    LOG_ERROR << "file has an unsupported charset: " << charset;
-    return eFileEncoding::LATIN1;
+    return enc;
 }
 
 const char* getFileEncodingName(eFileEncoding enc)
