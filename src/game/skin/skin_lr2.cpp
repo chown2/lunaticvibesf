@@ -796,7 +796,7 @@ int SkinLR2::IMAGE()
         Path pathFile = getCustomizePath(parseParamBuf[0]);
         std::string textureMapKey = std::to_string(imageCount);
 
-        if (video_file_extensions.find(toLower(pathFile.extension().u8string())) != video_file_extensions.end())
+        if (video_file_extensions.find(toLower(pathFile.extension().string())) != video_file_extensions.end())
         {
             videoNameMap[textureMapKey] = std::make_shared<sVideo>(pathFile, 1.0, true);
             textureNameMap[textureMapKey] = textureNameMap["White"];

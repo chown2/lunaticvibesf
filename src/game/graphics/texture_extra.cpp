@@ -160,18 +160,18 @@ bool TextureBmsBga::addBmp(size_t idx, Path pBmp)
 {
 	if (idx == size_t(-1)) return false;
 
-	if (!fs::exists(pBmp) && pBmp.has_extension() && lunaticvibes::iequals(pBmp.extension().u8string(), ".bmp"))
+	if (!fs::exists(pBmp) && pBmp.has_extension() && lunaticvibes::iequals(pBmp.extension().string(), ".bmp"))
 	{
-		pBmp = pBmp.parent_path() / PathFromUTF8(pBmp.filename().stem().u8string() + u8".jpg");
+		pBmp = pBmp.parent_path() / pBmp.filename().stem().concat(".jpg");
 
 		if (!fs::exists(pBmp))
 		{
-			pBmp = pBmp.parent_path() / PathFromUTF8(pBmp.filename().stem().u8string() + u8".png");
+			pBmp = pBmp.parent_path() / pBmp.filename().stem().concat(".png");
 		}
 	}
 	if (fs::exists(pBmp) && fs::is_regular_file(pBmp) && pBmp.has_extension())
 	{
-		if (video_file_extensions.find(toLower(pBmp.extension().u8string())) != video_file_extensions.end())
+		if (video_file_extensions.find(toLower(pBmp.extension().string())) != video_file_extensions.end())
 		{
 			objs[idx].type = obj::Ty::VIDEO;
 			objs[idx].pt = std::make_shared<TextureVideo>(std::make_shared<sVideo>(pBmp, gSelectContext.pitchSpeed, false));

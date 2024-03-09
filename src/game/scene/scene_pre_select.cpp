@@ -341,7 +341,7 @@ void ScenePreSelect::updateLoadCourses()
             for (auto& courseFile : fs::recursive_directory_iterator(coursePath))
             {
                 if (!(fs::is_regular_file(courseFile)
-                        && lunaticvibes::iequals(courseFile.path().extension().u8string(), ".lr2crs")))
+                        && lunaticvibes::iequals(courseFile.path().extension().string(), ".lr2crs")))
                     continue;
 
                 Path coursePath = courseFile.path();

@@ -76,7 +76,7 @@ std::vector<Path> findFiles(Path p, bool recursive)
         {
             if (recursive)
             {
-                if (f.path().filename().u8string().substr(0, 2) != u8"._" && RE2::FullMatch(f.path().filename().u8string(), pathRegex))
+                if (f.path().filename().string().substr(0, 2) != "._" && RE2::FullMatch(f.path().filename().u8string(), pathRegex))
                 {
                     res.push_back(f.path());
                 }
@@ -84,7 +84,7 @@ std::vector<Path> findFiles(Path p, bool recursive)
             else
             {
                 auto relativeFilePath = fs::relative(f, pathFolder);
-                if (relativeFilePath.u8string().substr(0, 2) != u8"._" && RE2::FullMatch(relativeFilePath.u8string(), pathRegex))
+                if (relativeFilePath.string().substr(0, 2) != "._" && RE2::FullMatch(relativeFilePath.u8string(), pathRegex))
                 {
                     res.push_back(f.path());
                 }
@@ -267,7 +267,6 @@ template <typename DigestUpdater> HashMD5 md5_impl(DigestUpdater updater)
     return format_hash(digest, digest_len);
 }
 
-// TODO(C++20): take std::span instead
 HashMD5 md5(std::string_view s)
 {
     return md5_impl([&](EVP_MD_CTX *context) { return EVP_DigestUpdate(context, s.data(), s.size()) != 0; });
@@ -372,7 +371,7 @@ static std::string resolveCaseInsensitivePath(std::string input)
         bool found_entry = false;
 
         for (const auto& dir_entry : std::filesystem::directory_iterator(out)) {
-            const auto dir_entry_name = dir_entry.path().filename().u8string();
+            const auto dir_entry_name = dir_entry.path().filename().string();
             if (lunaticvibes::iequals(dir_entry_name, segment)) {
                 found_entry = true;
                 out += dir_entry_name;

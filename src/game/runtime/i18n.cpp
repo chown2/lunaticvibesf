@@ -8,7 +8,7 @@ size_t i18n::currentLanguage = 0;
 
 i18n::i18n(const Path& translationFile)
 {
-    if (translationFile.stem().u8string() == "zh-cn")
+    if (translationFile.stem().string() == "zh-cn")
     {
         type = Languages::ZHCN;
     }
@@ -45,7 +45,7 @@ void i18n::init()
     {
         if (fs::equivalent(f.path(), en)) continue;
 
-        if (lunaticvibes::iequals(f.path().extension().u8string(), ".txt"))
+        if (lunaticvibes::iequals(f.path().extension().string(), ".txt"))
         {
             languages.push_back(i18n(f.path()));
         }

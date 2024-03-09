@@ -2899,7 +2899,7 @@ void SceneSelect::updatePreview()
                 {
                     for (auto& f : fs::directory_iterator(bms->getDirectory()))
                     {
-                        if (lunaticvibes::iequals(f.path().filename().u8string().substr(0, 7), "preview"))
+                        if (lunaticvibes::iequals(f.path().filename().string().substr(0, 7), "preview"))
                         {
                             Path pWav = f.path();
                             if (SoundMgr::loadNoteSample(pWav, 0) == 0)

@@ -544,7 +544,7 @@ int DirectoryDecode(u8* NameP, u8* DirP, u8* FileP, DARC_HEAD_VER5* Head, DARC_D
 	return 0;
 }
 
-int DecodeArchive(Path& path, DXArchive* output = NULL)
+static int DecodeArchive(const Path& path, DXArchive* output = NULL)
 {
 	u8* HeadBuffer = NULL;
 	DARC_HEAD_VER5 Head;
@@ -554,7 +554,7 @@ int DecodeArchive(Path& path, DXArchive* output = NULL)
 	KeyCreate(NULL, Key);
 
 	// アーカイブファイルを開く
-	std::ifstream ArcP(path.u8string(), std::ios_base::binary);
+	std::ifstream ArcP(path, std::ios_base::binary);
 	if (!ArcP.is_open()) return {};
 
 	// ヘッダを解析する

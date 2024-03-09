@@ -754,7 +754,7 @@ int SoundDriverFMOD::loadNoteSample(const Path& spath, size_t index)
         Path dir = spath.parent_path();
         for (auto& ext : wavExtensionList)
         {
-            Path filePath = dir / PathFromUTF8(spath.stem().u8string() + ext);
+            Path filePath = dir / spath.stem().concat(ext);
             if (fs::exists(filePath) && fs::is_regular_file(filePath))
             {
                 path = filePath.u8string();
@@ -848,7 +848,7 @@ int SoundDriverFMOD::loadSysSample(const Path& spath, size_t index, bool isStrea
         Path dir = spath.parent_path();
         for (auto& ext : wavExtensionList)
         {
-            Path filePath = dir / PathFromUTF8(spath.stem().u8string() + ext);
+            Path filePath = dir / spath.stem().concat(ext);
             if (fs::exists(filePath) && fs::is_regular_file(filePath))
             {
                 path = filePath.u8string();

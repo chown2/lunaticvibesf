@@ -82,7 +82,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
 
     LOG_DEBUG << "[BMS] File (" << getFileEncodingName(encoding) << "): " << absolutePath;
 
-    if (lunaticvibes::iequals(filePath.extension().u8string(), ".pms"))
+    if (lunaticvibes::iequals(filePath.extension().string(), ".pms"))
     {
         isPMS = true;
     }

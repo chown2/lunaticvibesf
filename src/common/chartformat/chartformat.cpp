@@ -10,7 +10,7 @@ eChartFormat analyzeChartType(const Path& p)
 
     eChartFormat fmt = eChartFormat::UNKNOWN;
 
-    auto extension = p.extension().u8string();
+    auto extension = p.extension().string();
     if (extension.length() == 4)
     {
         if (lunaticvibes::iequals(extension, ".bms") ||
