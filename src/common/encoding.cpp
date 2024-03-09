@@ -199,7 +199,7 @@ const char* getFileEncodingName(eFileEncoding enc)
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-std::string to_utf8(const std::string& input, eFileEncoding fromEncoding)
+std::string to_utf8(const std::string_view input, eFileEncoding fromEncoding)
 {
     int cp = CP_UTF8;
     switch (fromEncoding)
@@ -213,9 +213,9 @@ std::string to_utf8(const std::string& input, eFileEncoding fromEncoding)
 
     DWORD dwNum;
 
-    dwNum = MultiByteToWideChar(cp, 0, input.c_str(), -1, NULL, 0);
+    dwNum = MultiByteToWideChar(cp, 0, input.data(), input.size(), NULL, 0);
     wchar_t* wstr = new wchar_t[dwNum];
-    MultiByteToWideChar(cp, 0, input.c_str(), -1, wstr, dwNum);
+    MultiByteToWideChar(cp, 0, input.data(), input.size(), wstr, dwNum);
 
     dwNum = WideCharToMultiByte(CP_UTF8, NULL, wstr, -1, NULL, 0, NULL, FALSE);
     char* ustr = new char[dwNum];
@@ -229,7 +229,7 @@ std::string to_utf8(const std::string& input, eFileEncoding fromEncoding)
 }
 
 
-std::string from_utf8(const std::string& input, eFileEncoding toEncoding)
+std::string from_utf8(const std::string_view input, eFileEncoding toEncoding)
 {
     int cp = CP_UTF8;
     switch (toEncoding)
@@ -243,9 +243,9 @@ std::string from_utf8(const std::string& input, eFileEncoding toEncoding)
 
     DWORD dwNum;
 
-    dwNum = MultiByteToWideChar(CP_UTF8, 0, input.c_str(), -1, NULL, 0);
+    dwNum = MultiByteToWideChar(CP_UTF8, 0, input.data(), input.size(), NULL, 0);
     wchar_t* wstr = new wchar_t[dwNum];
-    MultiByteToWideChar(CP_UTF8, 0, input.c_str(), -1, wstr, dwNum);
+    MultiByteToWideChar(CP_UTF8, 0, input.data(), input.size(), wstr, dwNum);
 
     dwNum = WideCharToMultiByte(cp, NULL, wstr, -1, NULL, 0, NULL, FALSE);
     char* lstr = new char[dwNum];
@@ -295,7 +295,7 @@ struct IcdDeleter {
 };
 using IcdPtr = std::unique_ptr<std::remove_pointer<iconv_t>::type, IcdDeleter>;
 
-static std::string convert(const std::string& input, eFileEncoding from, eFileEncoding to)
+static std::string convert(const std::string_view input, eFileEncoding from, eFileEncoding to)
 {
     const auto* source_encoding_name = get_iconv_encoding_name(from);
     const auto* target_encoding_name = get_iconv_encoding_name(to);
@@ -313,7 +313,7 @@ static std::string convert(const std::string& input, eFileEncoding from, eFileEn
     char out_buf[BUF_SIZE] = { 0 };
 
     // BRUH-cast.
-    char* buf_ptr = const_cast<char*>(input.c_str());
+    char* buf_ptr = const_cast<char*>(input.data());
     std::size_t buf_len = input.length();
     char* out_ptr = static_cast<char*>(out_buf);
     std::size_t out_len = sizeof(out_buf);
@@ -328,19 +328,19 @@ static std::string convert(const std::string& input, eFileEncoding from, eFileEn
     return std::string{static_cast<char*>(out_buf)};
 }
 
-std::string to_utf8(const std::string& input, eFileEncoding fromEncoding)
+std::string to_utf8(const std::string_view input, eFileEncoding fromEncoding)
 {
     return convert(input, fromEncoding, eFileEncoding::UTF8);
 }
 
-std::string from_utf8(const std::string& input, eFileEncoding toEncoding)
+std::string from_utf8(const std::string_view input, eFileEncoding toEncoding)
 {
     return convert(input, eFileEncoding::UTF8, toEncoding);
 }
 
 #endif // _WIN32
 
-std::u32string to_utf32(const std::string& input, eFileEncoding fromEncoding)
+std::u32string to_utf32(const std::string_view input, eFileEncoding fromEncoding)
 {
     std::string inputUTF8 = to_utf8(input, fromEncoding);
     return utf8_to_utf32(inputUTF8);
@@ -353,7 +353,7 @@ std::string from_utf32(const std::u32string& input, eFileEncoding toEncoding)
 }
 
 
-std::u32string utf8_to_utf32(const std::string& str)
+std::u32string utf8_to_utf32(const std::string_view str)
 {
     static const auto locale = std::locale("");
     static const auto& facet_u32_u8 = std::use_facet<std::codecvt<char32_t, char, std::mbstate_t>>(locale);
@@ -379,7 +379,7 @@ std::u32string utf8_to_utf32(const std::string& str)
     return u32Text;
 }
 
-std::string utf32_to_utf8(const std::u32string& str)
+std::string utf32_to_utf8(const std::u32string_view& str)
 {
     static const auto locale = std::locale("");
     static const auto& facet_u32_u8 = std::use_facet<std::codecvt<char32_t, char, std::mbstate_t>>(locale);
