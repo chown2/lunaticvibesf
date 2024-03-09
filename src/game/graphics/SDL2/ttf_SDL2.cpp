@@ -4,8 +4,9 @@
 
 #include "common/log.h"
 #include "common/sysutil.h"
+#include "common/types.h"
 
-TTFFont::TTFFont(const char* filePath, int ptsize): _filePath(filePath), _ptsize(ptsize)
+TTFFont::TTFFont(const Path& filePath, int ptsize): _filePath(filePath.u8string()), _ptsize(ptsize)
 {
     pushAndWaitMainThreadTask<void>([&]() { _pFont = TTF_OpenFont(_filePath.c_str(), ptsize); });
     if (!_pFont)
@@ -13,7 +14,7 @@ TTFFont::TTFFont(const char* filePath, int ptsize): _filePath(filePath), _ptsize
     else loaded = true;
 }
 
-TTFFont::TTFFont(const char* filePath, int ptsize, int faceIndex) : _filePath(filePath), _faceIndex(faceIndex), _ptsize(ptsize)
+TTFFont::TTFFont(const Path& filePath, int ptsize, int faceIndex) : _filePath(filePath.u8string()), _faceIndex(faceIndex), _ptsize(ptsize)
 {
     pushAndWaitMainThreadTask<void>([&]() { _pFont = TTF_OpenFontIndex(_filePath.c_str(), ptsize, faceIndex); });
     if (!_pFont)

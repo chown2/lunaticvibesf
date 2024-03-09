@@ -51,7 +51,7 @@ SceneBase::SceneBase(SkinType skinType, unsigned rate, bool backgroundInput) :
     int faceIndex;
     Path fontPath = getSysMonoFontPath(NULL, &faceIndex, i18n::getCurrentLanguage());
     const int textHeight = 24;
-    _fNotifications = std::make_shared<TTFFont>(fontPath.u8string().c_str(), int(textHeight * 1.5), faceIndex);
+    _fNotifications = std::make_shared<TTFFont>(fontPath, int(textHeight * 1.5), faceIndex);
     _texNotificationsBG = std::make_shared<TextureFull>(0x000000ff);
     for (size_t i = 0; i < _sNotifications.size(); ++i)
     {

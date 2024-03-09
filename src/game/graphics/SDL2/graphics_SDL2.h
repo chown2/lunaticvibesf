@@ -251,8 +251,8 @@ protected:
     int _outlineWidth = 0;
 
 public:
-    TTFFont(const char* filePath, int ptsize);
-    TTFFont(const char* filePath, int ptsize, int faceIndex);
+    TTFFont(const Path& filePath, int ptsize);
+    TTFFont(const Path& filePath, int ptsize, int faceIndex);
     ~TTFFont();
 
 public:

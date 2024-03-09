@@ -990,7 +990,7 @@ int SkinLR2::SYSTEMFONT()
         int faceIndex;
         Path fontPath = getSysMonoFontPath(NULL, &faceIndex, i18n::getCurrentLanguage());
         size_t idx = fontNameMap.size();
-        fontNameMap[std::to_string(idx)] = std::make_shared<TTFFont>(fontPath.u8string().c_str(), ptsize, faceIndex);
+        fontNameMap[std::to_string(idx)] = std::make_shared<TTFFont>(fontPath, ptsize, faceIndex);
         LOG_DEBUG << "[Skin] " << csvLineNumber << ": Added FONT[" << idx << "]: " << fontPath;
         return 1;
     }
