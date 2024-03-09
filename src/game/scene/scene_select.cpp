@@ -480,6 +480,9 @@ SceneSelect::SceneSelect() : SceneBase(SkinType::MUSIC_SELECT, 250)
 
 SceneSelect::~SceneSelect()
 {
+    if (_previewLoading.joinable())
+        _previewLoading.join();
+
     if (_virtualSceneCustomize != nullptr)
     {
         _virtualSceneCustomize->loopEnd();
@@ -2927,7 +2930,9 @@ void SceneSelect::updatePreview()
                 gChartContext.isSampleLoaded = false;
                 gChartContext.sampleLoadedHash.reset();
 
-                std::thread([&, bms] {
+                if (_previewLoading.joinable())
+                    _previewLoading.join();
+                _previewLoading = std::thread([&, bms] {
                     unsigned bars = bms->lastBarIdx;
                     auto previewChartObjTmp = std::make_shared<ChartObjectBMS>(PLAYER_SLOT_PLAYER, bms);
                     auto previewRulesetTmp = std::make_shared<RulesetBMSAuto>(bms, previewChartObjTmp,
@@ -2987,7 +2992,7 @@ void SceneSelect::updatePreview()
                             }
                         }
                     }
-                    }).detach();
+                    });
             }
             else
             {
