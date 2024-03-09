@@ -456,6 +456,7 @@ std::string convertLR2Path(const std::string& lr2path, std::string_view relative
 
 #ifndef _WIN32
     out_path = resolveCaseInsensitivePath(out_path);
+    std::replace(out_path.begin(), out_path.end(), '\\', '/');
 #endif // _WIN32
 
     return out_path;
@@ -463,19 +464,7 @@ std::string convertLR2Path(const std::string& lr2path, std::string_view relative
 
 Path PathFromUTF8(std::string_view s)
 {
-#ifdef _WIN32
-    const static auto locale_utf8 = std::locale(".65001");
-    return Path(std::string(s), locale_utf8);
-#else
-    // Windows uses backslashes as path separators, unlike other
-    // systems. We must replace them with normal slashes.
-    // TODO: overload this to take ownership of supplied string, to
-    // prevent allocations.
-
-    auto copy = std::string(s);
-    std::replace(copy.begin(), copy.end(), '\\', '/');
-    return Path(copy);
-#endif
+    return fs::u8path(s);
 }
 
 void preciseSleep(long long sleep_ns)
