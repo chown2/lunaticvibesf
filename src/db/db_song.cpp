@@ -139,16 +139,10 @@ bool convert_bms(std::shared_ptr<ChartFormatBMSMeta> chart, const std::vector<st
 {
     if (in.size() < 30) return false;
 
-#ifdef _WIN32
-    const static auto locale_utf8 = std::locale(".65001");
-#else
-    const static auto locale_utf8 = std::locale("en_US.UTF-8");
-#endif
-
     song_all_params params(in);
     chart->fileHash       = params.md5        ;
     chart->folderHash     = params.parent     ;
-    chart->fileName       = Path(params.file, locale_utf8);
+    chart->fileName       = PathFromUTF8(params.file);
     //                        params.type       ;
     chart->title          = params.title      ;
     chart->title2         = params.title2     ;
