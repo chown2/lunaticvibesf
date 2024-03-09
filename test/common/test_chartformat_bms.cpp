@@ -34,7 +34,7 @@ TEST(tBMS, file_not_exist)
 TEST(tBMS, utf8_file_path)
 {
 	std::shared_ptr<ChartFormatBMS> bms = nullptr;
-	ASSERT_NO_THROW(bms = std::make_shared<ChartFormatBMS>(fs::u8path("bms/5k_世界.bms")));
+	ASSERT_NO_THROW(bms = std::make_shared<ChartFormatBMS>(PathFromUTF8("bms/5k_世界.bms")));
 	ASSERT_EQ(bms->isLoaded(), true);
 	EXPECT_EQ(bms->title, u8"ザ・ワールド");
 }

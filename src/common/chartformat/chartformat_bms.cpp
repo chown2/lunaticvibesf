@@ -68,7 +68,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
     {
         errorCode = err::FILE_ERROR;
         errorLine = 0;
-        LOG_WARNING << "[BMS] " << absolutePath.u8string() << " File ERROR";
+        LOG_WARNING << "[BMS] " << absolutePath << " File ERROR";
         return 1;
     }
 
@@ -80,7 +80,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
 
     auto encoding = getFileEncoding(bmsFile);
 
-    LOG_DEBUG << "[BMS] File (" << getFileEncodingName(encoding) << "): " << absolutePath.u8string();
+    LOG_DEBUG << "[BMS] File (" << getFileEncodingName(encoding) << "): " << absolutePath;
 
     if (lunaticvibes::iequals(filePath.extension().u8string(), ".pms"))
     {
@@ -136,7 +136,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
                     !lunaticvibes::iequals(v.substr(0, 6), "#ENDIF") &&
                     !lunaticvibes::iequals(v.substr(0, 10), "#ENDRANDOM"))
                 {
-                    LOG_WARNING << "[BMS] definition found after all IF blocks finished, assuming #ENDRANDOM is missing. " << absolutePath.u8string() << "@" << srcLine;
+                    LOG_WARNING << "[BMS] definition found after all IF blocks finished, assuming #ENDRANDOM is missing. " << absolutePath << "@" << srcLine;
                     randomValueMax.pop();
                     randomValue.pop();
                     randomUsedValues.pop();
@@ -150,7 +150,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
                 int iValue = toInt(value);
                 if (iValue == 0)
                 {
-                    LOG_WARNING << "[BMS] Invalid #RANDOM value found. " << absolutePath.u8string()  << "@" << srcLine;
+                    LOG_WARNING << "[BMS] Invalid #RANDOM value found. " << absolutePath  << "@" << srcLine;
                     continue;
                 }
 
@@ -179,13 +179,13 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
                         int ifBlockValue = toInt(value);
                         if (randomUsedValues.top().find(ifBlockValue) != randomUsedValues.top().end())
                         {
-                            LOG_WARNING << "[BMS] duplicate #IF value found. " << absolutePath.u8string() << "@" << srcLine;
+                            LOG_WARNING << "[BMS] duplicate #IF value found. " << absolutePath << "@" << srcLine;
                         }
 
                         // one level control flow
                         if (!ifValue.empty())
                         {
-                            LOG_WARNING << "[BMS] unexpected #IF found, assuming #ENDIF is missing. " << absolutePath.u8string() << "@" << srcLine;
+                            LOG_WARNING << "[BMS] unexpected #IF found, assuming #ENDIF is missing. " << absolutePath << "@" << srcLine;
                             randomUsedValues.top().emplace(ifValue.top());
                             ifValue.pop();
                         }
@@ -201,14 +201,14 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
                         }
                         else
                         {
-                            LOG_WARNING << "[BMS] unexpected #ENDIF found. " << absolutePath.u8string() << "@" << srcLine;
+                            LOG_WARNING << "[BMS] unexpected #ENDIF found. " << absolutePath << "@" << srcLine;
                         }
                     }
                     else if (lunaticvibes::iequals(key, "ENDRANDOM"))
                     {
                         if (!ifValue.empty())
                         {
-                            LOG_WARNING << "[BMS] #ENDRANDOM found before #ENDIF. " << absolutePath.u8string() << "@" << srcLine;
+                            LOG_WARNING << "[BMS] #ENDRANDOM found before #ENDIF. " << absolutePath << "@" << srcLine;
                         }
                         randomValueMax.pop();
                         randomValue.pop();
@@ -313,7 +313,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
                 {
                     if (!lnobjSet.empty())
                     {
-                        LOG_WARNING << "[BMS] Multiple #LNOBJ found. " << absolutePath.u8string() << "@" << srcLine;
+                        LOG_WARNING << "[BMS] Multiple #LNOBJ found. " << absolutePath << "@" << srcLine;
                         lnobjSet.clear();
                     }
                     lnobjSet.insert(base36(value[0], value[1]));
@@ -360,7 +360,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
 
                 if (value.empty())
                 {
-                    LOG_WARNING << "[BMS] Empty note line detected. " << absolutePath.u8string() << "@" << srcLine;
+                    LOG_WARNING << "[BMS] Empty note line detected. " << absolutePath << "@" << srcLine;
                     errorLine = srcLine;
                     errorCode = err::NOTE_LINE_ERROR;
                     return 1;
@@ -426,7 +426,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
                     {
                         if (!isPMS && _y == 7)
                         {
-                            LOG_WARNING << "[BMS] #xxxX7 lanes are not supported. " << absolutePath.u8string() << "@" << srcLine;
+                            LOG_WARNING << "[BMS] #xxxX7 lanes are not supported. " << absolutePath << "@" << srcLine;
                             continue;
                         }
 
@@ -514,7 +514,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
                 }
                 catch (noteLineException& e)
                 {
-                    LOG_WARNING << "[BMS] Line error. " << absolutePath.u8string() << "@" << srcLine;
+                    LOG_WARNING << "[BMS] Line error. " << absolutePath << "@" << srcLine;
                 }
             }
         }
@@ -815,7 +815,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
     }
 
     fileHash = md5file(absolutePath);
-    LOG_INFO << "[BMS] File (" << getFileEncodingName(encoding) << "): " << absolutePath.u8string() << " MD5: " << fileHash.hexdigest();
+    LOG_INFO << "[BMS] File (" << getFileEncodingName(encoding) << "): " << absolutePath << " MD5: " << fileHash.hexdigest();
 
     loaded = true;
 

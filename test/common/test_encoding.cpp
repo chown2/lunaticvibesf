@@ -5,8 +5,9 @@
 
 #include <common/encoding.h>
 #include <common/types.h>
+#include <common/utils.h>
 
-TEST(Encoding, determine)
+TEST(Encoding, CanDetermineFileEncoding)
 {
     EXPECT_EQ(getFileEncoding("encoding/euc_kr.txt"_p), eFileEncoding::EUC_KR);
     EXPECT_EQ(getFileEncoding("encoding/sjis.txt"_p), eFileEncoding::SHIFT_JIS);
@@ -14,13 +15,12 @@ TEST(Encoding, determine)
 }
 
 // Not about 'Encoding' per se but sure.
-TEST(Encoding, unicode_path)
+TEST(Encoding, CanOpenUtf8FilePath)
 {
-    Path file_path = std::filesystem::u8path("encoding/クールネーム.txt");
+    Path file_path = PathFromUTF8("encoding/クールネーム.txt");
     std::ifstream ifs(file_path);
     ASSERT_FALSE(ifs.fail());
     std::string contents{std::istreambuf_iterator<char>(ifs), std::istreambuf_iterator<char>()};
     boost::trim(contents);
-
     EXPECT_STREQ(contents.c_str(), "it's so cool");
 }

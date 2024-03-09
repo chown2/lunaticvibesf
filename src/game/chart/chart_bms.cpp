@@ -483,7 +483,7 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
                     assert(laneOccupiedByLN[gameLaneIdxLN] == true);
                     if (gameLaneIdxLN == _ || !laneOccupiedByLN[gameLaneIdxLN])
                     {
-                        LOG_ERROR << "[BMS] Parsing LN error! File: " << objBms.absolutePath.u8string();
+                        LOG_ERROR << "[BMS] Parsing LN error! File: " << objBms.absolutePath;
                         return;
                     }
                     laneOccupiedByLN[gameLaneIdxLN] = false;

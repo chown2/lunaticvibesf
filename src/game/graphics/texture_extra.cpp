@@ -175,7 +175,7 @@ bool TextureBmsBga::addBmp(size_t idx, Path pBmp)
 		{
 			objs[idx].type = obj::Ty::VIDEO;
 			objs[idx].pt = std::make_shared<TextureVideo>(std::make_shared<sVideo>(pBmp, gSelectContext.pitchSpeed, false));
-			LOG_DEBUG << "[TextureBmsBga] added video: " << pBmp.u8string();
+			LOG_DEBUG << "[TextureBmsBga] added video: " << pBmp;
 			return true;
 		}
 		else
@@ -188,7 +188,7 @@ bool TextureBmsBga::addBmp(size_t idx, Path pBmp)
 			layerImg.setTransparentColorRGB(Color(0, 0, 0, 255));
 			objs_layer[idx].pt = std::make_shared<Texture>(layerImg);
 
-			LOG_DEBUG << "[TextureBmsBga] added pic: " << pBmp.u8string();
+			LOG_DEBUG << "[TextureBmsBga] added pic: " << pBmp;
 			return true;
 		}
 	}
@@ -198,7 +198,7 @@ bool TextureBmsBga::addBmp(size_t idx, Path pBmp)
 
 		objs_layer[idx].type = obj::Ty::EMPTY;
 
-		LOG_DEBUG << "[TextureBmsBga] file not found, added dummy: " << pBmp.u8string();
+		LOG_DEBUG << "[TextureBmsBga] file not found, added dummy: " << pBmp;
 	}
 	return false;
 }

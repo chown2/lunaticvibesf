@@ -151,8 +151,8 @@ std::string hex2bin(std::string_view hex)
     for (size_t i = 0, j = 0; i < hex.length() - 1; i += 2, j++)
     {
         unsigned char &c = ((unsigned char&)res[j]);
-        char c1 = tolower(hex[i]);
-        char c2 = tolower(hex[i + 1]);
+        unsigned char c1 = tolower(hex[i]);
+        unsigned char c2 = tolower(hex[i + 1]);
         c += (c1 + ((c1 >= 'a') ? (10 - 'a') : (-'0'))) << 4;
         c += (c2 + ((c2 >= 'a') ? (10 - 'a') : (-'0')));
     }

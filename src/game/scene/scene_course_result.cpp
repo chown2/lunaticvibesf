@@ -368,7 +368,7 @@ void SceneCourseResult::updateFadeout()
             for (size_t i = 0; i < gPlayContext.courseStageReplayPathNew.size(); ++i)
             {
                 if (i != 0) dbReplayFile << "|";
-                dbReplayFile << gPlayContext.courseStageReplayPathNew[i].u8string();
+                dbReplayFile << gPlayContext.courseStageReplayPathNew[i];
             }
             score.replayFileName = dbReplayFile.str();
 

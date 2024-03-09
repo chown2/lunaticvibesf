@@ -103,7 +103,7 @@ void ConfigInput::setDefaults() noexcept
     }
     catch (YAML::BadFile&)
     {
-        LOG_WARNING << "[Config] Bad file while loading default input config: " << path.u8string();
+        LOG_WARNING << "[Config] Bad file while loading default input config: " << path;
     }
 }
 

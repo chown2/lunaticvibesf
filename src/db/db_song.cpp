@@ -259,7 +259,7 @@ bool SongDB::addChart(const HashMD5& folder, const Path& path)
         }
         catch (const std::exception& e)
         {
-            LOG_WARNING << "[SongDB] " << e.what() << ": " << path.filename().u8string();
+            LOG_WARNING << "[SongDB] " << e.what() << ": " << path.filename();
             return false;
         }
 
@@ -280,14 +280,14 @@ bool SongDB::addChart(const HashMD5& folder, const Path& path)
         std::shared_ptr<ChartFormatBase> c = ChartFormatBase::createFromFile(path, 2356);
         if (c == nullptr)
         {
-            LOG_WARNING << "[SongDB] File error: " << path.u8string();
+            LOG_WARNING << "[SongDB] File error: " << path;
             return false;
         }
 
         auto s = ChartObjectBase::createFromChartFormat(0, c);
         if (s == nullptr)
         {
-            LOG_WARNING << "[SongDB] File parsing error: " << path.u8string();
+            LOG_WARNING << "[SongDB] File parsing error: " << path;
             return false;
         }
 
@@ -352,7 +352,7 @@ bool SongDB::addChart(const HashMD5& folder, const Path& path)
             }
             else
             {
-                LOG_WARNING << "[SongDB] Insert chart into db error: " << path.u8string() << ": " << errmsg();
+                LOG_WARNING << "[SongDB] Insert chart into db error: " << path << ": " << errmsg();
                 return false;
             }
             break;
@@ -376,7 +376,7 @@ bool SongDB::removeChart(const Path& path, const HashMD5& parent)
 {
     if (SQLITE_OK != exec("DELETE FROM song WHERE file=? AND parent=?", { path.filename().u8string(), parent.hexdigest()}))
     {
-        LOG_WARNING << "[SongDB] Delete chart from db error: " << path.u8string() << ": " << errmsg();
+        LOG_WARNING << "[SongDB] Delete chart from db error: " << path << ": " << errmsg();
         return false;
     }
     return true;
@@ -512,7 +512,7 @@ std::vector<std::shared_ptr<ChartFormatBase>> SongDB::findChartByHash(const Hash
             auto hash = md5file(ret[i]->absolutePath);
             if (hash != target)
             {
-                LOG_WARNING << "[SongDB] Chart " << ret[i]->absolutePath.u8string() << " has been modified, ignoring";
+                LOG_WARNING << "[SongDB] Chart " << ret[i]->absolutePath << " has been modified, ignoring";
                 removing.push_front(i);
             }
         }
@@ -645,7 +645,7 @@ int SongDB::initializeFolders(const std::vector<Path>& paths)
     {
         int subCount = addSubFolder(p, ROOT_FOLDER_HASH);
         count += subCount;
-        LOG_INFO << "[SongDB] " << p.u8string() << ": added " << subCount << " entries";
+        LOG_INFO << "[SongDB] " << p << ": added " << subCount << " entries";
     }
 
     inAddFolderSession = false;
@@ -659,13 +659,13 @@ int SongDB::initializeFolders(const std::vector<Path>& paths)
 
 int SongDB::addSubFolder(Path path, const HashMD5& parentHash)
 {
-    LOG_VERBOSE << "[SongDB] Add folder: " << path.u8string();
+    LOG_VERBOSE << "[SongDB] Add folder: " << path;
 
     path = (path / ".").lexically_normal();
 
     if (!fs::is_directory(path))
     {
-        LOG_WARNING << "[SongDB] Add folder fail: path is not folder (" << path.u8string() << ")";
+        LOG_WARNING << "[SongDB] Add folder fail: path is not folder (" << path << ")";
         return -1;
     }
 
@@ -694,7 +694,7 @@ int SongDB::addSubFolder(Path path, const HashMD5& parentHash)
 
     if (auto q = query("SELECT pathmd5,path,type,modtime FROM folder WHERE path=?", 4, { path.u8string() }); !q.empty())
     {
-        LOG_VERBOSE << "[SongDB] Sub folder already exists (" << path.u8string() << ")";
+        LOG_VERBOSE << "[SongDB] Sub folder already exists (" << path << ")";
 
         std::string folderMD5 = ANY_STR(q[0][0]);
         std::string folderPath = ANY_STR(q[0][1]);
@@ -760,7 +760,7 @@ void SongDB::waitLoadingFinish()
 
 int SongDB::addNewFolder(const HashMD5& hash, const Path& path, const HashMD5& parentHash)
 {
-    LOG_DEBUG << "[SongDB] Add new folder " << path.u8string();
+    LOG_DEBUG << "[SongDB] Add new folder " << path;
 
     FolderType type = FolderType::FOLDER;
     for (auto& f : std::filesystem::directory_iterator(path))
@@ -798,7 +798,7 @@ int SongDB::addNewFolder(const HashMD5& hash, const Path& path, const HashMD5& p
     }
     if (SQLITE_OK != ret)
     {
-        LOG_WARNING << "[SongDB] Insert folder into db fail: [" << ret << "] " << errmsg() << " (" << path.u8string() << ")";
+        LOG_WARNING << "[SongDB] Insert folder into db fail: [" << ret << "] " << errmsg() << " (" << path << ")";
         return -1;
     }
 
@@ -853,7 +853,7 @@ int SongDB::addNewFolder(const HashMD5& hash, const Path& path, const HashMD5& p
 
 int SongDB::refreshExistingFolder(const HashMD5& hash, const Path& path, FolderType type)
 {
-    LOG_DEBUG << "[SongDB] Refreshing contents of " << path.u8string();
+    LOG_DEBUG << "[SongDB] Refreshing contents of " << path;
 
     bool isSongFolder = false;
     for (auto& f: fs::directory_iterator(path))
@@ -866,7 +866,7 @@ int SongDB::refreshExistingFolder(const HashMD5& hash, const Path& path, FolderT
     }
     if (!isSongFolder && (type == FolderType::SONG_BMS))
     {
-        LOG_DEBUG << "[SongDB] Re-analyzing" << " (" << path.u8string() << ")";
+        LOG_DEBUG << "[SongDB] Re-analyzing" << " (" << path << ")";
 
         // analyze the folder again
         removeFolder(hash, true);
@@ -874,7 +874,7 @@ int SongDB::refreshExistingFolder(const HashMD5& hash, const Path& path, FolderT
     }
     else if (type == FolderType::SONG_BMS)
     {
-        LOG_DEBUG << "[SongDB] Checking for new entries" << " (" << path.u8string() << ")";
+        LOG_DEBUG << "[SongDB] Checking for new entries" << " (" << path << ")";
 
         int count = 0;
 
@@ -980,16 +980,16 @@ int SongDB::refreshExistingFolder(const HashMD5& hash, const Path& path, FolderT
             long long folderModifyTime = getFileLastWriteTime(path);
             if (int ret = exec("UPDATE folder SET modtime=? WHERE pathmd5=?", { nowTime, hash.hexdigest() }); ret != SQLITE_OK)
             {
-                LOG_WARNING << "[SongDB] Update modification time fail: [" << ret << "] " << errmsg() << " (" << path.u8string() << ")";
+                LOG_WARNING << "[SongDB] Update modification time fail: [" << ret << "] " << errmsg() << " (" << path << ")";
             }
     }
 
-        LOG_DEBUG << "[SongDB] Folder originally has " << existedFiles.size() << " entries, added " << count << " (" << path.u8string() << ")";
+        LOG_DEBUG << "[SongDB] Folder originally has " << existedFiles.size() << " entries, added " << count << " (" << path << ")";
         return count;
     }
     else
     {
-        LOG_DEBUG << "[SongDB] Checking for new subfolders of " << path.u8string();
+        LOG_DEBUG << "[SongDB] Checking for new subfolders of " << path;
 
         // get folders from db
         std::vector<Path> existedFiles;
@@ -1012,7 +1012,7 @@ int SongDB::refreshExistingFolder(const HashMD5& hash, const Path& path, FolderT
                     if (!fs::exists(existedList->getEntry(i)->getPath()))
                     {
                         LOG_DEBUG << "[SongDB] Deleting file-not-found folder: "
-                                  << existedList->getEntry(i)->getPath().u8string();
+                                  << existedList->getEntry(i)->getPath();
                         deletedFiles.push_back(existedList->getEntry(i)->md5);
                     }
                 }
@@ -1049,11 +1049,11 @@ int SongDB::refreshExistingFolder(const HashMD5& hash, const Path& path, FolderT
             long long folderModifyTime = getFileLastWriteTime(path);
             if (int ret = exec("UPDATE folder SET modtime=? WHERE pathmd5=?", { nowTime, hash.hexdigest() }); ret != SQLITE_OK)
             {
-                LOG_WARNING << "[SongDB] Update modification time fail: [" << ret << "] " << errmsg() << " (" << path.u8string() << ")";
+                LOG_WARNING << "[SongDB] Update modification time fail: [" << ret << "] " << errmsg() << " (" << path << ")";
             }
         }
 
-        LOG_DEBUG << "[SongDB] Checking for new subfolders finished. Added " << count << " entries from " << path.u8string();
+        LOG_DEBUG << "[SongDB] Checking for new subfolders finished. Added " << count << " entries from " << path;
         return count;
     }
 }
@@ -1159,7 +1159,7 @@ std::shared_ptr<EntryFolderRegular> SongDB::browse(HashMD5 root, bool recursive)
         return nullptr;
     }
 
-    LOG_DEBUG << "[SongDB] browse folder " << path.u8string() << (recursive ? " RECURSIVE" : "");
+    LOG_DEBUG << "[SongDB] browse folder " << path << (recursive ? " RECURSIVE" : "");
 
     std::shared_ptr<EntryFolderRegular> list = std::make_shared<EntryFolderRegular>(root, path);
 

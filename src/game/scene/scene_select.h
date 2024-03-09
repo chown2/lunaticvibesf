@@ -1,6 +1,7 @@
 #pragma once
 #include <mutex>
 #include <string>
+#include <thread>
 #include <vector>
 #include <array>
 #include <list>
@@ -38,6 +39,7 @@ private:
     lunaticvibes::Time selectDownTimestamp;
 
     // preview
+    std::thread _previewLoading; // TODO(C++20): use std::jthread
     std::shared_mutex previewMutex;
     enum
     {

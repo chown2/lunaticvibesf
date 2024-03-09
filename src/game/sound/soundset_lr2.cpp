@@ -29,7 +29,7 @@ void SoundSetLR2::loadCSV(Path p)
     std::ifstream ifsFile(p, std::ios::binary);
     if (!ifsFile.is_open())
     {
-        LOG_ERROR << "[SoundSet] File Not Found: " << std::filesystem::absolute(p).u8string();
+        LOG_ERROR << "[SoundSet] File Not Found: " << std::filesystem::absolute(p);
         csvLineNumber = srcLineNumberParent;
         return;
     }
@@ -42,7 +42,7 @@ void SoundSetLR2::loadCSV(Path p)
 
     auto encoding = getFileEncoding(csvFile);
 
-    LOG_INFO << "[SoundSet] File (" << getFileEncodingName(encoding) << "): " << p.u8string();
+    LOG_INFO << "[SoundSet] File (" << getFileEncodingName(encoding) << "): " << p;
 
     std::vector<StringContent> tokenBuf;
     tokenBuf.reserve(32);
@@ -93,7 +93,7 @@ void SoundSetLR2::loadCSV(Path p)
     }
     catch (YAML::BadFile&)
     {
-        LOG_WARNING << "[Skin] Bad customize config file: " << pCustomize.u8string();
+        LOG_WARNING << "[Skin] Bad customize config file: " << pCustomize;
     }
 
     csvFile.clear();
@@ -124,7 +124,7 @@ void SoundSetLR2::loadCSV(Path p)
         parseBody(tokenBuf);
     }
 
-    LOG_DEBUG << "[SoundSet] File: " << p.u8string() << "(Line " << csvLineNumber << "): loading finished";
+    LOG_DEBUG << "[SoundSet] File: " << p << "(Line " << csvLineNumber << "): loading finished";
 }
 
 bool SoundSetLR2::parseHeader(const std::vector<StringContent>& tokens)
@@ -157,7 +157,7 @@ bool SoundSetLR2::parseHeader(const std::vector<StringContent>& tokens)
             }
         }
 
-        LOG_DEBUG << "[SoundSet] " << csvLineNumber << ": Loaded Custom file " << title << ": " << pathf.u8string();
+        LOG_DEBUG << "[SoundSet] " << csvLineNumber << ": Loaded Custom file " << title << ": " << pathf;
 
         CustomFile c;
         c.title = title;
@@ -241,7 +241,7 @@ bool SoundSetLR2::loadPath(const std::string& key, const std::string& rawpath)
                     pathFile /= PathFromUTF8(pathU8Str.substr(cf.filepath.length() + 1));
 
                 soundFilePath[key] = pathFile;
-                LOG_DEBUG << "[Skin] " << csvLineNumber << ": Added " << key << ": " << pathFile.u8string();
+                LOG_DEBUG << "[Skin] " << csvLineNumber << ": Added " << key << ": " << pathFile;
 
                 customFileFound = true;
                 break;
@@ -262,7 +262,7 @@ bool SoundSetLR2::loadPath(const std::string& key, const std::string& rawpath)
                 size_t ranidx = std::rand() % ls.size();
                 Path soundPath = PathFromUTF8(ls[ranidx].u8string());
                 soundFilePath[key] = soundPath;
-                LOG_DEBUG << "[Skin] " << csvLineNumber << ": Added random " << key << ": " << soundPath.u8string();
+                LOG_DEBUG << "[Skin] " << csvLineNumber << ": Added random " << key << ": " << soundPath;
             }
         }
     }
@@ -270,7 +270,7 @@ bool SoundSetLR2::loadPath(const std::string& key, const std::string& rawpath)
     {
         // Normal path
         soundFilePath[key] = path;
-        LOG_DEBUG << "[Skin] " << csvLineNumber << ": Added " << key << ": " << path.u8string();
+        LOG_DEBUG << "[Skin] " << csvLineNumber << ": Added " << key << ": " << path;
     }
 
     return soundFilePath.find(key) != soundFilePath.end() && !soundFilePath[key].empty();

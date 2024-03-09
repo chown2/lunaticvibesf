@@ -19,7 +19,7 @@ CourseLr2crs::CourseLr2crs(const Path& filePath)
 	std::ifstream ifs(filePath);
 	if (ifs.fail())
 	{
-		LOG_WARNING << "[lr2crs] " << filePath.u8string() << " File ERROR";
+		LOG_WARNING << "[lr2crs] " << filePath << " File ERROR";
 		return;
 	}
 	std::stringstream ss;

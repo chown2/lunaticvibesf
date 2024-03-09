@@ -597,7 +597,7 @@ void funKeyDown(const SDL_KeyboardEvent& e)
 
 void graphics_screenshot(const Path& png)
 {
-    LOG_INFO << "Screenshot: " << png.u8string();
+    LOG_INFO << "Screenshot: " << png;
 
     screenshotPath = png;
 }

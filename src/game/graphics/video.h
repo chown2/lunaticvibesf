@@ -1,8 +1,10 @@
 #pragma once
 
 #include <future>
+#include <memory>
 #include <set>
 #include <shared_mutex>
+#include <type_traits>
 
 #include "common/types.h"
 #include "graphics.h"
@@ -41,6 +43,19 @@ class SkinBase;
 
 void video_init();
 
+namespace lunaticvibes {
+struct AVFrameDeleter
+{
+    void operator()(AVFrame *avp);
+};
+using AVFramePtr = std::unique_ptr<std::remove_pointer_t<AVFrame>, AVFrameDeleter>;
+struct AVPacketDeleter
+{
+    void operator()(AVPacket *avp);
+};
+using AVPacketPtr = std::unique_ptr<std::remove_pointer_t<AVPacket>, AVPacketDeleter>;
+} // namespace lunaticvibes
+
 // libav decoder wrap
 class sVideo
 {
@@ -56,8 +71,8 @@ private:
 	AVFormatContext *pFormatCtx = nullptr;
 	const AVCodec *pCodec = nullptr;
 	AVCodecContext *pCodecCtx = nullptr;
-	AVFrame *pFrame = nullptr;
-	AVPacket *pPacket = nullptr;
+	lunaticvibes::AVFramePtr pFrame;
+	lunaticvibes::AVPacketPtr pPacket;
 	int videoIndex = -1;
 	int64_t decoded_frames = 0;
 	std::chrono::time_point<std::chrono::system_clock> startTime;
@@ -95,7 +110,7 @@ public:
 	void decodeLoop();
 
 	int getDecodedFrames() { return decoded_frames; }
-	AVFrame* getFrame() { return valid ? pFrame : NULL; }
+	AVFrame* getFrame() { return valid ? pFrame.get() : NULL; }
 
 public:
 	std::shared_mutex video_frame_mutex;

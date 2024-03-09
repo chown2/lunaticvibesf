@@ -7,6 +7,7 @@
 #include "scene_pre_select.h"
 #include "scene_customize.h"
 
+#include "common/utils.h"
 #include "common/chartformat/chartformat_types.h"
 #include "common/entry/entry_types.h"
 
@@ -480,6 +481,9 @@ SceneSelect::SceneSelect() : SceneBase(SkinType::MUSIC_SELECT, 250)
 
 SceneSelect::~SceneSelect()
 {
+    if (_previewLoading.joinable())
+        _previewLoading.join();
+
     if (_virtualSceneCustomize != nullptr)
     {
         _virtualSceneCustomize->loopEnd();
@@ -1353,7 +1357,7 @@ void SceneSelect::inputGamePressSelect(InputMask& input, const lunaticvibes::Tim
             const auto [hasPath, path] = g_pSongDB->getFolderPath(gSelectContext.backtrace.front().folder);
             if (hasPath)
             {
-                LOG_INFO << "[List] Refreshing folder " << path.u8string();
+                LOG_INFO << "[List] Refreshing folder " << path;
                 State::set(IndexText::_OVERLAY_TOPLEFT, (boost::format(i18n::c(i18nText::REFRESH_FOLDER)) % path.u8string()).str());
 
                 g_pSongDB->resetAddSummary();
@@ -2881,7 +2885,7 @@ void SceneSelect::updatePreview()
                 {
                     if (lunaticvibes::iequals(key, "PREVIEW") && !val.empty())
                     {
-                        Path pWav = fs::u8path(val);
+                        Path pWav = PathFromUTF8(val);
                         if (!pWav.is_absolute())
                             pWav = bms->getDirectory() / pWav;
                         if (SoundMgr::loadNoteSample(pWav, 0) == 0)
@@ -2927,7 +2931,9 @@ void SceneSelect::updatePreview()
                 gChartContext.isSampleLoaded = false;
                 gChartContext.sampleLoadedHash.reset();
 
-                std::thread([&, bms] {
+                if (_previewLoading.joinable())
+                    _previewLoading.join();
+                _previewLoading = std::thread([&, bms] {
                     unsigned bars = bms->lastBarIdx;
                     auto previewChartObjTmp = std::make_shared<ChartObjectBMS>(PLAYER_SLOT_PLAYER, bms);
                     auto previewRulesetTmp = std::make_shared<RulesetBMSAuto>(bms, previewChartObjTmp,
@@ -2952,7 +2958,7 @@ void SceneSelect::updatePreview()
 
                             boost::asio::post(pool, std::bind([&](size_t i)
                                 {
-                                    Path pWav = fs::u8path(wav);
+                                    Path pWav = PathFromUTF8(wav);
                                     if (pWav.is_absolute())
                                         SoundMgr::loadNoteSample(pWav, i);
                                     else
@@ -2987,7 +2993,7 @@ void SceneSelect::updatePreview()
                             }
                         }
                     }
-                    }).detach();
+                    });
             }
             else
             {

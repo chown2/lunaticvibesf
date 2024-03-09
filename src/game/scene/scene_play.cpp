@@ -206,7 +206,7 @@ ScenePlay::ScenePlay(): SceneBase(gPlayContext.mode, 1000, true)
     }
     if (gChartContext.chart == nullptr || !gChartContext.chart->isLoaded())
     {
-        LOG_ERROR << "[Play] Invalid chart: " << gChartContext.path.u8string();
+        LOG_ERROR << "[Play] Invalid chart: " << gChartContext.path;
         gNextScene = gQuitOnFinish ? SceneType::EXIT_TRANS : SceneType::SELECT;
         return;
     }
@@ -1183,7 +1183,7 @@ void ScenePlay::loadChart()
 
                 boost::asio::post(pool, std::bind([&](size_t i)
                     {
-                        Path pWav = fs::u8path(wav);
+                        Path pWav = PathFromUTF8(wav);
                         if (pWav.is_absolute())
                             SoundMgr::loadNoteSample(pWav, i);
                         else
@@ -1248,7 +1248,7 @@ void ScenePlay::loadChart()
                     const auto& bmp = _pChart->bgaFiles[i];
                     if (bmp.empty()) continue;
 
-                    mapBgaFiles.emplace_back(i, fs::u8path(bmp));
+                    mapBgaFiles.emplace_back(i, PathFromUTF8(bmp));
 
                     // load 8 bmps each frame
                     if (mapBgaFiles.size() >= 8)

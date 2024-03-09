@@ -53,6 +53,9 @@ jobs:
 
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
+        with:
+          # Only look for 'vcpkg.json' in the repo root.
+          vcpkgJsonGlob: "vcpkg.json"
 
       - name: Configure
         run: cmake --preset ${{ matrix.preset }} -B ./build
