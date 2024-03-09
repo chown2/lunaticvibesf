@@ -15,6 +15,15 @@ extern "C"
 #include "common/utils.h"
 #include "common/log.h"
 
+void lunaticvibes::AVFrameDeleter::operator()(AVFrame *avp)
+{
+	av_frame_free(&avp);
+}
+void lunaticvibes::AVPacketDeleter::operator()(AVPacket *avp)
+{
+	av_packet_free(&avp);
+}
+
 void video_init()
 {
 }
@@ -110,8 +119,8 @@ int sVideo::unsetVideo()
 	haveVideo = false;
 	finished = false;
 	firstFrame = true;
-	if (pPacket) av_packet_free(&pPacket);
-	if (pFrame) av_frame_free(&pFrame);
+	pPacket.reset();
+	pFrame.reset();
 	if (pCodecCtx) avcodec_free_context(&pCodecCtx);
 	if (pFormatCtx) avformat_close_input(&pFormatCtx);
 	return 0;
@@ -157,16 +166,15 @@ void sVideo::decodeLoop()
 
 	valid = false;
 
-	if (pFrame) av_frame_free(&pFrame);
-	if (pPacket) av_packet_free(&pPacket);
-
-	if ((pFrame = av_frame_alloc()) == nullptr)
+	pFrame.reset(av_frame_alloc());
+	if (pFrame == nullptr)
 	{
 		LOG_WARNING << "[Video] Could not alloc frame object of " << fs::absolute(file).u8string();
 		return;
 	}
 
-	if ((pPacket = av_packet_alloc()) == nullptr)
+	pPacket.reset(av_packet_alloc());
+	if (pPacket == nullptr)
 	{
 		LOG_WARNING << "[Video] Could not alloc packet object of " << fs::absolute(file).u8string();
 		return;
@@ -186,21 +194,21 @@ void sVideo::decodeLoop()
 	// timestamps per second
 	double tsps = pFormatCtx->streams[videoIndex]->time_base.num == 0 ?
 		AV_TIME_BASE : av_q2d(av_inv_q(pFormatCtx->streams[videoIndex]->time_base));
-	AVFrame *pFrame1 = av_frame_alloc();
+	lunaticvibes::AVFramePtr pFrame1{av_frame_alloc()};
 
 	do
 	{
-		while (av_read_frame(pFormatCtx, pPacket) == 0 && pPacket)
+		while (av_read_frame(pFormatCtx, pPacket.get()) == 0 && pPacket != nullptr)
 		{
 			if (!playing) return;
 
 			// Ignore packets from audio streams
 			if (pPacket->stream_index != videoIndex) continue;
 
-			avcodec_send_packet(pCodecCtx, pPacket);
+			avcodec_send_packet(pCodecCtx, pPacket.get());
 
-			int ret = avcodec_receive_frame(pCodecCtx, pFrame1);
-			av_packet_unref(pPacket);
+			int ret = avcodec_receive_frame(pCodecCtx, pFrame1.get());
+			av_packet_unref(pPacket.get());
 
 			if (ret < 0)
 			{
@@ -224,8 +232,8 @@ void sVideo::decodeLoop()
 				{
 					std::unique_lock l(video_frame_mutex);
 
-					av_frame_unref(pFrame);
-					av_frame_ref(pFrame, pFrame1);
+					av_frame_unref(pFrame.get());
+					av_frame_ref(pFrame.get(), pFrame1.get());
 					valid = true;
 				}
 
@@ -261,7 +269,7 @@ void sVideo::decodeLoop()
 			avcodec_send_packet(pCodecCtx, NULL);
 			{
 				// av_frame_unref(frame) is omitted
-				if (int ret = avcodec_receive_frame(pCodecCtx, pFrame1))
+				if (int ret = avcodec_receive_frame(pCodecCtx, pFrame1.get()))
 				{
 					char buf[128];
 					av_strerror(ret, buf, 128);
@@ -271,8 +279,8 @@ void sVideo::decodeLoop()
 				{
 					std::unique_lock l(video_frame_mutex);
 
-					av_frame_unref(pFrame);
-					av_frame_ref(pFrame, pFrame1);
+					av_frame_unref(pFrame.get());
+					av_frame_ref(pFrame.get(), pFrame1.get());
 					valid = true;
 				}
 				decoded_frames = pCodecCtx->frame_num;
