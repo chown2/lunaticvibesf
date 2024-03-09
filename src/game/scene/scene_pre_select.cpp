@@ -282,19 +282,19 @@ void ScenePreSelect::updateLoadTables()
                 if (t.loadFromFile())
                 {
                     // TODO should re-download the table if outdated
-                    LOG_INFO << "[List] Local table file found: " << t.getFolderPath().u8string();
+                    LOG_INFO << "[List] Local table file found: " << t.getFolderPath();
                     rootFolderProp.dbBrowseEntries.push_back({ convertTable(t), nullptr });
                 }
                 else
                 {
-                    LOG_INFO << "[List] Local file not found. Downloading... " << t.getFolderPath().u8string();
+                    LOG_INFO << "[List] Local file not found. Downloading... " << t.getFolderPath();
                     textHint2 = i18n::s(i18nText::DOWNLOADING_TABLE);
 
                     t.updateFromUrl([&](DifficultyTable::UpdateResult result)
                         {
                             if (result == DifficultyTable::UpdateResult::OK)
                             {
-                                LOG_INFO << "[List] Table file download complete: " << t.getFolderPath().u8string();
+                                LOG_INFO << "[List] Table file download complete: " << t.getFolderPath();
                                 rootFolderProp.dbBrowseEntries.push_back({ convertTable(t), nullptr });
                             }
                             else
@@ -345,7 +345,7 @@ void ScenePreSelect::updateLoadCourses()
                     continue;
 
                 Path coursePath = courseFile.path();
-                LOG_INFO << "[List] Loading course file: " << coursePath.u8string();
+                LOG_INFO << "[List] Loading course file: " << coursePath;
                 textHint2 = coursePath.u8string();
 
                 CourseLr2crs lr2crs(coursePath);

@@ -50,7 +50,7 @@ void vConfig::load()
     }
     catch (YAML::BadFile&)
     {
-        LOG_WARNING << "[Config] Bad file: " << _path.u8string();
+        LOG_WARNING << "[Config] Bad file: " << _path;
     }
 }
 

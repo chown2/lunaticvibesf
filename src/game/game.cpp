@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
     Path lr2path = Path(utf8_to_utf32(convertLR2Path(ConfigMgr::get('E', cfg::E_LR2PATH, "."), "LR2files/")));
     if (!fs::is_directory(lr2path))
     {
-        LOG_FATAL << "LR2files directory not found! " << lr2path.u8string();
+        LOG_FATAL << "LR2files directory not found! " << lr2path;
         panic("Error", "LR2files directory not found!");
         return -1;
     }

@@ -206,7 +206,7 @@ ScenePlay::ScenePlay(): SceneBase(gPlayContext.mode, 1000, true)
     }
     if (gChartContext.chart == nullptr || !gChartContext.chart->isLoaded())
     {
-        LOG_ERROR << "[Play] Invalid chart: " << gChartContext.path.u8string();
+        LOG_ERROR << "[Play] Invalid chart: " << gChartContext.path;
         gNextScene = gQuitOnFinish ? SceneType::EXIT_TRANS : SceneType::SELECT;
         return;
     }

@@ -37,7 +37,7 @@ std::shared_ptr<ChartFormatBase> ChartFormatBase::createFromFile(const Path& pat
     std::ifstream fs(filePath.c_str());
     if (fs.fail())
     {
-        LOG_WARNING << "[Chart] File invalid: " << filePath.u8string();
+        LOG_WARNING << "[Chart] File invalid: " << filePath;
         return nullptr;
     }
 
@@ -48,11 +48,11 @@ std::shared_ptr<ChartFormatBase> ChartFormatBase::createFromFile(const Path& pat
         return std::static_pointer_cast<ChartFormatBase>(std::make_shared<ChartFormatBMS>(filePath, randomSeed));
 
     case eChartFormat::UNKNOWN:
-        LOG_WARNING << "[Chart] File type unknown: " << filePath.u8string();
+        LOG_WARNING << "[Chart] File type unknown: " << filePath;
         return nullptr;
 
     default:
-        LOG_WARNING << "[Chart] File type unsupported: " << filePath.u8string();
+        LOG_WARNING << "[Chart] File type unsupported: " << filePath;
         return nullptr;
     }
 

@@ -1357,7 +1357,7 @@ void SceneSelect::inputGamePressSelect(InputMask& input, const lunaticvibes::Tim
             const auto [hasPath, path] = g_pSongDB->getFolderPath(gSelectContext.backtrace.front().folder);
             if (hasPath)
             {
-                LOG_INFO << "[List] Refreshing folder " << path.u8string();
+                LOG_INFO << "[List] Refreshing folder " << path;
                 State::set(IndexText::_OVERLAY_TOPLEFT, (boost::format(i18n::c(i18nText::REFRESH_FOLDER)) % path.u8string()).str());
 
                 g_pSongDB->resetAddSummary();

@@ -548,7 +548,7 @@ void SceneCustomize::load(SkinType mode)
         }
         catch (YAML::BadFile&)
         {
-            LOG_WARNING << "[Customize] Bad file: " << pCustomize.u8string();
+            LOG_WARNING << "[Customize] Bad file: " << pCustomize;
         }
     }
 
