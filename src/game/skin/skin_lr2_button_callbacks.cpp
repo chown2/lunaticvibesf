@@ -1,6 +1,7 @@
-
-
 #include "skin_lr2_button_callbacks.h"
+
+#include <memory>
+#include <string>
 
 #include "game/runtime/state.h"
 #include "game/sound/sound_mgr.h"
@@ -1358,6 +1359,32 @@ void skinselect_option(int index, int plus)
     SoundMgr::playSysSample(SoundChannelType::KEY_SYS, eSoundSample::SOUND_O_CHANGE);
 }
 
+static void open_ir_page()
+{
+    // TODO: dans
+
+    const EntryList& e = gSelectContext.entries;
+    assert(!e.empty());
+    const size_t idx = gSelectContext.selectedEntryIndex;
+    assert(e[idx].first->type() == eEntryType::CHART || e[idx].first->type() == eEntryType::RIVAL_CHART);
+    const auto& ps = std::dynamic_pointer_cast<EntryChart>(e[idx].first);
+    const auto& song = ps->getSongEntry();
+    assert(song != nullptr);
+    const auto& chart = song->getCurrentChart();
+    assert(chart != nullptr);
+
+    // FIXME: unhardcode LR2IR
+    std::string link = (boost::format("http://dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=%s") %
+                               chart->fileHash.hexdigest())
+                                  .str();
+    if (!lunaticvibes::open(link))
+    {
+        LOG_ERROR << "failed to open link";
+    }
+
+    LOG_DEBUG << "opened the thingy";
+}
+
 void help(int index)
 {
     // TODO #SRC_README, #HELPFILE
@@ -1613,8 +1640,7 @@ std::function<void(int)> getButtonCallback(int type)
         return std::bind(help, type - 200);
 
     case 210:
-        // IR page
-        break;
+        return [](auto) { open_ir_page(); };
 
     case 220:
     case 221:
