@@ -771,7 +771,7 @@ int SoundDriverFMOD::loadNoteSample(const Path& spath, size_t index)
     }
     else
     {
-        LOG_DEBUG << "[FMOD] Loading Sample (" + spath.u8string() + ") Error: " << r << ", " << FMOD_ErrorString(r);
+        LOG_DEBUG << "[FMOD] Loading Sample (" << spath.u8string() << ") Error: " << r << ", " << FMOD_ErrorString(r);
     }
 
     return (r == FMOD_OK) ? 0 : 1;
@@ -865,7 +865,7 @@ int SoundDriverFMOD::loadSysSample(const Path& spath, size_t index, bool isStrea
     }
     else
     {
-        LOG_DEBUG << "[FMOD] Loading Sample (" + spath.u8string() + ") Error: " << r << ", " << FMOD_ErrorString(r);
+        LOG_DEBUG << "[FMOD] Loading Sample (" << spath.u8string() << ") Error: " << r << ", " << FMOD_ErrorString(r);
     }
 
     return (r == FMOD_OK) ? 0 : 1;
