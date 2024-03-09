@@ -772,6 +772,39 @@ Tokens SkinLR2::csvLineTokenize(const std::string& raw)
     return res;
 }
 
+int SkinLR2::HELPFILE()
+{
+    if (!matchToken(parseKeyBuf, "#HELPFILE")) return 0;
+
+    if (_helpFiles.size() > (HELP_10 - HELP_1))
+    {
+        LOG_DEBUG << "[Skin] Too many #HELPFILE";
+        return 1;
+    }
+
+    const auto filePath = convertLR2Path(ConfigMgr::get('E', cfg::E_LR2PATH, "."), parseParamBuf[0]);
+
+    std::ifstream ifs{filePath};
+    if (ifs.fail())
+    {
+        LOG_DEBUG << "[Skin] HELPFILE Not Found: " << filePath;
+        _helpFiles.emplace_back("(file error)");
+        return 1;
+    }
+    auto encoding = getFileEncoding(ifs);
+
+    std::string help_file;
+    for (std::array<char, 1024> buf; !ifs.eof();)
+    {
+        ifs.read(buf.data(), buf.size());
+        help_file += to_utf8({buf.data(), static_cast<size_t>(ifs.gcount())}, encoding);
+    }
+
+    _helpFiles.push_back(std::move(help_file));
+    LOG_DEBUG << "[Skin] " << csvLineNumber << ": Added HELPFILE[" << _helpFiles.size() << "]: " << filePath;
+
+    return 1;
+}
 
 int SkinLR2::IMAGE()
 {
@@ -3433,6 +3466,8 @@ int SkinLR2::parseBody(const Tokens &raw)
             return 7;
         if (DST())
             return 8;
+        if (HELPFILE() != 0)
+            return 9;
 
         LOG_DEBUG << "[Skin] " << csvLineNumber << ": Invalid def \"" << parseKeyBuf << "\" (Line " << csvLineNumber << ")";
     }

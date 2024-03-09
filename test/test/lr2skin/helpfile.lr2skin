@@ -1,0 +1,14 @@
+#INFORMATION,testskin,testcreator
+#ENDOFHEADER
+
+#HELPFILE,lr2skin\helpfile.txt
+#HELPFILE,
+#HELPFILE,lr2skin\helpfile.txt
+#HELPFILE,,,,,,
+#HELPFILE,non-existing.txt
+#HELPFILE,non\existing\non-existing.txt
+#HELPFILE,n7_help_file
+#HELPFILE,n8_help_file
+#HELPFILE,n9_help_file
+#HELPFILE,lr2skin\helpfileヘルプ.txt
+#HELPFILE,past_10_should_be_ignored

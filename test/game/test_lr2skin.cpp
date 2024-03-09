@@ -1,6 +1,9 @@
 #include "gmock/gmock.h"
 #include "game/skin/skin_lr2.h"
 
+#include <string>
+#include <vector>
+
 class mock_SkinLR2 : public SkinLR2
 {
 public:
@@ -9,7 +12,7 @@ public:
 
 
 	std::vector<element> getDrawQueue() { return drawQueue; }
-
+	const std::vector<std::string>& getHelpFiles() { return _helpFiles; }
 };
 
 
@@ -81,4 +84,27 @@ TEST(tLR2Skin, IF6)
 	ASSERT_EQ(ps->getDrawQueue().size(), 1);
 	const auto v = ps->getDrawQueue();
 	EXPECT_EQ(v[0].op1, 2);
+}
+
+TEST(tLR2Skin, HelpFileParsed)
+{
+	std::shared_ptr<mock_SkinLR2> ps = nullptr;
+	ASSERT_NO_THROW(ps = std::make_shared<mock_SkinLR2>("lr2skin/helpfile.lr2skin"));
+	ASSERT_EQ(ps->isLoaded(), true);
+
+	static const std::vector<std::string> helpFiles{
+		u8"「とわ」とわ\n",
+		u8"(file error)",
+		u8"「とわ」とわ\n",
+		u8"(file error)",
+		u8"(file error)",
+		u8"(file error)",
+		u8"(file error)",
+		u8"(file error)",
+		u8"(file error)",
+		u8"UTF-8\nテスト\n",
+		// No tenth.
+	};
+
+	EXPECT_EQ(ps->getHelpFiles(), helpFiles);
 }

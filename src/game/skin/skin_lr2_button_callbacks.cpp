@@ -1387,7 +1387,7 @@ static void open_ir_page()
 
 void help(int index)
 {
-    // TODO #SRC_README, #HELPFILE
+    // TODO #SRC_README
 }
 
 #pragma endregion

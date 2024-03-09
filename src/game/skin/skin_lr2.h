@@ -1556,6 +1556,7 @@ private:
 
     Tokens csvLineTokenize(const std::string& raw);
 
+    int HELPFILE();
     int IMAGE();
     int INCLUDE();
     int LR2FONT();
@@ -1646,6 +1647,10 @@ public:
     StringContent getName() const override;
     StringContent getMaker() const override;
     StringPath getFilePath() const override;
+
+// For tests.
+protected:
+    std::vector<std::string> _helpFiles;
 };
 
 
