@@ -1,6 +1,6 @@
 #pragma once
 #define PLOG_CAPTURE_FILE 
-#include <plog/Log.h>
+#include <plog/Log.h> // IWYU pragma: export
 #include <string>
 #include <sstream>
 
