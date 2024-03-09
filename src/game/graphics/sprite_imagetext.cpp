@@ -21,26 +21,12 @@ void SpriteImageText::updateTextTexture(std::string&& text)
 
     text = text;
 
-    /*
-    // convert UTF-8 to SHIFT-JIS
-    std::u16string sjisText = utf8_to_sjis(text)
-
-    // save characters
-    int x_margin = 0;
-    for (auto c : sjisText)
-    {
-        if (_chrList.find(c) != _chrList.end())
-        {
-            _drawList.push_back({c, });
-        }
-    }
-    */
-
     // convert UTF-8 to UTF-32
     std::u32string u32Text = utf8_to_utf32(text);
 
     // save characters
     float x = 0;
+    float y = 0;
     float w = 0;
     _drawListOrig.clear();
     for (auto c : u32Text)
@@ -48,8 +34,14 @@ void SpriteImageText::updateTextTexture(std::string&& text)
         if (_chrList->find(c) != _chrList->end())
         {
             auto& r = _chrList->at(c).textureRect;
+            if (c == U'\n')
+            {
+                x = 0;
+                y += r.h;
+                continue;
+            }
             if (_chrList->at(c).textureIdx < _textures.size())
-                _drawListOrig.push_back({ c, {x, 0, (float)r.w, (float)r.h} });
+                _drawListOrig.push_back({ c, {x, y, (float)r.w, (float)r.h} });
             w = x + r.w;
             x += r.w + _margin;
         }
