@@ -420,6 +420,8 @@ std::string convertLR2Path(const std::string& lr2path, const char* relative_path
 
 std::string convertLR2Path(const std::string& lr2path, std::string_view relative_path_utf8)
 {
+    if (relative_path_utf8.empty())
+        return std::string(relative_path_utf8);
     if (auto p = PathFromUTF8(relative_path_utf8); p.is_absolute())
         return std::string(relative_path_utf8);
 

@@ -10,6 +10,7 @@ add_executable(apptest
     common/test_encoding.cpp
     common/test_fraction.cpp
     common/test_chartformat_bms.cpp
+    common/test_path.cpp
     game/test_graphics.cpp
  "game/test_lr2skin.cpp")
 target_link_libraries(apptest PUBLIC
