@@ -7,6 +7,7 @@
 #include "scene_pre_select.h"
 #include "scene_customize.h"
 
+#include "common/utils.h"
 #include "common/chartformat/chartformat_types.h"
 #include "common/entry/entry_types.h"
 
@@ -2884,7 +2885,7 @@ void SceneSelect::updatePreview()
                 {
                     if (lunaticvibes::iequals(key, "PREVIEW") && !val.empty())
                     {
-                        Path pWav = fs::u8path(val);
+                        Path pWav = PathFromUTF8(val);
                         if (!pWav.is_absolute())
                             pWav = bms->getDirectory() / pWav;
                         if (SoundMgr::loadNoteSample(pWav, 0) == 0)
@@ -2957,7 +2958,7 @@ void SceneSelect::updatePreview()
 
                             boost::asio::post(pool, std::bind([&](size_t i)
                                 {
-                                    Path pWav = fs::u8path(wav);
+                                    Path pWav = PathFromUTF8(wav);
                                     if (pWav.is_absolute())
                                         SoundMgr::loadNoteSample(pWav, i);
                                     else
