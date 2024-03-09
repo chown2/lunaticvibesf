@@ -1,16 +1,14 @@
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
+
 #include "sysutil.h"
+
 #include <cstdio>
 #include <filesystem>
-#include <windows.h>
-#include <VersionHelpers.h>
 
-#ifdef _MSC_VER
-#ifndef strcpy
-#define strcpy strcpy_s
-#endif
-#endif
+#include <VersionHelpers.h>
+#include <shellapi.h>
+#include <windows.h>
 
 const DWORD MS_VC_EXCEPTION = 0x406D1388;
 
@@ -105,6 +103,14 @@ const char* safe_strerror(int errnum, char* buffer, size_t buffer_length)
 {
     strerror_s(buffer, buffer_length, errnum);
     return buffer;
+}
+
+bool lunaticvibes::open(const std::string& link)
+{
+    auto res = reinterpret_cast<INT_PTR>(ShellExecute(NULL, "open", link.c_str(), NULL, NULL, SW_SHOWDEFAULT));
+    // > .. can be cast only to an INT_PTR
+    // > If the function succeeds, it returns a value greater than 32.
+    return res > 32;
 }
 
 #endif

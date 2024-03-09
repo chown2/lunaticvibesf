@@ -98,3 +98,10 @@ Path getSysMonoFontPath(std::string* faceName = NULL, int* faceIndex = NULL, Lan
 const char* safe_strerror(int errnum, char* buffer, size_t buffer_length);
 // Wrapper over the other safe_strerror() that returns an owned string.
 std::string safe_strerror(int errnum);
+
+namespace lunaticvibes {
+
+// Open link, file or a folder.
+bool open(const std::string& link);
+
+} // namespace lunaticvibes

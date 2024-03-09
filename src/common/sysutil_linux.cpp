@@ -8,6 +8,8 @@
 #include <string>
 #include <thread>
 
+#include <boost/format.hpp>
+
 #include <unistd.h>
 
 #include "common/utils.h"
@@ -85,6 +87,18 @@ static const char* portable_strerror_r(const int errnum, char* buffer, const siz
 const char* safe_strerror(const int errnum, char* buffer, const size_t buffer_length)
 {
     return portable_strerror_r(errnum, buffer, buffer_length);
+}
+
+bool lunaticvibes::open(const std::string& link)
+{
+    const std::string s = (boost::format("xdg-open \"%s\"") % link).str();
+    int rc = system(s.c_str());
+    if (rc != 0)
+    {
+        LOG_ERROR << "xdg-open failed with rc=" << rc;
+        return false;
+    }
+    return true;
 }
 
 #endif // __linux__

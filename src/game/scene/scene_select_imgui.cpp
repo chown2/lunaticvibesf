@@ -12,7 +12,6 @@
 #include "git_version.h"
 
 #ifdef _WIN32
-#include <shellapi.h>
 #include <VersionHelpers.h>
 #endif
 
@@ -1443,21 +1442,8 @@ bool SceneSelect::imguiDelFolder()
 bool SceneSelect::imguiBrowseFolder()
 {
     if (imgui_folder_index < 0 || imgui_folder_index >= imgui_folders_display.size()) return false;
-
     std::string pathstr = Path(imgui_folders_display[imgui_folder_index]).u8string();
-
-#ifdef _WIN32
-    ShellExecute(NULL, "open", pathstr.c_str(), NULL, NULL, SW_SHOWDEFAULT);
-#else
-    int rc = system((boost::format("xdg-open \"%s\"") % pathstr).str().c_str());
-    if (rc != 0)
-    {
-        LOG_ERROR << "xdg-open failed with rc=" << rc;
-        return false;
-    }
-#endif
-
-    return true;
+    return lunaticvibes::open(pathstr);
 }
 
 bool SceneSelect::imguiAddTable()
