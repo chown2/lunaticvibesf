@@ -1,5 +1,6 @@
 #include "skin_lr2_button_callbacks.h"
 
+#include <cassert>
 #include <memory>
 #include <string>
 
@@ -1387,7 +1388,26 @@ static void open_ir_page()
 
 void help(int index)
 {
-    // TODO #SRC_README
+    assert(index < 10);
+    lunaticvibes::Time now{};
+
+    if (index >= gSelectContext.helpfiles_fixme.size())
+    {
+        LOG_WARNING << "skin references out of bounds help file";
+        return;
+    }
+
+    if (State::get(IndexTimer::README_START) != TIMER_NEVER)
+    {
+        LOG_WARNING << "FIXME: shouldn't be able to click through the screen.";
+        // TODO: scrolling.
+        // Both of these are likely gonna either a derivative of or a modification to SpriteImageText.
+        return;
+    }
+
+    State::set(IndexText::_MY_HELPFILE, gSelectContext.helpfiles_fixme[index]);
+    State::set(IndexTimer::README_START, now.norm());
+    State::set(IndexTimer::README_END, TIMER_NEVER);
 }
 
 #pragma endregion

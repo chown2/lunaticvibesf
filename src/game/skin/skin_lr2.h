@@ -1470,6 +1470,7 @@ private:
         BARGRAPH,
         BUTTON,
         ONMOUSE,
+        README,
         TEXT,
         JUDGELINE,
         GROOVEGAUGE,
@@ -1516,6 +1517,7 @@ private:
         {"BARGRAPH",       DefType::BARGRAPH},
         {"BUTTON",         DefType::BUTTON},
         {"ONMOUSE",        DefType::ONMOUSE},
+        {"README",         DefType::README},
         {"TEXT",           DefType::TEXT},
         {"JUDGELINE",      DefType::JUDGELINE},
         {"GROOVEGAUGE",    DefType::GROOVEGAUGE},
@@ -1573,6 +1575,7 @@ private:
     ParseRet SRC_ONMOUSE();
     ParseRet SRC_MOUSECURSOR();
     ParseRet SRC_TEXT();
+    ParseRet SRC_README();
 
     ParseRet SRC_JUDGELINE();
     ParseRet SRC_GROOVEGAUGE();

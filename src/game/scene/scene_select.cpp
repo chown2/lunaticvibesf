@@ -1120,6 +1120,19 @@ void SceneSelect::update()
 
 ////////////////////////////////////////////////////////////////////////////////
 
+static void closeReadme()
+{
+    if (State::get(IndexTimer::README_START) == TIMER_NEVER)
+    {
+        return;
+    }
+
+    lunaticvibes::Time now{};
+    State::set(IndexTimer::README_START, TIMER_NEVER);
+    State::set(IndexTimer::README_END, now.norm());
+    SoundMgr::playSysSample(SoundChannelType::KEY_SYS, eSoundSample::SOUND_O_CLOSE);
+}
+
 // CALLBACK
 void SceneSelect::inputGamePress(InputMask& m, const lunaticvibes::Time& t)
 {
@@ -1210,8 +1223,8 @@ void SceneSelect::inputGamePress(InputMask& m, const lunaticvibes::Time& t)
 
         if (input[Pad::M2])
         {
-            // close panels if opened
             closeAllPanels(t);
+            closeReadme();
         }
 
         // lights
@@ -2646,6 +2659,7 @@ void SceneSelect::navigateVersionBack(const lunaticvibes::Time& t)
 
 bool SceneSelect::closeAllPanels(const lunaticvibes::Time& t)
 {
+    //
     bool hasPanelOpened = false;
     for (int i = 1; i <= 9; ++i)
     {

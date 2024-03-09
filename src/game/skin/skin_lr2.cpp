@@ -782,7 +782,7 @@ int SkinLR2::HELPFILE()
         return 1;
     }
 
-    const auto filePath = convertLR2Path(ConfigMgr::get('E', cfg::E_LR2PATH, "."), parseParamBuf[0]);
+    const auto filePath = PathFromUTF8(convertLR2Path(ConfigMgr::get('E', cfg::E_LR2PATH, "."), parseParamBuf[0]));
 
     std::ifstream ifs{filePath};
     if (ifs.fail())
@@ -1268,6 +1268,7 @@ bool SkinLR2::SRC()
     case DefType::BAR_BODY_OFF:
     case DefType::BAR_BODY_ON:      return false;
 
+    case DefType::README:
     case DefType::TEXT:
     case DefType::BAR_TITLE:
     case DefType::NOTE:
@@ -1336,6 +1337,7 @@ bool SkinLR2::SRC()
         case DefType::BUTTON:         SRC_BUTTON();              break;
         case DefType::ONMOUSE:        SRC_ONMOUSE();             break;
         case DefType::JUDGELINE:      SRC_JUDGELINE();           break;
+        case DefType::README:         SRC_README();              break;
         case DefType::TEXT:           SRC_TEXT();                break;
         case DefType::GROOVEGAUGE:    SRC_GROOVEGAUGE();         break;
         case DefType::NOWJUDGE_1P:    flipSide ? SRC_NOWJUDGE2() : SRC_NOWJUDGE1(); break;
@@ -1648,6 +1650,38 @@ ParseRet SkinLR2::SRC_MOUSECURSOR()
     return ParseRet::OK;
 }
 
+ParseRet SkinLR2::SRC_README()
+{
+    if (loadMode >= 1) return ParseRet::OK;
+
+    lr2skin::s_readme d(parseParamBuf);
+
+    SpriteImageText::SpriteImageTextBuilder builder;
+    builder.srcLine = csvLineNumber;
+    builder.textInd = IndexText::_MY_HELPFILE;
+    builder.align = TextAlign::TEXT_ALIGN_LEFT;
+    builder.editable = false;
+
+    std::string font = std::to_string(d.font);
+    if (LR2FontNameMap.find(font) != LR2FontNameMap.end() && LR2FontNameMap[font] != nullptr)
+    {
+        auto& pf = LR2FontNameMap[font];
+        builder.charTextures = pf->T_texture;
+        builder.charMappingList = &pf->R;
+        builder.height = pf->S;
+        builder.margin = pf->M;
+        _sprites.push_back(builder.build());
+    }
+    else
+    {
+        SpriteText::SpriteTextBuilder& pBuilder = builder;
+        pBuilder.font = fontNameMap[std::to_string(d.font)];
+        _sprites.push_back(pBuilder.build());
+    }
+
+    return ParseRet::OK;
+}
+
 ParseRet SkinLR2::SRC_TEXT()
 {
     if (loadMode >= 1) return ParseRet::OK;
@@ -1660,7 +1694,7 @@ ParseRet SkinLR2::SRC_TEXT()
     builder.align = (TextAlign)d.align;
     builder.editable = d.edit;
 
-    auto font = std::to_string(d.font);
+    std::string font = std::to_string(d.font);
     if (LR2FontNameMap.find(font) != LR2FontNameMap.end() && LR2FontNameMap[font] != nullptr)
     {
         auto& pf = LR2FontNameMap[font];
@@ -1672,9 +1706,9 @@ ParseRet SkinLR2::SRC_TEXT()
     }
     else
     {
-        SpriteText::SpriteTextBuilder* pBuilder = &builder;
-        pBuilder->font = fontNameMap[std::to_string(d.font)];
-        _sprites.push_back(pBuilder->build());
+        SpriteText::SpriteTextBuilder& pBuilder = builder;
+        pBuilder.font = fontNameMap[std::to_string(d.font)];
+        _sprites.push_back(pBuilder.build());
     }
 
     switch (d.st)
@@ -2620,6 +2654,7 @@ bool SkinLR2::DST()
     case DefType::LINE:           DST_LINE();                break;
     case DefType::NOTE:           DST_NOTE();                break;
 
+    case DefType::README:
     case DefType::TEXT:
         if (loadMode >= 1)
             return true;
@@ -2670,6 +2705,7 @@ bool SkinLR2::DST()
         case DefType::BARGRAPH:      typeMatch = sType == SpriteTypes::BARGRAPH; break;
         case DefType::BUTTON:        typeMatch = (sType == SpriteTypes::BUTTON || sType == SpriteTypes::OPTION); break;
         case DefType::ONMOUSE:       typeMatch = sType == SpriteTypes::ONMOUSE; break;
+        case DefType::README:
         case DefType::TEXT:          typeMatch = (sType == SpriteTypes::TEXT || sType == SpriteTypes::IMAGE_TEXT); break;
         case DefType::JUDGELINE:     typeMatch = sType == SpriteTypes::ANIMATED; break;
         case DefType::GROOVEGAUGE:   typeMatch = sType == SpriteTypes::GAUGE; break;
@@ -3670,6 +3706,8 @@ SkinLR2::SkinLR2(Path p, int loadMode): loadMode(loadMode)
 
         LOG_DEBUG << "[Skin] File: " << p << "(Line " << csvLineNumber << "): Body loading finished";
         loaded = true;
+
+        gSelectContext.helpfiles_fixme = _helpFiles;
 
         startSpriteVideoPlayback();
     }

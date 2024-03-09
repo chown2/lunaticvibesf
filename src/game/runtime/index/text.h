@@ -184,6 +184,7 @@ enum class IndexText: unsigned
 
         _TEST1 = 250,
         _TEST2,
+        _MY_HELPFILE,
 
         ARENA_LOBBY_STATUS = 260,
         ARENA_PLAYER_NAME_1 = 261,

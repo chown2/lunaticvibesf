@@ -6,6 +6,7 @@ SpriteImageText::SpriteImageText(const SpriteImageTextBuilder& builder) : Sprite
 {
     _type = SpriteTypes::IMAGE_TEXT;
     _textures = builder.charTextures;
+    assert(builder.charMappingList != nullptr);
     _chrList = builder.charMappingList;
     textHeight = builder.height;
     _margin = builder.margin;
