@@ -3,6 +3,7 @@
 #include "game/scene/scene_context.h"
 
 #include <cassert>
+#include <optional>
 
 RulesetBMSReplay::RulesetBMSReplay(
     std::shared_ptr<ChartFormatBase> format,
@@ -61,6 +62,44 @@ RulesetBMSReplay::RulesetBMSReplay(
     case RulesetBMS::PlaySide::NETWORK:
         assert(false);
         break;
+    }
+}
+
+static std::optional<std::pair<RulesetBMS::JudgeArea, unsigned>> command_to_judge(ReplayChart::Commands::Type cmd)
+{
+    using CmdType = ReplayChart::Commands::Type;
+    using JudgeArea = RulesetBMS::JudgeArea;
+    switch (cmd)
+    {
+    case CmdType::JUDGE_LEFT_EXACT_0: return {{JudgeArea::EXACT_PERFECT, PLAYER_SLOT_PLAYER}};
+    case CmdType::JUDGE_LEFT_EARLY_0: return {{JudgeArea::EARLY_PERFECT, PLAYER_SLOT_PLAYER}};
+    case CmdType::JUDGE_LEFT_EARLY_1: return {{JudgeArea::EARLY_GREAT, PLAYER_SLOT_PLAYER}};
+    case CmdType::JUDGE_LEFT_EARLY_2: return {{JudgeArea::EARLY_GOOD, PLAYER_SLOT_PLAYER}};
+    case CmdType::JUDGE_LEFT_EARLY_3: return {{JudgeArea::EARLY_BAD, PLAYER_SLOT_PLAYER}};
+    case CmdType::JUDGE_LEFT_EARLY_4: return {{JudgeArea::MISS, PLAYER_SLOT_PLAYER}};
+    case CmdType::JUDGE_LEFT_EARLY_5: return {{JudgeArea::EARLY_KPOOR, PLAYER_SLOT_PLAYER}};
+    case CmdType::JUDGE_LEFT_LATE_0: return {{JudgeArea::LATE_PERFECT, PLAYER_SLOT_PLAYER}};
+    case CmdType::JUDGE_LEFT_LATE_1: return {{JudgeArea::LATE_GREAT, PLAYER_SLOT_PLAYER}};
+    case CmdType::JUDGE_LEFT_LATE_2: return {{JudgeArea::LATE_GOOD, PLAYER_SLOT_PLAYER}};
+    case CmdType::JUDGE_LEFT_LATE_3: return {{JudgeArea::LATE_BAD, PLAYER_SLOT_PLAYER}};
+    case CmdType::JUDGE_LEFT_LATE_4: return {{JudgeArea::MISS, PLAYER_SLOT_PLAYER}};
+    case CmdType::JUDGE_LEFT_LATE_5: return {{JudgeArea::EARLY_KPOOR, PLAYER_SLOT_PLAYER}};
+    case CmdType::JUDGE_RIGHT_EXACT_0: return {{JudgeArea::EXACT_PERFECT, PLAYER_SLOT_TARGET}};
+    case CmdType::JUDGE_RIGHT_EARLY_0: return {{JudgeArea::EARLY_PERFECT, PLAYER_SLOT_TARGET}};
+    case CmdType::JUDGE_RIGHT_EARLY_1: return {{JudgeArea::EARLY_GREAT, PLAYER_SLOT_TARGET}};
+    case CmdType::JUDGE_RIGHT_EARLY_2: return {{JudgeArea::EARLY_GOOD, PLAYER_SLOT_TARGET}};
+    case CmdType::JUDGE_RIGHT_EARLY_3: return {{JudgeArea::EARLY_BAD, PLAYER_SLOT_TARGET}};
+    case CmdType::JUDGE_RIGHT_EARLY_4: return {{JudgeArea::MISS, PLAYER_SLOT_TARGET}};
+    case CmdType::JUDGE_RIGHT_EARLY_5: return {{JudgeArea::EARLY_KPOOR, PLAYER_SLOT_TARGET}};
+    case CmdType::JUDGE_RIGHT_LATE_0: return {{JudgeArea::LATE_PERFECT, PLAYER_SLOT_TARGET}};
+    case CmdType::JUDGE_RIGHT_LATE_1: return {{JudgeArea::LATE_GREAT, PLAYER_SLOT_TARGET}};
+    case CmdType::JUDGE_RIGHT_LATE_2: return {{JudgeArea::LATE_GOOD, PLAYER_SLOT_TARGET}};
+    case CmdType::JUDGE_RIGHT_LATE_3: return {{JudgeArea::LATE_BAD, PLAYER_SLOT_TARGET}};
+    case CmdType::JUDGE_RIGHT_LATE_4: return {{JudgeArea::MISS, PLAYER_SLOT_TARGET}};
+    case CmdType::JUDGE_RIGHT_LATE_5: return {{JudgeArea::EARLY_KPOOR, PLAYER_SLOT_TARGET}};
+    case CmdType::JUDGE_LEFT_LANDMINE: return {{JudgeArea::MINE_KPOOR, PLAYER_SLOT_PLAYER}};
+    case CmdType::JUDGE_RIGHT_LANDMINE: return {{JudgeArea::MINE_KPOOR, PLAYER_SLOT_TARGET}};
+    default: return {};
     }
 }
 
@@ -141,9 +180,10 @@ void RulesetBMSReplay::update(const lunaticvibes::Time& t)
 
             if (gPlayContext.mode == SkinType::PLAY5 || gPlayContext.mode == SkinType::PLAY5_2)
             {
-                if (REPLAY_CMD_INPUT_DOWN_MAP_5K[replayCmdMapIndex].find(cmd) != REPLAY_CMD_INPUT_DOWN_MAP_5K[replayCmdMapIndex].end())
+                if (auto it = REPLAY_CMD_INPUT_DOWN_MAP_5K[replayCmdMapIndex].find(cmd);
+                    it != REPLAY_CMD_INPUT_DOWN_MAP_5K[replayCmdMapIndex].end())
                 {
-                    keyPressing[REPLAY_CMD_INPUT_DOWN_MAP_5K[replayCmdMapIndex].at(cmd)] = true;
+                    keyPressing[it->second] = true;
                 }
                 else if (REPLAY_CMD_INPUT_UP_MAP_5K[replayCmdMapIndex].find(cmd) != REPLAY_CMD_INPUT_UP_MAP_5K[replayCmdMapIndex].end())
                 {
@@ -152,9 +192,9 @@ void RulesetBMSReplay::update(const lunaticvibes::Time& t)
             }
             else
             {
-                if (REPLAY_CMD_INPUT_DOWN_MAP.find(cmd) != REPLAY_CMD_INPUT_DOWN_MAP.end())
+                if (auto it = REPLAY_CMD_INPUT_DOWN_MAP.find(cmd); it != REPLAY_CMD_INPUT_DOWN_MAP.end())
                 {
-                    keyPressing[REPLAY_CMD_INPUT_DOWN_MAP.at(cmd)] = true;
+                    keyPressing[it->second] = true;
                 }
                 else if (REPLAY_CMD_INPUT_UP_MAP.find(cmd) != REPLAY_CMD_INPUT_UP_MAP.end())
                 {
@@ -176,40 +216,9 @@ void RulesetBMSReplay::update(const lunaticvibes::Time& t)
             }
         }
 
-        switch (cmd)
-        {
-        // extract judge from frames
-        case ReplayChart::Commands::Type::JUDGE_LEFT_EXACT_0:   updateJudge(t, NoteLaneIndex::_, JudgeArea::EXACT_PERFECT, PLAYER_SLOT_PLAYER, true); break;
-        case ReplayChart::Commands::Type::JUDGE_LEFT_EARLY_0:   updateJudge(t, NoteLaneIndex::_, JudgeArea::EARLY_PERFECT, PLAYER_SLOT_PLAYER, true); break;
-        case ReplayChart::Commands::Type::JUDGE_LEFT_EARLY_1:   updateJudge(t, NoteLaneIndex::_, JudgeArea::EARLY_GREAT, PLAYER_SLOT_PLAYER, true); break;
-        case ReplayChart::Commands::Type::JUDGE_LEFT_EARLY_2:   updateJudge(t, NoteLaneIndex::_, JudgeArea::EARLY_GOOD, PLAYER_SLOT_PLAYER, true); break;
-        case ReplayChart::Commands::Type::JUDGE_LEFT_EARLY_3:   updateJudge(t, NoteLaneIndex::_, JudgeArea::EARLY_BAD, PLAYER_SLOT_PLAYER, true); break;
-        case ReplayChart::Commands::Type::JUDGE_LEFT_EARLY_4:   updateJudge(t, NoteLaneIndex::_, JudgeArea::MISS, PLAYER_SLOT_PLAYER, true); break;
-        case ReplayChart::Commands::Type::JUDGE_LEFT_EARLY_5:   updateJudge(t, NoteLaneIndex::_, JudgeArea::EARLY_KPOOR, PLAYER_SLOT_PLAYER, true); break;
-        case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_0:    updateJudge(t, NoteLaneIndex::_, JudgeArea::LATE_PERFECT, PLAYER_SLOT_PLAYER, true); break;
-        case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_1:    updateJudge(t, NoteLaneIndex::_, JudgeArea::LATE_GREAT, PLAYER_SLOT_PLAYER, true); break;
-        case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_2:    updateJudge(t, NoteLaneIndex::_, JudgeArea::LATE_GOOD, PLAYER_SLOT_PLAYER, true); break;
-        case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_3:    updateJudge(t, NoteLaneIndex::_, JudgeArea::LATE_BAD, PLAYER_SLOT_PLAYER, true); break;
-        case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_4:    updateJudge(t, NoteLaneIndex::_, JudgeArea::MISS, PLAYER_SLOT_PLAYER, true); break;
-        case ReplayChart::Commands::Type::JUDGE_LEFT_LATE_5:    updateJudge(t, NoteLaneIndex::_, JudgeArea::EARLY_KPOOR, PLAYER_SLOT_PLAYER, true); break;
-        case ReplayChart::Commands::Type::JUDGE_RIGHT_EXACT_0:  updateJudge(t, NoteLaneIndex::_, JudgeArea::EXACT_PERFECT, PLAYER_SLOT_TARGET, true); break;
-        case ReplayChart::Commands::Type::JUDGE_RIGHT_EARLY_0:  updateJudge(t, NoteLaneIndex::_, JudgeArea::EARLY_PERFECT, PLAYER_SLOT_TARGET, true); break;
-        case ReplayChart::Commands::Type::JUDGE_RIGHT_EARLY_1:  updateJudge(t, NoteLaneIndex::_, JudgeArea::EARLY_GREAT, PLAYER_SLOT_TARGET, true); break;
-        case ReplayChart::Commands::Type::JUDGE_RIGHT_EARLY_2:  updateJudge(t, NoteLaneIndex::_, JudgeArea::EARLY_GOOD, PLAYER_SLOT_TARGET, true); break;
-        case ReplayChart::Commands::Type::JUDGE_RIGHT_EARLY_3:  updateJudge(t, NoteLaneIndex::_, JudgeArea::EARLY_BAD, PLAYER_SLOT_TARGET, true); break;
-        case ReplayChart::Commands::Type::JUDGE_RIGHT_EARLY_4:  updateJudge(t, NoteLaneIndex::_, JudgeArea::MISS, PLAYER_SLOT_TARGET, true); break;
-        case ReplayChart::Commands::Type::JUDGE_RIGHT_EARLY_5:  updateJudge(t, NoteLaneIndex::_, JudgeArea::EARLY_KPOOR, PLAYER_SLOT_TARGET, true); break;
-        case ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_0:   updateJudge(t, NoteLaneIndex::_, JudgeArea::LATE_PERFECT, PLAYER_SLOT_TARGET, true); break;
-        case ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_1:   updateJudge(t, NoteLaneIndex::_, JudgeArea::LATE_GREAT, PLAYER_SLOT_TARGET, true); break;
-        case ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_2:   updateJudge(t, NoteLaneIndex::_, JudgeArea::LATE_GOOD, PLAYER_SLOT_TARGET, true); break;
-        case ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_3:   updateJudge(t, NoteLaneIndex::_, JudgeArea::LATE_BAD, PLAYER_SLOT_TARGET, true); break;
-        case ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_4:   updateJudge(t, NoteLaneIndex::_, JudgeArea::MISS, PLAYER_SLOT_TARGET, true); break;
-        case ReplayChart::Commands::Type::JUDGE_RIGHT_LATE_5:   updateJudge(t, NoteLaneIndex::_, JudgeArea::EARLY_KPOOR, PLAYER_SLOT_TARGET, true); break;
-        case ReplayChart::Commands::Type::JUDGE_LEFT_LANDMINE:  updateJudge(t, NoteLaneIndex::_, JudgeArea::MINE_KPOOR, PLAYER_SLOT_PLAYER, true); break;
-        case ReplayChart::Commands::Type::JUDGE_RIGHT_LANDMINE: updateJudge(t, NoteLaneIndex::_, JudgeArea::MINE_KPOOR, PLAYER_SLOT_TARGET, true); break;
-
-        default: break;
-        }
+        if (auto judge = command_to_judge(cmd); judge.has_value())
+            // TODO: pass lane index in here.
+            updateJudge(t, NoteLaneIndex::_, judge->first, judge->second, true);
 
         if (cmd >= ReplayChart::Commands::Type::JUDGE_LEFT_EXACT_0 && cmd <= ReplayChart::Commands::Type::JUDGE_RIGHT_LANDMINE)
         {
