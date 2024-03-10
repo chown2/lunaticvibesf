@@ -12,7 +12,6 @@ public:
 
 
 	std::vector<element> getDrawQueue() { return drawQueue; }
-	const std::vector<std::string>& getHelpFiles() { return _helpFiles; }
 };
 
 

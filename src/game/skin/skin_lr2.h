@@ -1651,8 +1651,9 @@ public:
     StringContent getMaker() const override;
     StringPath getFilePath() const override;
 
-// For tests.
-protected:
+    const std::vector<std::string>& getHelpFiles() const;
+
+private:
     std::vector<std::string> _helpFiles;
 };
 

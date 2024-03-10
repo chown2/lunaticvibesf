@@ -5,6 +5,8 @@
 #include <string>
 
 #include "game/runtime/state.h"
+#include "game/skin/skin_lr2.h"
+#include "game/skin/skin_mgr.h"
 #include "game/sound/sound_mgr.h"
 #include "game/sound/sound_sample.h"
 #include "game/scene/scene_context.h"
@@ -1391,7 +1393,9 @@ void help(int index)
     assert(index < 10);
     lunaticvibes::Time now{};
 
-    if (index >= gSelectContext.helpfiles_fixme.size())
+    std::shared_ptr<SkinLR2> s = std::dynamic_pointer_cast<SkinLR2>(SkinMgr::get(SkinType::MUSIC_SELECT));
+    const std::vector<std::string>& help_files = s->getHelpFiles();
+    if (index >= help_files.size())
     {
         LOG_WARNING << "skin references out of bounds help file";
         return;
@@ -1405,7 +1409,7 @@ void help(int index)
         return;
     }
 
-    State::set(IndexText::_MY_HELPFILE, gSelectContext.helpfiles_fixme[index]);
+    State::set(IndexText::_MY_HELPFILE, help_files[index]);
     State::set(IndexTimer::README_START, now.norm());
     State::set(IndexTimer::README_END, TIMER_NEVER);
 }

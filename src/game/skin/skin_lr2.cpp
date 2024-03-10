@@ -3706,8 +3706,6 @@ SkinLR2::SkinLR2(Path p, int loadMode): loadMode(loadMode)
         LOG_DEBUG << "[Skin] File: " << p << "(Line " << csvLineNumber << "): Body loading finished";
         loaded = true;
 
-        gSelectContext.helpfiles_fixme = _helpFiles;
-
         startSpriteVideoPlayback();
     }
 
@@ -4738,3 +4736,8 @@ StringPath SkinLR2::getFilePath() const
 {
     return filePath.is_absolute() ? filePath : filePath.relative_path();
 }
+
+const std::vector<std::string>& SkinLR2::getHelpFiles() const
+{
+    return _helpFiles;
+};

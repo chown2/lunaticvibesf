@@ -192,8 +192,6 @@ struct SelectContextParams
     bool isGoingToAutoPlay = false;
     bool isGoingToReplay = false;
     bool isGoingToReboot = false;
-
-    std::vector<std::string> helpfiles_fixme; // copy of skin's help files FIXME: just use the skin
 };
 
 void loadSongList();
