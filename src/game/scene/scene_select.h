@@ -40,6 +40,7 @@ private:
 
     // preview
     std::thread _previewLoading; // TODO(C++20): use std::jthread
+    std::thread _previewChartLoading; // TODO(C++20): use std::jthread
     std::shared_mutex previewMutex;
     enum
     {

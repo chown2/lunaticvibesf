@@ -481,6 +481,8 @@ SceneSelect::SceneSelect() : SceneBase(SkinType::MUSIC_SELECT, 250)
 
 SceneSelect::~SceneSelect()
 {
+    if (_previewChartLoading.joinable())
+        _previewChartLoading.join();
     if (_previewLoading.joinable())
         _previewLoading.join();
 
@@ -2846,7 +2848,9 @@ void SceneSelect::updatePreview()
             previewState = PREVIEW_CHART;
             previewChart.reset();
         }
-        std::thread([&, previewChartPath, type]()
+        if (_previewChartLoading.joinable())
+            _previewChartLoading.join();
+        _previewChartLoading = std::thread([&, previewChartPath, type]()
             {
                 std::shared_ptr<ChartFormatBase> previewChartTmp;
                 if (type == eEntryType::SONG || type == eEntryType::RIVAL_SONG)
@@ -2865,7 +2869,7 @@ void SceneSelect::updatePreview()
                         previewChart = previewChartTmp;
                     }
                 }
-            }).detach();
+            });
 
             break;
     }
