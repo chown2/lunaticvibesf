@@ -403,9 +403,6 @@ static std::string resolveCaseInsensitivePath(std::string input)
 
 std::string convertLR2Path(const std::string& lr2path, const Path& relative_path)
 {
-    if (relative_path.is_absolute())
-        return relative_path.u8string();
-
     return convertLR2Path(lr2path, relative_path.u8string());
 }
 
@@ -419,34 +416,45 @@ std::string convertLR2Path(const std::string& lr2path, const char* relative_path
     return convertLR2Path(lr2path, std::string_view(relative_path_utf8));
 }
 
+// Trim leading and trailing symbols 'markers' from string 's'.
+[[nodiscard]] constexpr std::string_view trim(const std::string_view s, const std::string_view markers)
+{
+    auto l = s.find_first_not_of(markers);
+    if (l == std::string_view::npos)
+        return {};
+    const auto r = s.find_last_not_of(markers);
+    return s.substr(l, r - l + 1);
+}
+
+// Trim spaces from string 's'.
+[[nodiscard]] constexpr std::string_view trim(std::string_view s)
+{
+    constexpr std::string_view WHITESPACE_MARKERS = " \t\n\v\f\r";
+    return trim(s, WHITESPACE_MARKERS);
+}
+
 std::string convertLR2Path(const std::string& lr2path, std::string_view relative_path_utf8)
 {
-    if (relative_path_utf8.empty())
-        return std::string(relative_path_utf8);
-    if (auto p = PathFromUTF8(relative_path_utf8); p.is_absolute())
-        return std::string(relative_path_utf8);
-
-    int head = 0;
-    int tail = relative_path_utf8.length() - 1;
-    while (head <= tail && relative_path_utf8[0] == '"') head++;
-    while (head <= tail && relative_path_utf8[tail] == '"') tail--;
-
-    std::string_view raw(relative_path_utf8.data() + head, tail - head + 1);
-    std::string_view prefix(relative_path_utf8.data() + head, 2);
-    if (!prefix.empty())
+    std::string_view raw = trim(relative_path_utf8, "\"");
+    if (raw.empty())
+        return std::string(raw);
+    if (auto p = PathFromUTF8(raw); p.is_absolute())
     {
-        if (prefix == "./" || prefix == ".\\")
-        {
-            raw = raw.substr(2);
-        }
-        else if (prefix[0] == '/' || prefix[0] == '\\')
-        {
-            raw = raw.substr(1);
-        }
+        LOG_WARNING << "absolute path in LR2 path, this is forbidden";
+        return {};
     }
-    prefix = raw.substr(0, 8);
+
+    std::string_view prefix = raw.substr(0, 2);
+    if (prefix == "./" || prefix == ".\\")
+    {
+        raw = raw.substr(2);
+    }
+    else if (prefix[0] == '/' || prefix[0] == '\\')
+    {
+        raw = raw.substr(1);
+    }
     std::string out_path;
-    if (lunaticvibes::iequals(prefix, "LR2files"))
+    if (lunaticvibes::iequals(raw.substr(0, 8), "LR2files"))
     {
         Path path = PathFromUTF8(lr2path);
         path /= PathFromUTF8(raw);
@@ -454,7 +462,7 @@ std::string convertLR2Path(const std::string& lr2path, std::string_view relative
     }
     else
     {
-        out_path = std::string(relative_path_utf8);
+        out_path = std::string(raw);
     }
 
 #ifndef _WIN32
