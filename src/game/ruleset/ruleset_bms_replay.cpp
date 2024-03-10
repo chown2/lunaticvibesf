@@ -34,7 +34,6 @@ RulesetBMSReplay::RulesetBMSReplay(
 
     if (replay->pitchValue != 0)
     {
-        double ps = (replay->pitchValue + 12) / 24.0;
         static const double tick = std::pow(2, 1.0 / 12);
         playbackSpeed = std::pow(tick, replay->pitchValue);
     }
