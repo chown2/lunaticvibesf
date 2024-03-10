@@ -6,8 +6,6 @@
 #include "game/runtime/state.h"
 #include "game/scene/scene_context.h"
 
-static const size_t NOPE = -1;
-
 using namespace chart;
 
 ChartObjectBMS::ChartObjectBMS(int slot) : ChartObjectBase(slot, BGM_LANE_COUNT, (size_t)eNoteExt::EXT_COUNT),
@@ -847,7 +845,6 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
         double bpm = objBms.startBPM * gSelectContext.pitchSpeed;
         double bpmSum = 0.;
         lunaticvibes::Time prevTime(0);
-        long long bpmMainLength = 0;
         for (const auto& n : _bpmNoteList)
         {
             long long length = (n.time - prevTime).norm();

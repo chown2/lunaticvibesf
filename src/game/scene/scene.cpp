@@ -229,10 +229,8 @@ void SceneBase::draw() const
         if (!gOverlayContext.notifications.empty())
         {
             // draw notifications at the bottom. One string per line
-            auto itNotification = gOverlayContext.notifications.rbegin();
             for (size_t i = 0; i < gOverlayContext.notifications.size() && i < _sNotifications.size(); ++i)
             {
-                const auto& [timestamp, text] = *itNotification;
                 _sNotificationsBG[i]->draw();
                 _sNotifications[i]->updateText();
                 _sNotifications[i]->draw();

@@ -104,7 +104,6 @@ void SkinBase::update_mouse_click(int x, int y)
 
     // sprite inserted last has priority
     bool invoked = false;
-    bool invokedText = false;
     pSpriteLastClicked = nullptr;
 #if _DEBUG
     for (auto it = _sprites.rbegin(); it != _sprites.rend() && !invoked; ++it)

@@ -17,9 +17,15 @@ bool ReplayChart::loadFile(const Path& path)
 		}
 		catch (...)
 		{
+			LOG_DEBUG << "exception while loading replay file";
 			return false;
 		}
-		return validate();
+		const bool valid = validate();
+		if (!valid)
+		{
+			LOG_DEBUG << "invalid replay file";
+		}
+		return valid;
 	}
 	return false;
 }
@@ -30,10 +36,11 @@ bool ReplayChart::saveFile(const Path& path)
 	std::ofstream ofs(path, std::ios::binary | std::ios::trunc);
 	if (ofs.good())
 	{
-		generateChecksum();
+		updateChecksum();
 		try
 		{
 			cereal::PortableBinaryOutputArchive oa(ofs);
+			LOG_DEBUG << "exception while serializing replay file";
 			oa(*this);
 		}
 		catch (...)
@@ -48,14 +55,14 @@ bool ReplayChart::saveFile(const Path& path)
 bool ReplayChart::validate()
 {
 	uint32_t checksumReal = checksum;
-	generateChecksum();
-	uint32_t checksumTmp = checksum;
+	updateChecksum();
 	bool valid = (checksum == checksumReal);
 	checksum = checksumReal;
 	return valid;
 }
 
-void ReplayChart::generateChecksum()
+// NOTE: mutable this to set checksum to 0 before serializing
+void ReplayChart::updateChecksum()
 {
 	checksum = 0;
 
@@ -67,6 +74,7 @@ void ReplayChart::generateChecksum()
 	}
 	catch (...)
 	{
+		LOG_DEBUG << "exception while serializing replay file for checksum";
 		return;
 	}
 

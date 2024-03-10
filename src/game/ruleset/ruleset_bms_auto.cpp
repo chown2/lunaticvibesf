@@ -202,7 +202,6 @@ void RulesetBMSAuto::update(const lunaticvibes::Time& t)
                 {
                     if (!(itNote->flags & Note::LN_TAIL))
                     {
-                        const lunaticvibes::Time& hitTime = judgeTime[(size_t)_judgeDifficulty].BAD;
                         if (!itNote->expired && rt >= itNote->time)
                         {
                             itNote->hit = true;

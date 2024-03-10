@@ -195,7 +195,6 @@ void SceneKeyConfig::inputGamePress(InputMask& m, const lunaticvibes::Time& t)
     if (m[Input::Pad::M2]) exiting = true;
 
     // individual keys
-    size_t sampleCount = 0;
     for (size_t i = 0; i < Input::Pad::ESC; ++i)
     {
         if (m[i])
@@ -659,7 +658,6 @@ void SceneKeyConfig::updateInfo(KeyMap k, int slot)
 
 void SceneKeyConfig::updateAllText()
 {
-    auto [pad, slot] = gKeyconfigContext.selecting;
     GameModeKeys keys = gKeyconfigContext.keys;
 
     const auto input = ConfigMgr::Input(keys);

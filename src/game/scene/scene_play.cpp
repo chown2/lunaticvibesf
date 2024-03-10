@@ -48,7 +48,7 @@ bool ScenePlay::isHoldingSelect(int player) const
 
 int getLanecoverTop(int slot)
 {
-    IndexNumber lcTopInd, lcBottomInd;
+    IndexNumber lcTopInd;
     IndexOption lcTypeInd;
     if (slot == PLAYER_SLOT_PLAYER)
     {
@@ -1466,7 +1466,6 @@ void ScenePlay::updateAsyncLanecover(const lunaticvibes::Time& t)
         }
 
         bool lcHasChanged = false;
-        int lcOld = lc;
         const bool inverted = lanecoverType == Option::LANE_HIDDEN || lanecoverType == Option::LANE_LIFT;
         int units = playerState[slot].lanecoverAddPending > 0 ? (playerState[slot].lanecoverAddPending / lcThreshold) : -(-playerState[slot].lanecoverAddPending / lcThreshold);
         if (units != 0)
@@ -1524,7 +1523,6 @@ void ScenePlay::updateAsyncLanecover(const lunaticvibes::Time& t)
         else if (playerState[slot].hispeedAddPending <= -hsThreshold || playerState[slot].hispeedAddPending >= hsThreshold)
         {
             double hs = *pHispeed;
-            double hsOld = hs;
             int units = playerState[slot].hispeedAddPending > 0 ? (playerState[slot].hispeedAddPending / hsThreshold) : -(-playerState[slot].hispeedAddPending / hsThreshold);
             if (units != 0)
             {
@@ -2163,8 +2161,6 @@ void ScenePlay::updatePlaying()
     int miss2 = 0;
     if (true)
     {
-        auto dp1 = gPlayContext.ruleset[PLAYER_SLOT_PLAYER]->getData();
-
         long long exScore1P = 0;
         long long exScore2P = 0;
         long long exScoreMybest = 0;
@@ -3242,7 +3238,6 @@ void ScenePlay::inputGamePress(InputMask& m, const lunaticvibes::Time& t)
     holdingStart[1] |= input[K2START];
     holdingSelect[1] |= input[K2SELECT];
 
-    auto holding = _input.Holding();
     if (state != ePlayState::FADEOUT)
     {
         if (input[Input::F1])
@@ -3416,7 +3411,6 @@ void ScenePlay::inputGameReleaseTimer(InputMask& input, const lunaticvibes::Time
 {
     using namespace Input;
 
-    size_t count = 0;
     for (size_t i = Input::S1L; i < Input::LANE_COUNT; ++i)
         if (input[i])
         {

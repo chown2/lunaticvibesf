@@ -85,7 +85,6 @@ int main(int argc, char* argv[])
     LOG_INFO << "Initializing ImGui...";
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
     ImGui::StyleColorsDark();
     LOG_INFO << "ImGui version: " << ImGui::GetVersion();
 

@@ -149,13 +149,9 @@ void ScenePreSelect::updateLoadSongs()
                 std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count() - State::get(IndexNumber::NEW_ENTRY_SECONDS));
             if (!newSongList.empty())
             {
-                size_t index = 0;
                 std::shared_ptr<EntryFolderNewSong> entry = std::make_shared<EntryFolderNewSong>("NEW SONGS");
                 for (auto& c : newSongList)
                 {
-                    //std::shared_ptr<EntryFolderSong> f = std::make_shared<EntryFolderSong>(HashMD5((boost::format("%032lu") % index++).str()), "", c->title, c->title2);
-                    //f->pushChart(c);
-                    //entry->pushEntry(f);
                     entry->pushEntry(std::make_shared<EntryFolderSong>(c));
                 }
                 rootFolderProp.dbBrowseEntries.insert(rootFolderProp.dbBrowseEntries.begin(), {entry, nullptr});

@@ -212,7 +212,7 @@ private:
 
         }
     }
-    void generateChecksum();
+    void updateChecksum();
 
 
 public:

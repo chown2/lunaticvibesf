@@ -63,7 +63,6 @@ std::pair<bool, Option::e_lamp_type> getSaveScoreType()
             return { true, Option::LAMP_ASSIST };
     }
 
-    Option::e_gauge_type gaugeType = (Option::e_gauge_type)State::get(IndexOption::PLAY_GAUGE_TYPE_1P);
     Option::e_lamp_type lampType = Option::e_lamp_type::LAMP_FULLCOMBO; // FIXME change to PERFECT / MAX
     return { true, lampType };
 }
@@ -638,7 +637,6 @@ void setEntryInfo()
     if (e.empty()) return;
 
     const size_t idx = gSelectContext.selectedEntryIndex;
-    const size_t cursor = gSelectContext.highlightBarIndex;
 
     std::map<std::string, int> param;
     std::map<std::string, double> paramf;
@@ -1292,7 +1290,6 @@ void switchVersion(int difficulty)
     if (e.empty()) return;
 
     const size_t idx = gSelectContext.selectedEntryIndex;
-    const size_t cursor = gSelectContext.highlightBarIndex;
 
     // chart parameters
     if (e[idx].first->type() == eEntryType::CHART || e[idx].first->type() == eEntryType::RIVAL_CHART)
@@ -1416,7 +1413,6 @@ void setDynamicTextures()
     if (e.empty()) return;
 
     const size_t idx = gSelectContext.selectedEntryIndex;
-    const size_t cursor = gSelectContext.highlightBarIndex;
 
     // chart parameters
     auto entry = e[idx].first;

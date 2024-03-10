@@ -1375,7 +1375,7 @@ void SceneSelect::inputGamePressSelect(InputMask& input, const lunaticvibes::Tim
                 State::set(IndexText::_OVERLAY_TOPLEFT, (boost::format(i18n::c(i18nText::REFRESH_FOLDER)) % path.u8string()).str());
 
                 g_pSongDB->resetAddSummary();
-                int count = g_pSongDB->addSubFolder(path, gSelectContext.backtrace.front().parent);
+                g_pSongDB->addSubFolder(path, gSelectContext.backtrace.front().parent);
                 g_pSongDB->waitLoadingFinish();
 
                 LOG_INFO << "[List] Building chart hash cache...";
@@ -1400,7 +1400,6 @@ void SceneSelect::inputGamePressSelect(InputMask& input, const lunaticvibes::Tim
             // simplified navigateBack(t)
             {
                 std::unique_lock<std::shared_mutex> u(gSelectContext._mutex);
-                auto& top = gSelectContext.backtrace.front();
 
                 gSelectContext.selectedEntryIndex = 0;
                 gSelectContext.backtrace.pop_front();
@@ -2578,8 +2577,6 @@ void SceneSelect::navigateBack(const lunaticvibes::Time& t, bool sound)
             gSelectContext.isInArenaRequest = false;
         }
 
-        auto& top = gSelectContext.backtrace.front();
-
         gSelectContext.selectedEntryIndex = 0;
         gSelectContext.backtrace.pop_front();
         auto& parent = gSelectContext.backtrace.front();
@@ -2951,7 +2948,6 @@ void SceneSelect::updatePreview()
                 if (_previewLoading.joinable())
                     _previewLoading.join();
                 _previewLoading = std::thread([&, bms] {
-                    unsigned bars = bms->lastBarIdx;
                     auto previewChartObjTmp = std::make_shared<ChartObjectBMS>(PLAYER_SLOT_PLAYER, bms);
                     auto previewRulesetTmp = std::make_shared<RulesetBMSAuto>(bms, previewChartObjTmp,
                         PlayModifierGaugeType::NORMAL, bms->gamemode, RulesetBMS::JudgeDifficulty::VERYHARD, 0.2, RulesetBMS::PlaySide::RIVAL);

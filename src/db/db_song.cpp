@@ -683,7 +683,6 @@ int SongDB::addSubFolder(Path path, const HashMD5& parentHash)
     // check if the folder is already added
     int count = 0;
     HashMD5 folderHash = md5(path.u8string());
-    long long nowTime = getFileTimeNow();
     long long folderModifyTime = getFileLastWriteTime(path);
 
     if (auto q = query("SELECT pathmd5,path,type,modtime FROM folder WHERE path=?", 4, { path.u8string() }); !q.empty())
@@ -970,8 +969,8 @@ int SongDB::refreshExistingFolder(const HashMD5& hash, const Path& path, FolderT
         if (hasDeletedEntry || hasModifiedEntry || count > 0)
         {
             // update modification time
+            // saving current time here is OK.
             long long nowTime = getFileTimeNow();
-            long long folderModifyTime = getFileLastWriteTime(path);
             if (int ret = exec("UPDATE folder SET modtime=? WHERE pathmd5=?", { nowTime, hash.hexdigest() }); ret != SQLITE_OK)
             {
                 LOG_WARNING << "[SongDB] Update modification time fail: [" << ret << "] " << errmsg() << " (" << path << ")";
@@ -1039,8 +1038,8 @@ int SongDB::refreshExistingFolder(const HashMD5& hash, const Path& path, FolderT
         if (hasDeletedEntry || count > 0)
         {
             // update modification time
+            // saving current time here is OK.
             long long nowTime = getFileTimeNow();
-            long long folderModifyTime = getFileLastWriteTime(path);
             if (int ret = exec("UPDATE folder SET modtime=? WHERE pathmd5=?", { nowTime, hash.hexdigest() }); ret != SQLITE_OK)
             {
                 LOG_WARNING << "[SongDB] Update modification time fail: [" << ret << "] " << errmsg() << " (" << path << ")";

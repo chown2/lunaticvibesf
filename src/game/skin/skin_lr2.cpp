@@ -1018,8 +1018,8 @@ int SkinLR2::SYSTEMFONT()
         }
 
         int ptsize = toInt(parseParamBuf[0]);
-        int thick = toInt(parseParamBuf[1]);
-        int fonttype = toInt(parseParamBuf[2]);
+        //int thick = toInt(parseParamBuf[1]);
+        //int fonttype = toInt(parseParamBuf[2]);
         //StringContent name = parseParamBuf[3];
         int faceIndex;
         Path fontPath = getSysMonoFontPath(NULL, &faceIndex, i18n::getCurrentLanguage());
@@ -2665,7 +2665,6 @@ bool SkinLR2::DST()
         // load raw into data struct
         lr2skin::dst d(parseParamBuf);
 
-        int ret = 0;
         auto e = _sprites.back();
         if (e == nullptr)
         {
@@ -2894,7 +2893,6 @@ ParseRet SkinLR2::DST_LINE()
     // load raw into data struct
     lr2skin::dst d(parseParamBuf);
     
-    int ret = 0;
     auto e = _sprites.back();
     if (e == nullptr)
     {
