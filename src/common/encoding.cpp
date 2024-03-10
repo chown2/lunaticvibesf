@@ -25,7 +25,6 @@ bool is_shiftjis(const std::string_view str)
     for (auto it = str.begin(); it != str.end(); ++it)
     {
         uint8_t c = *it;
-        int bytes = 0;
 
         // ascii
         if (c <= 0x7f)
@@ -64,7 +63,6 @@ bool is_euckr(const std::string_view str)
     for (auto it = str.begin(); it != str.end(); ++it)
     {
         uint8_t c = *it;
-        int bytes = 0;
 
         // ascii
         if (c <= 0x7f)
@@ -269,7 +267,6 @@ std::string from_utf8(const std::string& input, eFileEncoding toEncoding)
 #include <cstring>
 #include <memory>
 #include <type_traits>
-#include <vector>
 
 #include <iconv.h>
 

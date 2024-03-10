@@ -256,7 +256,6 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
                 }
             }
 
-            bool isNoteDef = false;
             static LazyRE2 regexNote{ R"(#[\d]{3}[0-9A-Za-z]{2}:.*)" };
             if (!RE2::FullMatch(re2::StringPiece(buf.data(), buf.length()), *regexNote))
             {
@@ -354,7 +353,6 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
             }
             else // #zzzxy:......
             {
-                auto colon_idx = buf.find_first_of(':');
                 StringContentView key = buf.substr(1, 5);
                 StringContentView value = buf.substr(7);
 

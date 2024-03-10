@@ -546,7 +546,6 @@ int DirectoryDecode(u8* NameP, u8* DirP, u8* FileP, DARC_HEAD_VER5* Head, DARC_D
 
 static int DecodeArchive(const Path& path, DXArchive* output = NULL)
 {
-	u8* HeadBuffer = NULL;
 	DARC_HEAD_VER5 Head;
 	u8 Key[DXA_KEYSTR_LENGTH_VER5];
 

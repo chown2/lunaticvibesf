@@ -816,7 +816,6 @@ bool SpriteSlider::OnClick(int x, int y)
     if (valueRange == 0) return false;
 
     bool inRange = false;
-    double val = 0.0;
     switch (dir)
     {
     case SliderDirection::UP:

@@ -278,18 +278,14 @@ public:
 
 TEST_F(sAnimated, animRectConstruct)
 {
-    int w = TEST_RECT.w / 2;
-    int h = TEST_RECT.h / 4;
     int ww = TEST_RECT.w / 4;
     int hh = TEST_RECT.h / 8;
 
     EXPECT_EQ(s.textureRects.size(), 1 * 8);
     EXPECT_EQ(s.animationFrames, 8);
-    //EXPECT_EQ(s._aRect, Rect(0, 0, w, h));
 
     EXPECT_EQ(ss.textureRects.size(), 4 * 8);
     EXPECT_EQ(ss.animationFrames, 8);
-    //EXPECT_EQ(ss._aRect, Rect(0, 0, w/2 , h/2));
     EXPECT_EQ(ss.textureRects[0], Rect(0, 0, ww, hh));
 }
 

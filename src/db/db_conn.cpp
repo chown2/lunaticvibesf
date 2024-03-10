@@ -1,5 +1,4 @@
 #include <string>
-#include <filesystem>
 
 #include "sqlite3.h"
 #include "db_conn.h"
@@ -54,8 +53,6 @@ void sql_bind_any(sqlite3_stmt* stmt, const std::initializer_list<std::any>& arg
 std::vector<std::vector<std::any>> SQLite::query(const char* zsql, size_t retSize, std::initializer_list<std::any> args) const
 {
     _lastSql = zsql;
-
-    size_t argc = args.size();
 
     sqlite3_stmt* stmt = nullptr;
     const char* pzTail;
@@ -154,9 +151,12 @@ void SQLite::transactionStart()
 
     sqlite3_stmt* stmt = nullptr;
     const char* pzTail;
-    if (int ret = sqlite3_prepare_v3(_db, "BEGIN", 6, 0, &stmt, &pzTail))
+    int ret = sqlite3_prepare_v3(_db, "BEGIN", 6, 0, &stmt, &pzTail);
+    if (ret)
+    {
+        LOG_ERROR << "[sqlite3] " << tag << ": " << "sqlite3_prepare_v3 error";
         return;
-    int ret;
+    }
     if ((ret = sqlite3_step(stmt)) != SQLITE_OK && ret != SQLITE_ROW && ret != SQLITE_DONE)
     {
         LOG_ERROR << "[sqlite3] " << tag << ": " << "Transaction start failed with error: " << errmsg();
@@ -177,9 +177,12 @@ void SQLite::transactionStop()
 
     sqlite3_stmt* stmt = nullptr;
     const char* pzTail;
-    if (int ret = sqlite3_prepare_v3(_db, "COMMIT", 6, 0, &stmt, &pzTail))
+    int ret = sqlite3_prepare_v3(_db, "COMMIT", 6, 0, &stmt, &pzTail);
+    if (ret)
+    {
+        LOG_ERROR << "[sqlite3] " << tag << ": " << "sqlite3_prepare_v3 error";
         return;
-    int ret;
+    }
     if ((ret = sqlite3_step(stmt)) != SQLITE_OK && ret != SQLITE_ROW && ret != SQLITE_DONE)
     {
         LOG_ERROR << "[sqlite3] " << tag << ": " << "Transaction end failed with error: " << errmsg();
