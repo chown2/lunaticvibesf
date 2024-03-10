@@ -63,9 +63,7 @@ int graphics_init()
         SDL_SetHint(SDL_HINT_IME_SHOW_UI, "1");
 
         Uint32 flags = SDL_WINDOW_HIDDEN;   // window created with opengles2 will destroy itself when creating Renderer, resulting in flashes
-#ifdef _DEBUG
         flags |= SDL_WINDOW_RESIZABLE;
-#endif
         auto mode = ConfigMgr::get("V", cfg::V_WINMODE, cfg::V_WINMODE_WINDOWED);
         if (lunaticvibes::iequals(mode, cfg::V_WINMODE_BORDERLESS))
         {
@@ -347,12 +345,20 @@ void graphics_change_window_mode(int mode)
 void graphics_resize_window(int x, int y)
 {
     LOG_WARNING << "Resizing window mode to " << x << 'x' << y;
-    if (x != 0) windowRect.w = x;
-    if (y != 0) windowRect.h = y;
-    canvasScaleX = (double)x / canvasRect.w;
-    canvasScaleY = (double)y / canvasRect.h;
+    lunaticvibes::graphics::save_new_window_size(x, y);
     SDL_SetWindowSize(gFrameWindow, windowRect.w, windowRect.h);
     SDL_SetWindowPosition(gFrameWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+}
+
+void lunaticvibes::graphics::save_new_window_size(int width, int height)
+{
+    LOG_DEBUG << "saving new window size " << width << 'x' << height;
+    windowRect.w = width;
+    windowRect.h = height;
+    canvasScaleX = (double)width / canvasRect.w;
+    canvasScaleY = (double)height / canvasRect.h;
+    ConfigMgr::set("V", cfg::V_DISPLAY_RES_X, width);
+    ConfigMgr::set("V", cfg::V_DISPLAY_RES_Y, height);
 }
 
 void graphics_change_vsync(int mode)
@@ -443,6 +449,13 @@ void event_handle()
             case SDL_WINDOWEVENT_FOCUS_LOST:
                 SetWindowForeground(false);
                 break;
+            case SDL_WINDOWEVENT_SIZE_CHANGED:
+            case SDL_WINDOWEVENT_RESIZED: {
+                const auto height = static_cast<unsigned>(e.window.data2);
+                const auto width = static_cast<unsigned>(e.window.data1);
+                lunaticvibes::graphics::save_new_window_size(width, height);
+                break;
+            }
             default:
                 break;
             }

@@ -41,6 +41,10 @@ std::vector<std::tuple<int, int, int>> graphics_get_resolution_list();
 void graphics_change_window_mode(int mode);
 
 void graphics_resize_window(int x, int y);
+namespace lunaticvibes::graphics {
+// save passed windows size as the new one, without applying it (for that refer to graphics_resize_window)
+void save_new_window_size(int x, int y);
+} // namespace lunaticvibes::graphics
 
 // 0: off / 1: vsync (double buffer) / 2: adaptive vsync
 void graphics_change_vsync(int mode);

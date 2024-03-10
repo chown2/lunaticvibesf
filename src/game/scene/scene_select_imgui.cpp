@@ -1506,8 +1506,6 @@ bool SceneSelect::imguiApplyResolution()
     graphics_set_supersample_level(imgui_video_ssLevel);
     graphics_change_vsync(imgui_video_vsync_index);
 
-    ConfigMgr::set("V", cfg::V_DISPLAY_RES_X, windowW);
-    ConfigMgr::set("V", cfg::V_DISPLAY_RES_Y, windowH);
     if (imgui_video_mode != old_video_mode)
     {
         old_video_mode = imgui_video_mode;
