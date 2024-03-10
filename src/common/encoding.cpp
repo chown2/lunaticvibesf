@@ -40,7 +40,7 @@ bool is_shiftjis(const std::string_view str)
         {
             if (++it == str.end()) return false;
             uint8_t cc = *it;
-            if ((c >= 0x40 && c <= 0x7e) || (c >= 0x80 && c <= 0xfc))
+            if ((cc >= 0x40 && cc <= 0x7e) || (cc >= 0x80 && cc <= 0xfc))
                 continue;
         }
 
@@ -49,7 +49,7 @@ bool is_shiftjis(const std::string_view str)
         {
             if (++it == str.end()) return false;
             uint8_t cc = *it;
-            if ((c >= 0x40 && c <= 0x7e) || (c >= 0x80 && c <= 0xfc))
+            if ((cc >= 0x40 && cc <= 0x7e) || (cc >= 0x80 && cc <= 0xfc))
                 continue;
         }
 
@@ -83,7 +83,7 @@ bool is_euckr(const std::string_view str)
         {
             if (++it == str.end()) return false;
             uint8_t cc = *it;
-            if (c >= 0xa1 && c <= 0xfe)
+            if (cc >= 0xa1 && cc <= 0xfe)
                 continue;
         }
 
