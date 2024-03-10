@@ -328,7 +328,7 @@ void mainLoop()
     SceneType currentScene = SceneType::NOT_INIT;
 
     pScene scene = nullptr;
-    while (!gEventQuit && currentScene != SceneType::EXIT && gNextScene != SceneType::EXIT)
+    while (currentScene != SceneType::EXIT && gNextScene != SceneType::EXIT)
     {
         // Evenet handling
         event_handle();

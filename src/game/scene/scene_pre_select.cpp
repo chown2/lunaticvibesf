@@ -72,6 +72,7 @@ void ScenePreSelect::_updateAsync()
     {
         gNextScene = SceneType::EXIT_TRANS;
         g_pSongDB->stopLoading();
+        return;
     }
 
 	_updateCallback();
