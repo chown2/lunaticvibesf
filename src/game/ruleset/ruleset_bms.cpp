@@ -1036,7 +1036,7 @@ void RulesetBMS::_updateHp(JudgeArea judge)
     _updateHp(_healthGain.at(JudgeAreaTypeMap.at(judge)));
 }
 
-void RulesetBMS::updateJudge(const lunaticvibes::Time& t, NoteLaneIndex ch, RulesetBMS::JudgeArea judge, int slot, bool force)
+void RulesetBMS::updateJudge(const lunaticvibes::Time& t, const NoteLaneIndex ch, const RulesetBMS::JudgeArea judge, const int slot, const bool force)
 {
     if (isFailed()) return;
     
@@ -1094,24 +1094,17 @@ void RulesetBMS::updateJudge(const lunaticvibes::Time& t, NoteLaneIndex ch, Rule
             _basic.maxComboDisplay = _basic.combo + _basic.comboDisplay;
     }
 
-    JudgeType judgeType = JudgeAreaTypeMap.at(judge);
+    const JudgeType judgeType = JudgeAreaTypeMap.at(judge);
     if (showJudge)
     {
-        bool setBombTimer = false;
-        switch (judgeType)
+        const bool should_show_bomb = judgeType == JudgeType::PERFECT || judgeType == JudgeType::GREAT;
+        if (should_show_bomb && _bombTimerMap != nullptr)
         {
-        case JudgeType::PERFECT:
-        case JudgeType::GREAT:
-            setBombTimer = true;
-            break;
-        default:
-            break;
+            if (auto it = _bombTimerMap->find(ch); it != _bombTimerMap->end())
+            {
+                State::set(it->second, t.norm());
+            }
         }
-        if (_bombTimerMap == nullptr || _bombTimerMap->find(ch) == _bombTimerMap->end())
-            setBombTimer = false;
-
-        if (setBombTimer) 
-            State::set(_bombTimerMap->at(ch), t.norm());
 
         if (slot == PLAYER_SLOT_PLAYER)
         {
