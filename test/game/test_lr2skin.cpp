@@ -88,9 +88,8 @@ TEST(tLR2Skin, IF6)
 
 TEST(tLR2Skin, HelpFileParsed)
 {
-	std::shared_ptr<mock_SkinLR2> ps = nullptr;
-	ASSERT_NO_THROW(ps = std::make_shared<mock_SkinLR2>("lr2skin/helpfile.lr2skin"));
-	ASSERT_EQ(ps->isLoaded(), true);
+	mock_SkinLR2 s{"lr2skin/helpfile.lr2skin"};
+	ASSERT_EQ(s.isLoaded(), true);
 
 	static const std::vector<std::string> helpFiles{
 		u8"「とわ」とわ\n",
@@ -106,5 +105,5 @@ TEST(tLR2Skin, HelpFileParsed)
 		// No tenth.
 	};
 
-	EXPECT_EQ(ps->getHelpFiles(), helpFiles);
+	EXPECT_EQ(s.getHelpFiles(), helpFiles);
 }
