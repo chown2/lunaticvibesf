@@ -933,8 +933,8 @@ int ConfigMgr::_createProfile(const std::string& newProfile, const std::string& 
     {
         for (auto& f : fs::directory_iterator(oldFolder))
         {
-            if (lunaticvibes::iequals(f.path().extension().string(), ".yml") ||
-                lunaticvibes::iequals(f.path().filename().string(), "customize"))
+            if (lunaticvibes::iequals(f.path().extension().u8string(), ".yml") ||
+                lunaticvibes::iequals(f.path().filename().u8string(), "customize"))
             {
                 fs::copy(f, newFolder / f.path().lexically_relative(oldFolder));
             }

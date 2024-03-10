@@ -40,7 +40,7 @@ void panic(const char* title, const char* msg)
     abort(); 
 }
 
-Path GetExecutablePath()
+std::string GetExecutablePath()
 {
     char fullpath[256] = { 0 };
 
@@ -49,7 +49,7 @@ Path GetExecutablePath()
     if (bytes >= 0)
         fullpath[bytes] = '\0';
 
-    return fs::path(fullpath).parent_path();
+    return fs::path(fullpath).parent_path().u8string();
 }
 
 long long getFileLastWriteTime(const Path& p)

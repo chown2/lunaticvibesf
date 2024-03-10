@@ -97,6 +97,13 @@ private:
         }
         return {};
     }
+    std::string _getDBPath()
+    {
+        Path path = Path(GAMEDATA_PATH) / "profile" / profileName;
+        if (!std::filesystem::exists(path))
+            std::filesystem::create_directories(path);
+        return path.u8string();
+    }
 
 protected:
     std::shared_ptr<ConfigGeneral>     G;
@@ -150,6 +157,9 @@ public:
 
     static void set(char type, const std::string& key, const std::string& value) noexcept { return set<std::string>(type, key, value); }
     static void set(const std::string& type, const std::string& key, const std::string& value) noexcept { return set<std::string>(type[0], key, value); }
+
+    static std::string getDBPath() { return getInst()._getDBPath(); }
+
 
 public:
 };

@@ -72,7 +72,7 @@ void panic(const char* title, const char* msg)
     panicWin32(title, msg);
 }
 
-Path GetExecutablePath()
+std::string GetExecutablePath()
 {
     char fullpath[256] = { 0 };
 
@@ -81,7 +81,7 @@ Path GetExecutablePath()
         return {};
     }
 
-    return fs::path(fullpath).parent_path();
+    return fs::path(fullpath).parent_path().u8string();
 }
 
 static HWND hwnd = NULL;

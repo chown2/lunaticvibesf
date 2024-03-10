@@ -13,7 +13,7 @@ int64_t GetCurrentThreadID();
 bool IsMainThread();
 void SetThreadName(const char* name);
 void panic(const char* title, const char* msg);
-Path GetExecutablePath();
+std::string GetExecutablePath();
 
 void setWindowHandle(void* handle);
 void getWindowHandle(void* handle);
