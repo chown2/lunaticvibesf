@@ -145,7 +145,9 @@ int graphics_init()
             LOG_FATAL << "[SDL2] Init Target Texture Error! " << SDL_GetError();
             return -3;
         }
-        SDL_SetTextureScaleMode(gInternalRenderTarget, SDL_ScaleModeBest);
+        // TODO: an option to set SDL_ScaleModeBest (anisotropic filtering).
+        // Nearest neighbour as the default makes most sense, as that's what LR2 does (in windowed mode).
+        SDL_SetTextureScaleMode(gInternalRenderTarget, SDL_ScaleModeNearest);
 
         SDL_SetRenderTarget(gFrameRenderer, gInternalRenderTarget);
 
