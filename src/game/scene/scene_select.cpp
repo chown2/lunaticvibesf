@@ -1130,7 +1130,6 @@ static void closeReadme()
     lunaticvibes::Time now{};
     State::set(IndexTimer::README_START, TIMER_NEVER);
     State::set(IndexTimer::README_END, now.norm());
-    SoundMgr::playSysSample(SoundChannelType::KEY_SYS, eSoundSample::SOUND_O_CLOSE);
 }
 
 // CALLBACK
