@@ -801,7 +801,8 @@ int SkinLR2::HELPFILE()
     }
 
     _helpFiles.push_back(std::move(help_file));
-    LOG_DEBUG << "[Skin] " << csvLineNumber << ": Added HELPFILE[" << _helpFiles.size() << "]: " << filePath;
+    LOG_DEBUG << "[Skin] " << csvLineNumber << ": Added HELPFILE[" << _helpFiles.size() << "] ("
+              << getFileEncodingName(encoding) << "): " << filePath;
 
     return 1;
 }
