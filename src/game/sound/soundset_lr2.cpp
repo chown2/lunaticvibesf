@@ -260,7 +260,7 @@ bool SoundSetLR2::loadPath(const std::string& key, const std::string& rawpath)
             else
             {
                 size_t ranidx = std::rand() % ls.size();
-                Path soundPath = PathFromUTF8(ls[ranidx].u8string());
+                const Path& soundPath = ls[ranidx];
                 soundFilePath[key] = soundPath;
                 LOG_DEBUG << "[Skin] " << csvLineNumber << ": Added random " << key << ": " << soundPath;
             }
