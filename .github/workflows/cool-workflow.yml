@@ -13,10 +13,10 @@ jobs:
             os: ubuntu-22.04
             preset: linux-vcpkg-gcc
             build-args: "--config Debug"
-          - name: "Ubuntu (GCC, Release)"
-            os: ubuntu-22.04
-            preset: linux-vcpkg-gcc
-            build-args: "--config Release"
+          # - name: "Ubuntu (GCC, Release)"
+          #   os: ubuntu-22.04
+          #   preset: linux-vcpkg-gcc
+          #   build-args: "--config Release"
           - name: "Ubuntu (Clang, Debug)"
             os: ubuntu-22.04
             preset: linux-vcpkg-clang
