@@ -314,7 +314,7 @@ std::vector<std::tuple<int, int, int>> graphics_get_resolution_list()
         SDL_DisplayMode mode = { 0 };
         SDL_GetDisplayMode(index, i, &mode);
         LOG_DEBUG << mode.w << 'x' << mode.h << ' ' << mode.refresh_rate << "Hz";
-        res.push_back({ mode.w, mode.h, mode.refresh_rate });
+        res.emplace_back(mode.w, mode.h, mode.refresh_rate);
     }
     return res;
 }

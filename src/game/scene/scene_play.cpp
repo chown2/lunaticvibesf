@@ -339,7 +339,7 @@ ScenePlay::ScenePlay(): SceneBase(gPlayContext.mode, 1000, true)
     {
         if (gPlayContext.courseStage < gPlayContext.courseCharts.size())
         {
-            gPlayContext.courseStageReplayPathNew.push_back("");
+            gPlayContext.courseStageReplayPathNew.emplace_back("");
 
             if (gPlayContext.ruleset[PLAYER_SLOT_PLAYER])
             {
@@ -2831,7 +2831,7 @@ void ScenePlay::changeKeySampleMapping(const lunaticvibes::Time& t)
         std::vector<std::pair<long long, size_t>> sortTmp;
         for (size_t i = 0; i < 3; ++i)
         {
-            sortTmp.push_back(std::make_pair(time[i], i));
+            sortTmp.emplace_back(time[i], i);
         }
         std::sort(sortTmp.begin(), sortTmp.end());
         for (size_t i = 0; i < 3; ++i)

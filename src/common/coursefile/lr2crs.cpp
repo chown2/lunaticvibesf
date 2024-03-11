@@ -76,7 +76,7 @@ CourseLr2crs::CourseLr2crs(const Path& filePath)
 					c.hashTop = hash.substr(0, 32);
 					for (size_t count = 1; count < hash.size() / 32; ++count)
 					{
-						c.chartHash.push_back(HashMD5(hash.substr(count * 32, 32)));
+						c.chartHash.emplace_back(hash.substr(count * 32, 32));
 					}
 				}
 			}

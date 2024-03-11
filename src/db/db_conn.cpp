@@ -72,7 +72,7 @@ std::vector<std::vector<std::any>> SQLite::query(const char* zsql, size_t retSiz
     size_t idx = 0;
     while (sqlite3_step(stmt) == SQLITE_ROW)
     {
-        ret.push_back({});
+        ret.emplace_back();
         ret[idx].resize(retSize);
         for (int i = 0; i < retSize; ++i)
         {

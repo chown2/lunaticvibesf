@@ -600,11 +600,11 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
                                     if (!_noteLists[i].empty())
                                     {
                                         auto lastNote = --_noteLists[i].end();
-                                        placableMin.push_back({ lastNote->time.hres(), i });
+                                        placableMin.emplace_back(lastNote->time.hres(), i);
                                     }
                                     else
                                     {
-                                        placableMin.push_back({ 0, i });
+                                        placableMin.emplace_back(0, i);
                                     }
                                 }
                                 assert(!placableMin.empty());
@@ -714,11 +714,11 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
                                         if (!_noteLists[i].empty())
                                         {
                                             auto lastNote = --_noteLists[i].end();
-                                            placableMin.push_back({ lastNote->time.hres(), i });
+                                            placableMin.emplace_back(lastNote->time.hres(), i);
                                         }
                                         else
                                         {
-                                            placableMin.push_back({ 0, i });
+                                            placableMin.emplace_back(0, i);
                                         }
                                     }
                                     assert(!placableMin.empty());
@@ -877,7 +877,7 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
         std::vector<std::pair<unsigned, double>> noteBpmCount;
         for (auto& [bpm, notes] : bpmNoteCount)
         {
-            noteBpmCount.push_back({ notes, bpm });
+            noteBpmCount.emplace_back(notes, bpm);
             _playMaxBPM = std::max(_playMaxBPM, bpm);
             _playMinBPM = std::min(_playMinBPM, bpm);
         }

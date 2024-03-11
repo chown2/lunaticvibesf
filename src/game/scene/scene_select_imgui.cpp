@@ -1204,7 +1204,7 @@ void SceneSelect::imguiRefreshVideoDisplayResolutionList()
         }
         for (auto& r : resolutions)
         {
-            imgui_video_display_resolution_size.push_back(r);
+            imgui_video_display_resolution_size.emplace_back(r);
         }
     }
     else
@@ -1217,7 +1217,7 @@ void SceneSelect::imguiRefreshVideoDisplayResolutionList()
         {
             if (w >= dw && h >= dh)
             {
-                imgui_video_display_resolution_size.push_back({ dw, dh });
+                imgui_video_display_resolution_size.emplace_back(dw, dh);
             }
         };
         addResolution(640, 480);
@@ -1406,7 +1406,7 @@ bool SceneSelect::imguiAddFolder(const char* path)
                 return false;
         }
         
-        imgui_folders.push_back(path);
+        imgui_folders.emplace_back(path);
         imgui_folders_display.push_back(imgui_folders.back().c_str());
         imgui_folder_index = -1;
         added = true;
@@ -1451,7 +1451,7 @@ bool SceneSelect::imguiAddTable()
             return false;
     }
 
-    imgui_tables.push_back(imgui_table_url_buf);
+    imgui_tables.emplace_back(imgui_table_url_buf);
     imgui_tables_display.push_back(imgui_tables.back().c_str());
     added = true;
 

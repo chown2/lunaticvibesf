@@ -3,5 +3,6 @@ Checks: |
     -*,
     performance-*,
     modernize-raw-string-literal,
+    modernize-use-emplace,
     modernize-use-override,
 ---

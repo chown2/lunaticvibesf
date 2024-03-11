@@ -170,8 +170,8 @@ bool SoundSetLR2::parseHeader(const std::vector<StringContent>& tokens)
             c.label.push_back(p.filename().stem().u8string());
             c.pathList.push_back(p);
         }
-        c.label.push_back("RANDOM");
-        c.pathList.push_back("RANDOM");
+        c.label.emplace_back("RANDOM");
+        c.pathList.emplace_back("RANDOM");
         c.defIdx = defVal;
         c.value = defVal;
         customfiles.push_back(c);

@@ -126,7 +126,7 @@ void SpriteLine::updateRects()
         for (auto& [p1, p2] : tmp)
         {
             if (int(p1.x) != int(p2.x) || int(p1.y) != int(p2.y))
-                _rects.push_back({ p1, p2 });
+                _rects.emplace_back(p1, p2);
         }
     };
 
@@ -191,7 +191,7 @@ void SpriteLine::updateRects()
         for (auto& [p1, p2] : tmp)
         {
             if (int(p1.x) != int(p2.x) || int(p1.y) != int(p2.y))
-                _rects.push_back({ p1, p2 });
+                _rects.emplace_back(p1, p2);
         }
     };
 

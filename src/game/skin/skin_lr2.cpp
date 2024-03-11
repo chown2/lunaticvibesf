@@ -646,7 +646,7 @@ Tokens csvLineTokenizeSimple(const std::string& raw)
     {
         pos = linecsv.find(',', idx);
         auto token = linecsv.substr(idx, pos - idx);
-        res.push_back(StringContent(token));
+        res.emplace_back(token);
         idx = pos + 1;
     } while (pos != linecsv.npos);
     return res;
@@ -2855,6 +2855,7 @@ ParseRet SkinLR2::DST_NOTE()
     {
         if (e->isMotionKeyFramesEmpty())
         {
+             // NOLINTNEXTLINE(modernize-use-emplace): can't use emplace with structs without constructors.
             drawQueue.push_back({ e, dst_option(d.op[0]), dst_option(d.op[1]), dst_option(d.op[2]), dst_option(d.op[3]), {} });
             e->setMotionLoopTo(d.loop);
             e->setMotionStartTimer((IndexTimer)d.timer);
@@ -2929,6 +2930,7 @@ ParseRet SkinLR2::DST_LINE()
     p->pNote->appendMotionKeyFrame({ 0, {Rect(d.x, d.y, d.w, d.h), (RenderParams::accelType)d.acc, Color(d.r, d.g, d.b, d.a),
         lr2skin::convertBlend(d.blend), !!d.filter, (double)d.angle, getCenterPoint(d.w, d.h, d.center) } });
 
+    // NOLINTNEXTLINE(modernize-use-emplace): can't use emplace with structs without constructors.
     drawQueue.push_back({ e, dst_option(d.op[0]), dst_option(d.op[1]), dst_option(d.op[2]), dst_option(d.op[3]), {} });
     e->appendMotionKeyFrame({ 0, {Rect(d.x, d.y, d.w, d.h), (RenderParams::accelType)d.acc, Color(d.r, d.g, d.b, d.a),
         lr2skin::convertBlend(d.blend), !!d.filter, (double)d.angle, getCenterPoint(d.w, d.h, d.center) } });
@@ -2980,9 +2982,11 @@ ParseRet SkinLR2::DST_BAR_BODY()
             {
                 barSprites[idx]->setSrcLine(csvLineNumber);
                 barSpriteAvailable[idx] = true;
+                // NOLINTNEXTLINE(modernize-use-emplace): can't use emplace with structs without constructors.
                 drawQueue.push_back({ barSprites[idx], dst_option(d.op[0]), dst_option(d.op[1]), dst_option(d.op[2]), dst_option(d.op[3]), {} });
             }
 
+            // NOLINTNEXTLINE(modernize-use-emplace): can't use emplace with structs without constructors.
             drawQueue.push_back({ e, DST_TRUE, DST_TRUE, DST_TRUE, DST_TRUE, {} });
         }
 
@@ -3016,6 +3020,7 @@ ParseRet SkinLR2::DST_BAR_FLASH()
             e->setMotionLoopTo(d.loop);
             e->setMotionStartTimer((IndexTimer)d.timer);
 
+            // NOLINTNEXTLINE(modernize-use-emplace): can't use emplace with structs without constructors.
             drawQueue.push_back({ e, DST_TRUE, DST_TRUE, DST_TRUE, DST_TRUE, {} });
         }
 
@@ -3057,6 +3062,7 @@ ParseRet SkinLR2::DST_BAR_LEVEL()
             e->setMotionLoopTo(d.loop);
             e->setMotionStartTimer((IndexTimer)d.timer);
 
+            // NOLINTNEXTLINE(modernize-use-emplace): can't use emplace with structs without constructors.
             drawQueue.push_back({ e, DST_TRUE, DST_TRUE, DST_TRUE, DST_TRUE, {} });
         }
 
@@ -3099,6 +3105,7 @@ ParseRet SkinLR2::DST_BAR_RIVAL_MYLAMP()
             e->setMotionLoopTo(d.loop);
             e->setMotionStartTimer((IndexTimer)d.timer);
 
+            // NOLINTNEXTLINE(modernize-use-emplace): can't use emplace with structs without constructors.
             drawQueue.push_back({ e, DST_TRUE, DST_TRUE, DST_TRUE, DST_TRUE, {} });
         }
 
@@ -3139,6 +3146,7 @@ ParseRet SkinLR2::DST_BAR_RIVAL_RIVALLAMP()
             e->setMotionLoopTo(d.loop);
             e->setMotionStartTimer((IndexTimer)d.timer);
 
+            // NOLINTNEXTLINE(modernize-use-emplace): can't use emplace with structs without constructors.
             drawQueue.push_back({ e, DST_TRUE, DST_TRUE, DST_TRUE, DST_TRUE, {} });
         }
 
@@ -3180,6 +3188,7 @@ ParseRet SkinLR2::DST_BAR_LAMP()
             e->setMotionLoopTo(d.loop);
             e->setMotionStartTimer((IndexTimer)d.timer);
 
+            // NOLINTNEXTLINE(modernize-use-emplace): can't use emplace with structs without constructors.
             drawQueue.push_back({ e, DST_TRUE, DST_TRUE, DST_TRUE, DST_TRUE, {} });
         }
 
@@ -3221,6 +3230,7 @@ ParseRet SkinLR2::DST_BAR_TITLE()
             e->setMotionLoopTo(d.loop);
             e->setMotionStartTimer((IndexTimer)d.timer);
 
+            // NOLINTNEXTLINE(modernize-use-emplace): can't use emplace with structs without constructors.
             drawQueue.push_back({ e, DST_TRUE, DST_TRUE, DST_TRUE, DST_TRUE, {} });
         }
 
@@ -3262,6 +3272,7 @@ ParseRet SkinLR2::DST_BAR_RANK()
             e->setMotionLoopTo(d.loop);
             e->setMotionStartTimer((IndexTimer)d.timer);
 
+            // NOLINTNEXTLINE(modernize-use-emplace): can't use emplace with structs without constructors.
             drawQueue.push_back({ e, DST_TRUE, DST_TRUE, DST_TRUE, DST_TRUE, {} });
         }
 
@@ -3306,6 +3317,7 @@ ParseRet SkinLR2::DST_BAR_RIVAL()
             e->setMotionLoopTo(d.loop);
             e->setMotionStartTimer((IndexTimer)d.timer);
 
+            // NOLINTNEXTLINE(modernize-use-emplace): can't use emplace with structs without constructors.
             drawQueue.push_back({ e, DST_TRUE, DST_TRUE, DST_TRUE, DST_TRUE, {} });
         }
 
@@ -3344,7 +3356,7 @@ int SkinLR2::parseHeader(const Tokens& raw)
 
     if (matchToken(parseKeyBuf, "#INFORMATION"))
     {
-        while (parseParamBuf.size() < 4) parseParamBuf.push_back("");
+        while (parseParamBuf.size() < 4) parseParamBuf.emplace_back("");
 
         int type = toInt(parseParamBuf[0]);
         const auto title = StringContent(parseParamBuf[1]);
@@ -3381,7 +3393,7 @@ int SkinLR2::parseHeader(const Tokens& raw)
 
     else if (matchToken(parseKeyBuf, "#CUSTOMOPTION"))
     {
-        while (parseParamBuf.size() < 2) parseParamBuf.push_back("");
+        while (parseParamBuf.size() < 2) parseParamBuf.emplace_back("");
 
         auto& title(parseParamBuf[0]);
         int dst_op = toInt(parseParamBuf[1]);
@@ -3392,7 +3404,7 @@ int SkinLR2::parseHeader(const Tokens& raw)
         }
         std::vector<StringContent> op_label;
         for (size_t idx = 2; idx < parseParamBuf.size() && !parseParamBuf[idx].empty(); ++idx)
-            op_label.push_back(StringContent(parseParamBuf[idx]));
+            op_label.emplace_back(parseParamBuf[idx]);
 
         LOG_DEBUG << "[Skin] " << csvLineNumber << ": Loaded Custom option " << title << ": " << dst_op;
 
@@ -3409,7 +3421,7 @@ int SkinLR2::parseHeader(const Tokens& raw)
 
     else if (matchToken(parseKeyBuf, "#CUSTOMFILE"))
     {
-        while (parseParamBuf.size() < 3) parseParamBuf.push_back("");
+        while (parseParamBuf.size() < 3) parseParamBuf.emplace_back("");
 
         auto& title(parseParamBuf[0]);
         auto& path(parseParamBuf[1]);
@@ -3439,8 +3451,8 @@ int SkinLR2::parseHeader(const Tokens& raw)
             c.label.push_back(p.filename().stem().u8string());
             c.pathList.push_back(p);
         }
-        c.label.push_back("RANDOM");
-        c.pathList.push_back("RANDOM");
+        c.label.emplace_back("RANDOM");
+        c.pathList.emplace_back("RANDOM");
         c.defIdx = defVal;
         c.value = defVal;
         customize.push_back(c);
@@ -3453,7 +3465,7 @@ int SkinLR2::parseHeader(const Tokens& raw)
 
     else if (matchToken(parseKeyBuf, "#RESOLUTION"))
     {
-        while (parseParamBuf.size() < 1) parseParamBuf.push_back("");
+        while (parseParamBuf.size() < 1) parseParamBuf.emplace_back("");
 
         info.resolution = toInt(parseParamBuf[0]);
     }

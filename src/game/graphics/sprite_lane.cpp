@@ -138,7 +138,7 @@ void SpriteLaneVertical::updateNoteRect(const lunaticvibes::Time& t)
 			else
 				y = (c.y + c.h) - static_cast<int>(std::floor(-noteMetreOffset * _noteAreaHeight * _basespd * _hispeed));
 			it++;
-			_outRect.push_front({ c.x, (float)y, c.w, -c.h });
+			_outRect.emplace_front(c.x, (float)y, c.w, -c.h);
 		}
 	}
 	else
@@ -160,7 +160,7 @@ void SpriteLaneVertical::updateNoteRect(const lunaticvibes::Time& t)
 			else
 				y = (c.y + c.h) - static_cast<int>(std::floor(-noteTimeOffset / 1600.0 * _noteAreaHeight * _basespd * _hispeed));
 			it++;
-			_outRect.push_front({ c.x, (float)y, c.w, -c.h });
+			_outRect.emplace_front(c.x, (float)y, c.w, -c.h);
 		}
 	}
 }
@@ -411,9 +411,9 @@ void SpriteLaneVerticalLN::updateNoteRect(const lunaticvibes::Time& t)
 				++it;
 			}
 
-			_outRect.push_front({ c.x, (float)head_y, c.w, -c.h });
-			_outRectBody.push_front({ c.x, (float)tail_y, c.w, float(head_y - tail_y - c.h) });
-			_outRectTail.push_front({ c.x, (float)tail_y, c.w, -c.h });
+			_outRect.emplace_front(c.x, (float)head_y, c.w, -c.h);
+			_outRectBody.emplace_front(c.x, (float)tail_y, c.w, float(head_y - tail_y - c.h));
+			_outRectTail.emplace_front(c.x, (float)tail_y, c.w, -c.h);
 		}
 	}
 	else
@@ -491,9 +491,9 @@ void SpriteLaneVerticalLN::updateNoteRect(const lunaticvibes::Time& t)
 				++it;
 			}
 
-			_outRect.push_front({ c.x, (float)head_y, c.w, -c.h });
-			_outRectBody.push_front({ c.x, (float)tail_y, c.w, float(head_y - tail_y - c.h) });
-			_outRectTail.push_front({ c.x, (float)tail_y, c.w, -c.h });
+			_outRect.emplace_front(c.x, (float)head_y, c.w, -c.h);
+			_outRectBody.emplace_front(c.x, (float)tail_y, c.w, float(head_y - tail_y - c.h));
+			_outRectTail.emplace_front(c.x, (float)tail_y, c.w, -c.h);
 		}
 	}
 

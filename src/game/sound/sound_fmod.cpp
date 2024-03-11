@@ -427,7 +427,7 @@ std::vector<std::pair<int, std::string>> SoundDriverFMOD::getDeviceList()
         {
             if (FMOD_OK == f->getDriverInfo(i, name, sizeof(name), &guid, &systemrate, &speakermode, &speakermodechannels))
             {
-                res.push_back(std::make_pair(i, std::string(name)));
+                res.emplace_back(i, std::string(name));
             }
         }
 

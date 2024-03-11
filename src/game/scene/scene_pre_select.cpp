@@ -105,7 +105,7 @@ void ScenePreSelect::updateLoadSongs()
             pathList.reserve(folderList.size());
             for (auto& f : folderList)
             {
-                pathList.push_back(Path(f));
+                pathList.emplace_back(f);
             }
 
             LOG_INFO << "[List] Refreshing folders...";
@@ -136,7 +136,7 @@ void ScenePreSelect::updateLoadSongs()
                     if (!deleted)
                     {
                         g_pSongDB->browse(entry->md5, true);
-                        rootFolderProp.dbBrowseEntries.push_back({ entry, nullptr });
+                        rootFolderProp.dbBrowseEntries.emplace_back(entry, nullptr);
                     }
                 }
             }
@@ -171,7 +171,7 @@ void ScenePreSelect::updateLoadSongs()
 
                 // TODO load lobby list from file
 
-                rootFolderProp.dbBrowseEntries.push_back({ entry, nullptr });
+                rootFolderProp.dbBrowseEntries.emplace_back(entry, nullptr);
             }
             LOG_INFO << "[List] ARENA has " << 0 << " known hosts (placeholder)";
 
@@ -281,7 +281,7 @@ void ScenePreSelect::updateLoadTables()
                 {
                     // TODO should re-download the table if outdated
                     LOG_INFO << "[List] Local table file found: " << t.getFolderPath();
-                    rootFolderProp.dbBrowseEntries.push_back({ convertTable(t), nullptr });
+                    rootFolderProp.dbBrowseEntries.emplace_back(convertTable(t), nullptr);
                 }
                 else
                 {
@@ -293,7 +293,7 @@ void ScenePreSelect::updateLoadTables()
                             if (result == DifficultyTable::UpdateResult::OK)
                             {
                                 LOG_INFO << "[List] Table file download complete: " << t.getFolderPath();
-                                rootFolderProp.dbBrowseEntries.push_back({ convertTable(t), nullptr });
+                                rootFolderProp.dbBrowseEntries.emplace_back(convertTable(t), nullptr);
                             }
                             else
                             {
@@ -379,7 +379,7 @@ void ScenePreSelect::updateLoadCourses()
                     LOG_INFO << "[List] Add course: " << c->_name;
                     folder->pushEntry(c);
                 }
-                rootFolderProp.dbBrowseEntries.push_back({ folder, nullptr });
+                rootFolderProp.dbBrowseEntries.emplace_back(folder, nullptr);
             }
 
             });

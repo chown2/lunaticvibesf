@@ -245,7 +245,7 @@ void loadSongList()
                     auto p = std::reinterpret_pointer_cast<ChartFormatBMSMeta>(f->getChart(idx));
 
                     // add all charts as individual entries into list.
-                    gSelectContext.entries.push_back({ std::make_shared<EntryChart>(p, f), nullptr });
+                    gSelectContext.entries.emplace_back(std::make_shared<EntryChart>(p, f), nullptr);
                 }
                 break;
 
@@ -270,14 +270,14 @@ void loadSongList()
                 }
 
                 // filters are matched
-                gSelectContext.entries.push_back({ e, nullptr });
+                gSelectContext.entries.emplace_back(e, nullptr);
                 break;
             }
             break;
         }
 
         default:
-            gSelectContext.entries.push_back({ e, nullptr });
+            gSelectContext.entries.emplace_back(e, nullptr);
             break;
         }
     }
@@ -870,7 +870,7 @@ void setEntryInfo()
                 {
                     if (stage >= replayFileNames.size())
                     {
-                        gPlayContext.courseStageReplayPath.push_back(Path());
+                        gPlayContext.courseStageReplayPath.emplace_back();
                     }
                     else
                     {
@@ -1470,5 +1470,5 @@ void setDynamicTextures()
 void createNotification(StringContentView text)
 {
     std::unique_lock lock(gOverlayContext._mutex);
-    gOverlayContext.notifications.push_back(std::make_pair(lunaticvibes::Time(), StringContent(text)));
+    gOverlayContext.notifications.emplace_back(lunaticvibes::Time(), StringContent(text));
 }

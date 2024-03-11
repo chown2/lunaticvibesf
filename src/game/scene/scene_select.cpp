@@ -652,7 +652,7 @@ void SceneSelect::_updateAsync()
             0,
             true
         };
-        prop.dbBrowseEntries.push_back({ std::make_shared<EntryChart>(*g_pSongDB->findChartByHash(gSelectContext.remoteRequestedChart).begin()), nullptr });
+        prop.dbBrowseEntries.emplace_back(std::make_shared<EntryChart>(*g_pSongDB->findChartByHash(gSelectContext.remoteRequestedChart).begin()), nullptr);
 
         gSelectContext.backtrace.front().index = gSelectContext.selectedEntryIndex;
         gSelectContext.backtrace.front().displayEntries = gSelectContext.entries;
@@ -2470,7 +2470,7 @@ void SceneSelect::navigateEnter(const lunaticvibes::Time& t)
                 if (top && !top->empty())
                 {
                     for (size_t i = 0; i < top->getContentsCount(); ++i)
-                        prop.dbBrowseEntries.push_back({ top->getEntry(i), nullptr });
+                        prop.dbBrowseEntries.emplace_back(top->getEntry(i), nullptr);
                 }
 
                 gSelectContext.backtrace.front().index = gSelectContext.selectedEntryIndex;
@@ -2519,7 +2519,7 @@ void SceneSelect::navigateEnter(const lunaticvibes::Time& t)
                     folderType == eEntryType::CUSTOM_FOLDER || folderType == eEntryType::RIVAL
                 };
                 for (size_t i = 0; i < top->getContentsCount(); ++i)
-                    prop.dbBrowseEntries.push_back({ top->getEntry(i), nullptr });
+                    prop.dbBrowseEntries.emplace_back(top->getEntry(i), nullptr);
 
                 gSelectContext.backtrace.front().index = gSelectContext.selectedEntryIndex;
                 gSelectContext.backtrace.front().displayEntries = gSelectContext.entries;
@@ -2754,7 +2754,7 @@ void SceneSelect::searchSong(const std::string& text)
         0
     };
     for (size_t i = 0; i < top->getContentsCount(); ++i)
-        prop.dbBrowseEntries.push_back({ top->getEntry(i), nullptr });
+        prop.dbBrowseEntries.emplace_back(top->getEntry(i), nullptr);
 
     gSelectContext.backtrace.front().index = gSelectContext.selectedEntryIndex;
     gSelectContext.backtrace.front().displayEntries = gSelectContext.entries;

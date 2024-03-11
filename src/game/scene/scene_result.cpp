@@ -441,7 +441,7 @@ void SceneResult::updateFadeout()
             if (saveScore)
                 gPlayContext.courseStageReplayPathNew.push_back(replayPath);
             else
-                gPlayContext.courseStageReplayPathNew.push_back(Path());
+                gPlayContext.courseStageReplayPathNew.emplace_back();
 
             if (gPlayContext.ruleset[PLAYER_SLOT_PLAYER])
             {
