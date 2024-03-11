@@ -158,7 +158,6 @@ private:
     void imguiInit();
 
     // imgui Dialogs
-    void imguiSampleDialog();
     void imguiSettings();
 
     // pages
