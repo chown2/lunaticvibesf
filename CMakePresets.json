@@ -59,7 +59,7 @@
             "inherits": "linux-vcpkg",
             "cacheVariables": {
                 "CMAKE_CXX_COMPILER": "g++",
-                "CMAKE_CXX_FLAGS": "-fsanitize=address,undefined -pedantic -Werror=catch-value -Werror=reorder -Werror=sequence-point -Werror=switch -Wunused-variable -Wunused-function"
+                "CMAKE_CXX_FLAGS": "-fsanitize=address,undefined -pedantic -Werror=catch-value -Werror=reorder -Werror=sequence-point -Werror=switch -Werror=unused-variable -Wunused-function"
             }
         },
         {
