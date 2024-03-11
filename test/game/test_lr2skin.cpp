@@ -2,12 +2,13 @@
 #include "game/skin/skin_lr2.h"
 
 #include <string>
+#include <utility>
 #include <vector>
 
 class mock_SkinLR2 : public SkinLR2
 {
 public:
-	mock_SkinLR2(Path p, int loadMode = 0) : SkinLR2(p, loadMode) {}
+	mock_SkinLR2(Path p, int loadMode = 0) : SkinLR2(std::move(p), loadMode) {}
 	~mock_SkinLR2() override = default;
 
 

@@ -111,7 +111,7 @@ void RulesetBMSNetwork::update(const lunaticvibes::Time& t)
     State::set(O(IndexOption::ARENA_PLAYDATA_CLEAR_TYPE), std::min(lamp, saveLampMax));
 }
 
-std::vector<unsigned char> RulesetBMSNetwork::packInit(std::shared_ptr<RulesetBMS> local)
+std::vector<unsigned char> RulesetBMSNetwork::packInit(const std::shared_ptr<RulesetBMS>& local)
 {
     PayloadInit p;
     p.randomLeft = (int8_t)gPlayContext.mods[PLAYER_SLOT_PLAYER].randomLeft;
@@ -174,7 +174,7 @@ bool RulesetBMSNetwork::unpackInit(const std::vector<unsigned char>& payload)
 }
 
 
-std::vector<unsigned char> RulesetBMSNetwork::packFrame(std::shared_ptr<RulesetBMS> local)
+std::vector<unsigned char> RulesetBMSNetwork::packFrame(const std::shared_ptr<RulesetBMS>& local)
 {
     PayloadFrame p;
     const auto d = local->getData();

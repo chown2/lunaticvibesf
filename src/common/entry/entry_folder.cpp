@@ -1,7 +1,7 @@
 #include "entry_folder.h"
 #include "common/chartformat/chartformat.h"
 
-EntryFolderBase::EntryFolderBase(HashMD5 md5, StringContentView name, StringContentView name2)
+EntryFolderBase::EntryFolderBase(const HashMD5& md5, StringContentView name, StringContentView name2)
 {
     this->md5 = md5;
     _name = name;
@@ -16,5 +16,5 @@ std::shared_ptr<EntryBase> EntryFolderBase::getEntry(size_t idx)
 
 void EntryFolderBase::pushEntry(std::shared_ptr<EntryBase> f)
 {
-    entries.push_back(f);
+    entries.push_back(std::move(f));
 }

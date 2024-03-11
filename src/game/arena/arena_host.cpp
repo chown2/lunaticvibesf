@@ -38,7 +38,7 @@ std::vector<std::string> ArenaHost::getPlayerNameList(const std::string& keyExcl
 	return l;
 }
 
-static void emptyHandleSend(std::shared_ptr<std::vector<unsigned char>> message, const boost::system::error_code& error, std::size_t /*bytes_transferred*/)
+static void emptyHandleSend(const std::shared_ptr<std::vector<unsigned char>>& message, const boost::system::error_code& error, std::size_t /*bytes_transferred*/)
 {
 }
 
@@ -139,7 +139,7 @@ void ArenaHost::disbandLobby()
 	gArenaData.expired = true;
 }
 
-void ArenaHost::requestChart(const HashMD5& reqChart, const std::string clientKey)
+void ArenaHost::requestChart(const HashMD5& reqChart, const std::string& clientKey)
 {
 	if (reqChart.empty())
 	{
@@ -515,7 +515,7 @@ void ArenaHost::handleRequest(const unsigned char* recv_buf, size_t recv_buf_len
 }
 
 
-void ArenaHost::handleResponse(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg)
+void ArenaHost::handleResponse(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageResponse>(msg);
 
@@ -543,7 +543,7 @@ void ArenaHost::handleResponse(const std::string& clientKey, std::shared_ptr<Are
 	}
 }
 
-void ArenaHost::handleHeartbeatResp(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg)
+void ArenaHost::handleHeartbeatResp(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageResponse>(msg);
 
@@ -555,7 +555,7 @@ void ArenaHost::handleHeartbeatResp(const std::string& clientKey, std::shared_pt
 	c.ping = (c.heartbeatRecvTime - c.heartbeatSendTime).norm();
 }
 
-void ArenaHost::handleJoinLobby(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg)
+void ArenaHost::handleJoinLobby(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageJoinLobby>(msg);
 
@@ -617,7 +617,7 @@ void ArenaHost::handleJoinLobby(const std::string& clientKey, std::shared_ptr<Ar
 	}
 }
 
-void ArenaHost::handlePlayerLeft(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg)
+void ArenaHost::handlePlayerLeft(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageLeaveLobby>(msg);
 
@@ -644,7 +644,7 @@ void ArenaHost::handlePlayerLeft(const std::string& clientKey, std::shared_ptr<A
 	}
 }
 
-void ArenaHost::handleRequestChart(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg)
+void ArenaHost::handleRequestChart(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageRequestChart>(msg);
 
@@ -658,7 +658,7 @@ void ArenaHost::handleRequestChart(const std::string& clientKey, std::shared_ptr
 	c.serverSocket->async_send_to(boost::asio::buffer(*payload), c.endpoint, std::bind(emptyHandleSend, payload, std::placeholders::_1, std::placeholders::_2));
 }
 
-void ArenaHost::handleCheckChartExistResp(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg)
+void ArenaHost::handleCheckChartExistResp(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageResponse>(msg);
 
@@ -700,7 +700,7 @@ void ArenaHost::handleCheckChartExistResp(const std::string& clientKey, std::sha
 }
 
 
-void ArenaHost::handlePlayInit(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg)
+void ArenaHost::handlePlayInit(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageClientPlayInit>(msg);
 
@@ -740,7 +740,7 @@ void ArenaHost::handlePlayInit(const std::string& clientKey, std::shared_ptr<Are
 	c.serverSocket->async_send_to(boost::asio::buffer(*payload), c.endpoint, std::bind(emptyHandleSend, payload, std::placeholders::_1, std::placeholders::_2));
 }
 
-void ArenaHost::handleFinishedLoading(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg)
+void ArenaHost::handleFinishedLoading(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageClientFinishedLoading>(msg);
 
@@ -754,7 +754,7 @@ void ArenaHost::handleFinishedLoading(const std::string& clientKey, std::shared_
 	c.serverSocket->async_send_to(boost::asio::buffer(*payload), c.endpoint, std::bind(emptyHandleSend, payload, std::placeholders::_1, std::placeholders::_2));
 }
 
-void ArenaHost::handlePlayData(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg)
+void ArenaHost::handlePlayData(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageClientPlayData>(msg);
 
@@ -779,7 +779,7 @@ void ArenaHost::handlePlayData(const std::string& clientKey, std::shared_ptr<Are
 	// no response
 }
 
-void ArenaHost::handleFinishedPlaying(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg)
+void ArenaHost::handleFinishedPlaying(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageClientFinishedPlaying>(msg);
 
@@ -793,7 +793,7 @@ void ArenaHost::handleFinishedPlaying(const std::string& clientKey, std::shared_
 	c.serverSocket->async_send_to(boost::asio::buffer(*payload), c.endpoint, std::bind(emptyHandleSend, payload, std::placeholders::_1, std::placeholders::_2));
 }
 
-void ArenaHost::handleFinishedResult(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg)
+void ArenaHost::handleFinishedResult(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageClientFinishedResult>(msg);
 

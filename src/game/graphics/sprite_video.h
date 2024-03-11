@@ -15,7 +15,7 @@ protected:
 	Texture::PixelFormat format;
 
 public:
-	SpriteVideo(int w, int h, std::shared_ptr<sVideo> pVid, int srcLine = -1);
+	SpriteVideo(int w, int h, const std::shared_ptr<sVideo>& pVid, int srcLine = -1);
 	~SpriteVideo() override = default;
 	
 public:

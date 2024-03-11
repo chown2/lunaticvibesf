@@ -102,6 +102,7 @@ void ScenePreSelect::updateLoadSongs()
             // get folders from config
             auto folderList = ConfigMgr::General()->getFoldersPath();
             std::vector<Path> pathList;
+            pathList.reserve(folderList.size());
             for (auto& f : folderList)
             {
                 pathList.push_back(Path(f));
@@ -341,7 +342,7 @@ void ScenePreSelect::updateLoadCourses()
                         && lunaticvibes::iequals(courseFile.path().extension().u8string(), ".lr2crs")))
                     continue;
 
-                Path coursePath = courseFile.path();
+                const Path& coursePath = courseFile.path();
                 LOG_INFO << "[List] Loading course file: " << coursePath;
                 textHint2 = coursePath.u8string();
 

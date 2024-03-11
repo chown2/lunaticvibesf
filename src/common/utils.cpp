@@ -55,7 +55,7 @@ std::vector<Path> findFiles(Path p, bool recursive)
 	if (offset == pstr.npos)
 	{
 		if (!pstr.empty())
-			res.push_back(p);
+			res.push_back(std::move(p));
 		return res;
 	}
 

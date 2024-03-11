@@ -55,6 +55,7 @@ void i18n::init()
 std::vector<std::string> i18n::getLanguageList()
 {
     std::vector<std::string> res;
+    res.reserve(languages.size());
     for (auto& l : languages)
     {
         res.push_back(l.text[i18nText::LANGUAGE_NAME]);

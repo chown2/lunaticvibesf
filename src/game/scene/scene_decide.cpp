@@ -90,7 +90,7 @@ void SceneDecide::updateCancel()
 ////////////////////////////////////////////////////////////////////////////////
 
 // CALLBACK
-void SceneDecide::inputGamePress(InputMask& m, lunaticvibes::Time t)
+void SceneDecide::inputGamePress(InputMask& m, const lunaticvibes::Time& t)
 {
     unsigned rt = (t - State::get(IndexTimer::SCENE_START)).norm();
     if (rt < pSkin->info.timeIntro) return;
@@ -134,7 +134,7 @@ void SceneDecide::inputGamePress(InputMask& m, lunaticvibes::Time t)
 }
 
 // CALLBACK
-void SceneDecide::inputGameHold(InputMask& m, lunaticvibes::Time t)
+void SceneDecide::inputGameHold(InputMask& m, const lunaticvibes::Time& t)
 {
     unsigned rt = (t - State::get(IndexTimer::SCENE_START)).norm();
     if (rt < pSkin->info.timeIntro) return;
@@ -163,7 +163,7 @@ void SceneDecide::inputGameHold(InputMask& m, lunaticvibes::Time t)
 }
 
 // CALLBACK
-void SceneDecide::inputGameRelease(InputMask& m, lunaticvibes::Time t)
+void SceneDecide::inputGameRelease(InputMask& m, const lunaticvibes::Time& t)
 {
     unsigned rt = (t - State::get(IndexTimer::SCENE_START)).norm();
     if (rt < pSkin->info.timeIntro) return;

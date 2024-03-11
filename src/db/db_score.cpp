@@ -89,32 +89,32 @@ struct score_bms_all_params
         }
     }
 };
-bool convert_score_bms(std::shared_ptr<ScoreBMS> out, const std::vector<std::any>& in)
+bool convert_score_bms(ScoreBMS& out, const std::vector<std::any>& in)
 {
     if (in.size() < SCORE_BMS_PARAM_COUNT) return false;
 
     score_bms_all_params params(in);
 
-    out->notes = params.notes;
-    out->score = params.score;
-    out->rate = params.rate;
-    out->fast = params.fast;
-    out->slow = params.slow;
-    out->maxcombo = params.maxcombo;
-    out->addtime = params.addtime;
-    out->playcount = params.pc;
-    out->clearcount = params.clearcount;
-    out->exscore = params.exscore;
-    out->lamp = (ScoreBMS::Lamp)params.lamp;
-    out->pgreat = params.pgreat;
-    out->great = params.great;
-    out->good = params.good;
-    out->bad = params.bad;
-    out->kpoor = params.kpoor;
-    out->miss = params.miss;
-    out->bp = params.bp;
-    out->combobreak = params.cb;
-    out->replayFileName = params.replay;
+    out.notes = params.notes;
+    out.score = params.score;
+    out.rate = params.rate;
+    out.fast = params.fast;
+    out.slow = params.slow;
+    out.maxcombo = params.maxcombo;
+    out.addtime = params.addtime;
+    out.playcount = params.pc;
+    out.clearcount = params.clearcount;
+    out.exscore = params.exscore;
+    out.lamp = (ScoreBMS::Lamp)params.lamp;
+    out.pgreat = params.pgreat;
+    out.great = params.great;
+    out.good = params.good;
+    out.bad = params.bad;
+    out.kpoor = params.kpoor;
+    out.miss = params.miss;
+    out.bp = params.bp;
+    out.combobreak = params.cb;
+    out.replayFileName = params.replay;
     return true;
 }
 
@@ -257,7 +257,7 @@ void ScoreDB::updateScoreBMS(const char* tableName, const HashMD5& hash, const S
     {
         const auto& r = result[0];
         auto ret = std::make_shared<ScoreBMS>();
-        convert_score_bms(ret, r);
+        convert_score_bms(*ret, r);
         cache[tableName][hashStr] = ret;
     }
 }
@@ -288,13 +288,13 @@ void ScoreDB::preloadScore()
     for (auto& r : query("SELECT * FROM score_course_bms", SCORE_BMS_PARAM_COUNT))
     {
         auto ret = std::make_shared<ScoreBMS>();
-        convert_score_bms(ret, r);
-        cache["score_course_bms"][ANY_STR(r[0])] = ret;
+        convert_score_bms(*ret, r);
+        cache["score_course_bms"].insert_or_assign(ANY_STR(r[0]), std::move(ret));
     }
     for (auto& r : query("SELECT * FROM score_bms", SCORE_BMS_PARAM_COUNT))
     {
         auto ret = std::make_shared<ScoreBMS>();
-        convert_score_bms(ret, r);
-        cache["score_bms"][ANY_STR(r[0])] = ret;
+        convert_score_bms(*ret, r);
+        cache["score_bms"].insert_or_assign(ANY_STR(r[0]), std::move(ret));
     }
 }

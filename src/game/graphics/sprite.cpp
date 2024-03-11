@@ -239,7 +239,7 @@ SpriteStatic::SpriteStatic(const SpriteStaticBuilder& builder): SpriteBase(build
 
 SpriteStatic::SpriteStatic(std::shared_ptr<Texture> texture, const Rect& texRect, int srcLine) : SpriteBase(SpriteTypes::STATIC, srcLine)
 {
-    pTexture = texture;
+    pTexture = std::move(texture);
     if (pTexture && texRect == RECT_FULL)
         textureRect = pTexture->getRect();
     else

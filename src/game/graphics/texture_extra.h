@@ -102,7 +102,7 @@ public:
 
 public:
 	bool addBmp(size_t idx, Path path);
-	bool setSlot(size_t idx, lunaticvibes::Time time, bool base, bool layer, bool poor);
+	bool setSlot(size_t idx, const lunaticvibes::Time& time, bool base, bool layer, bool poor);
 	void sortSlot();
 	bool setSlotFromBMS(ChartObjectBMS& bms);
 	virtual void seek(const lunaticvibes::Time& t);

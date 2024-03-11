@@ -1,6 +1,7 @@
 ---
 Checks: |
     -*,
+    performance-*,
     modernize-raw-string-literal,
     modernize-use-override,
 ---

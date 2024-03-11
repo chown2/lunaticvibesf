@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <mutex>
+#include <utility>
 
 #include "common/log.h"
 #include "common/sysutil.h"
@@ -271,9 +272,9 @@ bool InputWrapper::_register(unsigned type, const std::string& key, INPUTCALLBAC
 
     switch (type)
     {
-    case 0: _pCallbackMap[key] = f; break;
-    case 1: _hCallbackMap[key] = f; break;
-    case 2: _rCallbackMap[key] = f; break;
+    case 0: _pCallbackMap[key] = std::move(f); break;
+    case 1: _hCallbackMap[key] = std::move(f); break;
+    case 2: _rCallbackMap[key] = std::move(f); break;
     }
     return true;
 }
@@ -302,7 +303,7 @@ bool InputWrapper::register_a(const std::string& key, AXISPLUSCALLBACK f)
         return false;
 
     std::unique_lock _lock(_inputMutex);
-    _aCallbackMap[key] = f;
+    _aCallbackMap[key] = std::move(f);
     return true;
 }
 
@@ -322,7 +323,7 @@ bool InputWrapper::register_kb(const std::string& key, KEYBOARDCALLBACK f)
         return false;
 
     std::unique_lock _lock(_inputMutex);
-    _keyboardCallbackMap[key] = f;
+    _keyboardCallbackMap[key] = std::move(f);
     return true;
 }
 bool InputWrapper::unregister_kb(const std::string& key)
@@ -341,7 +342,7 @@ bool InputWrapper::register_joy(const std::string& key, JOYSTICKCALLBACK f)
         return false;
 
     std::unique_lock _lock(_inputMutex);
-    _joystickCallbackMap[key] = f;
+    _joystickCallbackMap[key] = std::move(f);
     return true;
 }
 bool InputWrapper::unregister_joy(const std::string& key)
@@ -360,7 +361,7 @@ bool InputWrapper::register_aa(const std::string& key, ABSAXISCALLBACK f)
         return false;
 
     std::unique_lock _lock(_inputMutex);
-    _absaxisCallbackMap[key] = f;
+    _absaxisCallbackMap[key] = std::move(f);
     return true;
 }
 bool InputWrapper::unregister_aa(const std::string& key)

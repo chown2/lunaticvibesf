@@ -29,7 +29,7 @@ protected:
 
 protected:
     // Register to InputWrapper: judge / keysound
-    void inputGamePress(InputMask&, lunaticvibes::Time);
-    void inputGameHold(InputMask&, lunaticvibes::Time);
-    void inputGameRelease(InputMask&, lunaticvibes::Time);
+    void inputGamePress(InputMask&, const lunaticvibes::Time&);
+    void inputGameHold(InputMask&, const lunaticvibes::Time&);
+    void inputGameRelease(InputMask&, const lunaticvibes::Time&);
 };

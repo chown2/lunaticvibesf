@@ -24,7 +24,7 @@ ArenaClient::~ArenaClient()
 	}
 }
 
-static void emptyHandleSend(std::shared_ptr<std::vector<unsigned char>> message, const boost::system::error_code& error, std::size_t /*bytes_transferred*/)
+static void emptyHandleSend(const std::shared_ptr<std::vector<unsigned char>>& message, const boost::system::error_code& error, std::size_t /*bytes_transferred*/)
 {
 	if (error)
 	{
@@ -306,7 +306,7 @@ void ArenaClient::handleRequest(const unsigned char* recv_buf, size_t recv_buf_l
 		recvMessageIndex = std::max(recvMessageIndex, pMsg->messageIndex);
 }
 
-void ArenaClient::handleResponse(std::shared_ptr<ArenaMessage> msg)
+void ArenaClient::handleResponse(const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageResponse>(msg);
 
@@ -331,7 +331,7 @@ void ArenaClient::handleResponse(std::shared_ptr<ArenaMessage> msg)
 	}
 }
 
-void ArenaClient::handleJoinLobbyResp(std::shared_ptr<ArenaMessage> msg)
+void ArenaClient::handleJoinLobbyResp(const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageResponse>(msg);
 
@@ -363,7 +363,7 @@ void ArenaClient::handleJoinLobbyResp(std::shared_ptr<ArenaMessage> msg)
 	}
 }
 
-void ArenaClient::handleHeartbeat(std::shared_ptr<ArenaMessage> msg)
+void ArenaClient::handleHeartbeat(const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageHeartbeat>(msg);
 
@@ -375,7 +375,7 @@ void ArenaClient::handleHeartbeat(std::shared_ptr<ArenaMessage> msg)
 	socket->async_send_to(boost::asio::buffer(*payload), server, std::bind(emptyHandleSend, payload, std::placeholders::_1, std::placeholders::_2));
 }
 
-void ArenaClient::handleNotice(std::shared_ptr<ArenaMessage> msg)
+void ArenaClient::handleNotice(const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageNotice>(msg);
 
@@ -416,7 +416,7 @@ void ArenaClient::handleNotice(std::shared_ptr<ArenaMessage> msg)
 	socket->async_send_to(boost::asio::buffer(*payload), server, std::bind(emptyHandleSend, payload, std::placeholders::_1, std::placeholders::_2));
 }
 
-void ArenaClient::handleDisbandLobby(std::shared_ptr<ArenaMessage> msg)
+void ArenaClient::handleDisbandLobby(const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageDisbandLobby>(msg);
 
@@ -430,7 +430,7 @@ void ArenaClient::handleDisbandLobby(std::shared_ptr<ArenaMessage> msg)
 }
 
 
-void ArenaClient::handlePlayerJoined(std::shared_ptr<ArenaMessage> msg)
+void ArenaClient::handlePlayerJoined(const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessagePlayerJoinedLobby>(msg);
 
@@ -461,7 +461,7 @@ void ArenaClient::handlePlayerJoined(std::shared_ptr<ArenaMessage> msg)
 	createNotification((boost::format(i18n::c(i18nText::ARENA_PLAYER_JOINED)) % pMsg->playerName).str());
 }
 
-void ArenaClient::handlePlayerLeft(std::shared_ptr<ArenaMessage> msg)
+void ArenaClient::handlePlayerLeft(const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessagePlayerLeftLobby>(msg);
 
@@ -489,7 +489,7 @@ void ArenaClient::handlePlayerLeft(std::shared_ptr<ArenaMessage> msg)
 	}
 }
 
-void ArenaClient::handleCheckChartExist(std::shared_ptr<ArenaMessage> msg)
+void ArenaClient::handleCheckChartExist(const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageCheckChartExist>(msg);
 
@@ -520,7 +520,7 @@ void ArenaClient::handleCheckChartExist(std::shared_ptr<ArenaMessage> msg)
 
 }
 
-void ArenaClient::handleHostRequestChart(std::shared_ptr<ArenaMessage> msg)
+void ArenaClient::handleHostRequestChart(const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageHostRequestChart>(msg);
 
@@ -551,7 +551,7 @@ void ArenaClient::handleHostRequestChart(std::shared_ptr<ArenaMessage> msg)
 	}
 }
 
-void ArenaClient::handleHostReadyStat(std::shared_ptr<ArenaMessage> msg)
+void ArenaClient::handleHostReadyStat(const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageHostReadyStat>(msg);
 
@@ -572,7 +572,7 @@ void ArenaClient::handleHostReadyStat(std::shared_ptr<ArenaMessage> msg)
 	}
 }
 
-void ArenaClient::handleHostStartPlaying(std::shared_ptr<ArenaMessage> msg)
+void ArenaClient::handleHostStartPlaying(const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageHostStartPlaying>(msg);
 
@@ -586,7 +586,7 @@ void ArenaClient::handleHostStartPlaying(std::shared_ptr<ArenaMessage> msg)
 	gSelectContext.isArenaReady = true;
 }
 
-void ArenaClient::handleHostPlayInit(std::shared_ptr<ArenaMessage> msg)
+void ArenaClient::handleHostPlayInit(const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageHostPlayInit>(msg);
 
@@ -606,7 +606,7 @@ void ArenaClient::handleHostPlayInit(std::shared_ptr<ArenaMessage> msg)
 
 }
 
-void ArenaClient::handleHostFinishedLoading(std::shared_ptr<ArenaMessage> msg)
+void ArenaClient::handleHostFinishedLoading(const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageHostFinishedLoading>(msg);
 
@@ -619,7 +619,7 @@ void ArenaClient::handleHostFinishedLoading(std::shared_ptr<ArenaMessage> msg)
 	socket->async_send_to(boost::asio::buffer(*payload), server, std::bind(emptyHandleSend, payload, std::placeholders::_1, std::placeholders::_2));
 }
 
-void ArenaClient::handleHostPlayData(std::shared_ptr<ArenaMessage> msg)
+void ArenaClient::handleHostPlayData(const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageHostPlayData>(msg);
 
@@ -633,7 +633,7 @@ void ArenaClient::handleHostPlayData(std::shared_ptr<ArenaMessage> msg)
 	}
 }
 
-void ArenaClient::handleHostFinishedPlaying(std::shared_ptr<ArenaMessage> msg)
+void ArenaClient::handleHostFinishedPlaying(const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageHostFinishedPlaying>(msg);
 
@@ -646,7 +646,7 @@ void ArenaClient::handleHostFinishedPlaying(std::shared_ptr<ArenaMessage> msg)
 
 }
 
-void ArenaClient::handleHostFinishedResult(std::shared_ptr<ArenaMessage> msg)
+void ArenaClient::handleHostFinishedResult(const std::shared_ptr<ArenaMessage>& msg)
 {
 	auto pMsg = std::static_pointer_cast<ArenaMessageHostFinishedResult>(msg);
 

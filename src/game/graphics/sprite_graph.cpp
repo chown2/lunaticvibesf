@@ -65,7 +65,7 @@ void SpriteLine::updateRects()
 
     if (!gPlayContext.ruleset[_player]) return;
 
-    auto pushRects = [this](int size, const std::vector<int>& points, unsigned maxh, std::function<bool(int val1, int val2)> cond = [](int, int) { return true; })
+    auto pushRects = [this](int size, const std::vector<int>& points, unsigned maxh, const std::function<bool(int val1, int val2)>& cond = [](int, int) { return true; })
     {
         std::vector<std::pair<Point, Point>> tmp;
         const auto& r = _current.rect;
@@ -130,7 +130,7 @@ void SpriteLine::updateRects()
         }
     };
 
-    auto pushRectsF = [this](int size, const std::vector<double>& points, double maxh, std::function<bool(int val1, int val2)> cond = [](int, int) { return true; })
+    auto pushRectsF = [this](int size, const std::vector<double>& points, double maxh, const std::function<bool(int val1, int val2)>& cond = [](int, int) { return true; })
     {
         std::vector<std::pair<Point, Point>> tmp;
         const auto& r = _current.rect;

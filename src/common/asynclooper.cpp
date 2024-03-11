@@ -4,6 +4,7 @@
 
 #ifndef _WIN32
 #include <ratio>
+#include <utility>
 #endif
 
 #include <common/utils.h>
@@ -11,7 +12,7 @@
 #include "log.h"
 
 AsyncLooper::AsyncLooper(StringContentView tag, std::function<void()> func, unsigned rate_per_sec, bool single_inst) : 
-    _tag(tag), _loopFunc(func)
+    _tag(tag), _loopFunc(std::move(func))
 {
     _rate = rate_per_sec;
 

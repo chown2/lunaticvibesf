@@ -2915,7 +2915,7 @@ void SceneSelect::updatePreview()
                     {
                         if (lunaticvibes::iequals(f.path().filename().u8string().substr(0, 7), "preview"))
                         {
-                            Path pWav = f.path();
+                            const Path& pWav = f.path();
                             if (SoundMgr::loadNoteSample(pWav, 0) == 0)
                             {
                                 previewStandalone = true;

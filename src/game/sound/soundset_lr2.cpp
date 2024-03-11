@@ -1,4 +1,7 @@
 #include "soundset_lr2.h"
+
+#include <utility>
+
 #include "common/encoding.h"
 #include "config/config_mgr.h"
 #include "game/scene/scene_customize.h"
@@ -13,7 +16,7 @@ SoundSetLR2::SoundSetLR2()
 
 SoundSetLR2::SoundSetLR2(Path p) : SoundSetLR2()
 {
-	loadCSV(p);
+	loadCSV(std::move(p));
 }
 
 void SoundSetLR2::loadCSV(Path p)

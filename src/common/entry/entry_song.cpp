@@ -22,7 +22,7 @@ size_t EntryFolderSong::incCurrentChart()
 void EntryFolderSong::pushChart(std::shared_ptr<ChartFormatBase> c)
 {
     charts.push_back(c);
-    chartMap[c->gamemode][c->difficulty].push_back(c);
+    chartMap[c->gamemode][c->difficulty].push_back(std::move(c));
 }
 
 const std::vector<std::shared_ptr<ChartFormatBase>>& EntryFolderSong::getDifficultyList(int gamemode, unsigned difficulty) const

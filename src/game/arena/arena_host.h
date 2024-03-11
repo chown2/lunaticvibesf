@@ -100,7 +100,7 @@ public:
 	void disbandLobby();
 
 	// select song
-	void requestChart(const HashMD5& chart, const std::string clientKey = "host");
+	void requestChart(const HashMD5& chart, const std::string& clientKey = "host");
 
 	// request start playing
 	void startPlaying();
@@ -123,18 +123,18 @@ protected:
 	void handleRecv6(const boost::system::error_code& error, size_t bytes_transferred);
 
 	void handleRequest(const unsigned char* recv_buf, size_t recv_buf_len, const udp::endpoint& remote_endpoint);
-	void handleResponse(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg);
+	void handleResponse(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg);
 
-	void handleHeartbeatResp(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg);
-	void handleJoinLobby(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg);
-	void handlePlayerLeft(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg);
-	void handleRequestChart(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg);
-	void handleCheckChartExistResp(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg);
-	void handlePlayInit(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg);
-	void handleFinishedLoading(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg);
-	void handlePlayData(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg);
-	void handleFinishedPlaying(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg);
-	void handleFinishedResult(const std::string& clientKey, std::shared_ptr<ArenaMessage> msg);
+	void handleHeartbeatResp(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg);
+	void handleJoinLobby(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg);
+	void handlePlayerLeft(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg);
+	void handleRequestChart(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg);
+	void handleCheckChartExistResp(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg);
+	void handlePlayInit(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg);
+	void handleFinishedLoading(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg);
+	void handlePlayData(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg);
+	void handleFinishedPlaying(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg);
+	void handleFinishedResult(const std::string& clientKey, const std::shared_ptr<ArenaMessage>& msg);
 
 protected:
 	void update();

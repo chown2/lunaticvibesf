@@ -169,7 +169,7 @@ protected:
 	Rect textureRect;
 
 protected:
-    void static _draw(std::shared_ptr<SDL_Texture> pTex, const Rect* srcRect, RectF dstRect,
+    void static _draw(SDL_Texture* pTex, const Rect* srcRect, RectF dstRect,
         const Color c, const BlendMode blend, const bool filter, const double angleInDegrees, const Point* center = NULL);
 
 public:

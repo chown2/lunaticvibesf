@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <boost/format.hpp>
+#include <utility>
 #include "entry_folder.h"
 #include "common/chartformat/chartformat.h"
 
@@ -9,7 +10,7 @@ class EntryFolderSong : public EntryFolderBase
 {
 public:
     EntryFolderSong() = delete;
-    EntryFolderSong(HashMD5 md5, const Path& path, StringContentView name = "", StringContentView name2 = "") :
+    EntryFolderSong(const HashMD5& md5, const Path& path, StringContentView name = "", StringContentView name2 = "") :
         EntryFolderBase(md5, name, name2), _path(path)
     {
         _type = eEntryType::SONG;
@@ -17,7 +18,7 @@ public:
     EntryFolderSong(std::shared_ptr<ChartFormatBase> pChart):
         EntryFolderBase(pChart->fileHash, pChart->title, pChart->title2), _path(pChart->fileName)
     {
-        pushChart(pChart);
+        pushChart(std::move(pChart));
         _type = eEntryType::SONG;
     }
 
@@ -57,7 +58,8 @@ public:
 
 public:
     EntryChart() = default;
-    EntryChart(std::shared_ptr<ChartFormatBase> p, std::shared_ptr<EntryFolderSong> ps = nullptr) : _file(p), _song(ps)
+    EntryChart(std::shared_ptr<ChartFormatBase> p, std::shared_ptr<EntryFolderSong> ps = nullptr)
+        : _file(std::move(p)), _song(std::move(ps))
     {
         _type = eEntryType::CHART;
         md5 = _file->fileHash;
@@ -76,7 +78,7 @@ class EntryFolderRegular : public EntryFolderBase
 {
 public:
     EntryFolderRegular() = delete;
-    EntryFolderRegular(HashMD5 md5, const Path& path, StringContentView name = "", StringContentView name2 = "") :
+    EntryFolderRegular(const HashMD5& md5, const Path& path, StringContentView name = "", StringContentView name2 = "") :
         EntryFolderBase(md5, name, name2), _path(path)
     {
         _type = eEntryType::FOLDER;

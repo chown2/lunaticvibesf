@@ -4,18 +4,21 @@
 
 #include <cassert>
 #include <optional>
+#include <utility>
 
 RulesetBMSReplay::RulesetBMSReplay(
-    std::shared_ptr<ChartFormatBase> format,
-    std::shared_ptr<ChartObjectBase> chart,
-    std::shared_ptr<ReplayChart> replay,
+    std::shared_ptr<ChartFormatBase> format_,
+    std::shared_ptr<ChartObjectBase> chart_,
+    std::shared_ptr<ReplayChart> replay_,
     PlayModifierGaugeType gauge,
     GameModeKeys keys,
     JudgeDifficulty difficulty,
     double health,
-    PlaySide side) : RulesetBase(format, chart), RulesetBMS(format, chart, gauge, keys, difficulty, health, side)
+    PlaySide side)
+    : RulesetBase(format_, chart_)
+    , RulesetBMS(std::move(format_), std::move(chart_), gauge, keys, difficulty, health, side)
+    , replay(std::move(replay_))
 {
-    this->replay = replay;
     itReplayCommand = replay->commands.begin();
     showJudge = (_side == PlaySide::AUTO || _side == PlaySide::AUTO_DOUBLE || _side == PlaySide::AUTO_2P);
 

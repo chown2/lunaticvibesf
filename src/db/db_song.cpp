@@ -135,7 +135,7 @@ struct song_all_params
         }
     }   
 };
-bool convert_bms(std::shared_ptr<ChartFormatBMSMeta> chart, const std::vector<std::any>& in)
+bool convert_bms(const std::shared_ptr<ChartFormatBMSMeta>& chart, const std::vector<std::any>& in)
 {
     if (in.size() < 30) return false;
 
@@ -1144,7 +1144,7 @@ HashMD5 SongDB::getFolderHash(Path path) const
 
 
 
-std::shared_ptr<EntryFolderRegular> SongDB::browse(HashMD5 root, bool recursive)
+std::shared_ptr<EntryFolderRegular> SongDB::browse(const HashMD5& root, bool recursive)
 {
     const auto [hasPath, path] = getFolderPath(root);
     if (!hasPath)
@@ -1214,7 +1214,7 @@ std::shared_ptr<EntryFolderRegular> SongDB::browse(HashMD5 root, bool recursive)
     return list;
 }
 
-std::shared_ptr<EntryFolderSong> SongDB::browseSong(HashMD5 root)
+std::shared_ptr<EntryFolderSong> SongDB::browseSong(const HashMD5& root)
 {
     LOG_VERBOSE << "[SongDB] browse from " << root.hexdigest();
 
@@ -1265,7 +1265,7 @@ std::shared_ptr<EntryFolderSong> SongDB::browseSong(HashMD5 root)
 }
 
 
-std::shared_ptr<EntryFolderRegular> SongDB::search(HashMD5 root, std::string key)
+std::shared_ptr<EntryFolderRegular> SongDB::search(const HashMD5& root, const std::string& key)
 {
     LOG_DEBUG << "[SongDB] search " << root.hexdigest() << " " << key;
 

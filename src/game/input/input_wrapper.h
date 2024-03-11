@@ -132,9 +132,9 @@ private:
     bool _register(unsigned type, const std::string& key, INPUTCALLBACK);
     bool _unregister(unsigned type, const std::string& key);
 public:
-    bool register_p(const std::string& key, INPUTCALLBACK f) { return _register(0, key, f); }
-    bool register_h(const std::string& key, INPUTCALLBACK f) { return _register(1, key, f); }
-    bool register_r(const std::string& key, INPUTCALLBACK f) { return _register(2, key, f); }
+    bool register_p(const std::string& key, INPUTCALLBACK f) { return _register(0, key, std::move(f)); }
+    bool register_h(const std::string& key, INPUTCALLBACK f) { return _register(1, key, std::move(f)); }
+    bool register_r(const std::string& key, INPUTCALLBACK f) { return _register(2, key, std::move(f)); }
     bool unregister_p(const std::string& key) { return _unregister(0, key); }
     bool unregister_h(const std::string& key) { return _unregister(1, key); }
     bool unregister_r(const std::string& key) { return _unregister(2, key); }

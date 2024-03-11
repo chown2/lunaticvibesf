@@ -8,7 +8,7 @@ class tConfig : public vConfig
 {
 public:
     tConfig() : vConfig() {}
-    tConfig(StringPath path) : vConfig(path) {}
+    tConfig(const StringPath& path) : vConfig(path) {}
 
     void setDefaults() noexcept override
     {

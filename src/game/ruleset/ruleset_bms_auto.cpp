@@ -1,11 +1,14 @@
 #include "ruleset_bms_auto.h"
+
+#include <utility>
+
 #include "game/scene/scene.h"
 #include "game/scene/scene_context.h"
 #include "game/chart/chart_types.h"
 
 RulesetBMSAuto::RulesetBMSAuto(
-    std::shared_ptr<ChartFormatBase> format,
-    std::shared_ptr<ChartObjectBase> chart,
+    const std::shared_ptr<ChartFormatBase>& format,
+    const std::shared_ptr<ChartObjectBase>& chart,
     PlayModifierGaugeType gauge,
     GameModeKeys keys,
     JudgeDifficulty difficulty,

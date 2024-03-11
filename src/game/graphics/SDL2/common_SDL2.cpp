@@ -325,14 +325,14 @@ int Texture::updateYUV(uint8_t* Y, int Ypitch, uint8_t* U, int Upitch, uint8_t* 
         V, Vpitch);
 }
 
-void Texture::_draw(std::shared_ptr<SDL_Texture> pTex, const Rect* srcRect, RectF dstRectF,
+void Texture::_draw(SDL_Texture* pTex, const Rect* srcRect, RectF dstRectF,
 	const Color c, const BlendMode b, const bool filter, const double angle, const Point* center)
 {
     int flipFlags = 0;
     if (dstRectF.w < 0) { dstRectF.w = -dstRectF.w; dstRectF.x -= dstRectF.w; /*flipFlags |= SDL_FLIP_HORIZONTAL;*/ }
     if (dstRectF.h < 0) { dstRectF.h = -dstRectF.h; dstRectF.y -= dstRectF.h; /*flipFlags |= SDL_FLIP_VERTICAL;*/ }
 
-	SDL_SetTextureColorMod(&*pTex, c.r, c.g, c.b);
+	SDL_SetTextureColorMod(pTex, c.r, c.g, c.b);
 
     int ssLevel = graphics_get_supersample_level();
     dstRectF.x *= ssLevel;
@@ -343,7 +343,7 @@ void Texture::_draw(std::shared_ptr<SDL_Texture> pTex, const Rect* srcRect, Rect
     SDL_FPoint scenter;
     if (center) scenter = { (float)center->x * ssLevel, (float)center->y * ssLevel };
 
-    SDL_SetTextureScaleMode(&*pTex, filter ? SDL_ScaleModeBest : SDL_ScaleModeNearest);
+    SDL_SetTextureScaleMode(pTex, filter ? SDL_ScaleModeBest : SDL_ScaleModeNearest);
 
     if (b == BlendMode::INVERT)
     {
@@ -367,11 +367,11 @@ void Texture::_draw(std::shared_ptr<SDL_Texture> pTex, const Rect* srcRect, Rect
         static auto blendMode = SDL_ComposeCustomBlendMode(
             SDL_BLENDFACTOR_ZERO, SDL_BLENDFACTOR_ONE_MINUS_SRC_COLOR, SDL_BLENDOPERATION_ADD,
             SDL_BLENDFACTOR_ZERO, SDL_BLENDFACTOR_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
-        SDL_SetTextureBlendMode(&*pTex, blendMode);
-        SDL_SetTextureAlphaMod(&*pTex, c.a);
+        SDL_SetTextureBlendMode(pTex, blendMode);
+        SDL_SetTextureAlphaMod(pTex, c.a);
         SDL_RenderCopyEx(
             gFrameRenderer,
-            &*pTex,
+            pTex,
             srcRect, &rc,
             0, 
             NULL, SDL_FLIP_NONE
@@ -397,11 +397,11 @@ void Texture::_draw(std::shared_ptr<SDL_Texture> pTex, const Rect* srcRect, Rect
             SDL_BLENDFACTOR_DST_COLOR, SDL_BLENDFACTOR_ONE, SDL_BLENDOPERATION_ADD,
             SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
 
-        SDL_SetTextureBlendMode(&*pTex, blendMode);
+        SDL_SetTextureBlendMode(pTex, blendMode);
     }
     else
     {
-        SDL_SetTextureAlphaMod(&*pTex, b == BlendMode::NONE ? 255 : c.a);
+        SDL_SetTextureAlphaMod(pTex, b == BlendMode::NONE ? 255 : c.a);
 
         static const std::map<BlendMode, SDL_BlendMode> BlendMap
         {
@@ -425,13 +425,13 @@ void Texture::_draw(std::shared_ptr<SDL_Texture> pTex, const Rect* srcRect, Rect
 
         if (BlendMap.find(b) != BlendMap.end())
         {
-            SDL_SetTextureBlendMode(&*pTex, BlendMap.at(b));
+            SDL_SetTextureBlendMode(pTex, BlendMap.at(b));
         }
     }
 
     SDL_RenderCopyExF(
         gFrameRenderer,
-        &*pTex,
+        pTex,
         srcRect, &dstRectF,
         angle,
         center ? &scenter : NULL, SDL_RendererFlip(flipFlags)
@@ -449,13 +449,13 @@ void Texture::_draw(std::shared_ptr<SDL_Texture> pTex, const Rect* srcRect, Rect
 void Texture::draw(RectF dstRect,
     const Color c, const BlendMode b, const bool filter, const double angle) const
 {
-    _draw(_pTexture, NULL, dstRect, c, b, filter, angle, NULL);
+    _draw(_pTexture.get(), NULL, dstRect, c, b, filter, angle, NULL);
 }
 
 void Texture::draw(RectF dstRect,
     const Color c, const BlendMode b, const bool filter, const double angle, const Point& center) const
 {
-    _draw(_pTexture, NULL, dstRect, c, b, filter, angle, &center);
+    _draw(_pTexture.get(), NULL, dstRect, c, b, filter, angle, &center);
 }
 
 void Texture::draw(const Rect& srcRect, RectF dstRect,
@@ -464,7 +464,7 @@ void Texture::draw(const Rect& srcRect, RectF dstRect,
     Rect srcRectTmp(srcRect);
     if (srcRectTmp.w == RECT_FULL.w) srcRectTmp.w = textureRect.w;
     if (srcRectTmp.h == RECT_FULL.h) srcRectTmp.h = textureRect.h;
-    _draw(_pTexture, &srcRectTmp, dstRect, c, b, filter, angle, NULL);
+    _draw(_pTexture.get(), &srcRectTmp, dstRect, c, b, filter, angle, NULL);
 }
 
 void Texture::draw(const Rect& srcRect, RectF dstRect,
@@ -473,7 +473,7 @@ void Texture::draw(const Rect& srcRect, RectF dstRect,
     Rect srcRectTmp(srcRect);
     if (srcRectTmp.w == RECT_FULL.w) srcRectTmp.w = textureRect.w;
     if (srcRectTmp.h == RECT_FULL.h) srcRectTmp.h = textureRect.h;
-    _draw(_pTexture, &srcRectTmp, dstRect, c, b, filter, angle, &center);
+    _draw(_pTexture.get(), &srcRectTmp, dstRect, c, b, filter, angle, &center);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

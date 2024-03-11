@@ -39,6 +39,7 @@ std::vector<StringPath> ConfigGeneral::getFoldersPath()
 {
 	auto folderList = _yaml[cfg::E_FOLDERS].as<std::vector<std::string>>(std::vector<std::string>());
 	std::vector<StringPath> ret;
+	ret.reserve(folderList.size());
 	for (const auto& p : folderList)
 	{
 		ret.push_back(Path(p).native());

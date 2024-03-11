@@ -217,11 +217,11 @@ public:
     void initGaugeParams(PlayModifierGaugeType gauge);
 
 protected:
-    JudgeRes _judge(const Note& note, lunaticvibes::Time time);
+    JudgeRes _judge(const Note& note, const lunaticvibes::Time& time);
 private:
-    void _judgePress(chart::NoteLaneCategory cat, chart::NoteLaneIndex idx, HitableNote& note, JudgeRes judge, const lunaticvibes::Time& t, int slot);
-    void _judgeHold(chart::NoteLaneCategory cat, chart::NoteLaneIndex idx, HitableNote& note, JudgeRes judge, const lunaticvibes::Time& t, int slot);
-    void _judgeRelease(chart::NoteLaneCategory cat, chart::NoteLaneIndex idx, HitableNote& note, JudgeRes judge, const lunaticvibes::Time& t, int slot);
+    void _judgePress(chart::NoteLaneCategory cat, chart::NoteLaneIndex idx, HitableNote& note, const JudgeRes& judge, const lunaticvibes::Time& t, int slot);
+    void _judgeHold(chart::NoteLaneCategory cat, chart::NoteLaneIndex idx, HitableNote& note, const JudgeRes& judge, const lunaticvibes::Time& t, int slot);
+    void _judgeRelease(chart::NoteLaneCategory cat, chart::NoteLaneIndex idx, HitableNote& note, const JudgeRes& judge, const lunaticvibes::Time& t, int slot);
     void judgeNotePress(Input::Pad k, const lunaticvibes::Time& t, const lunaticvibes::Time& rt, int slot);
     void judgeNoteHold(Input::Pad k, const lunaticvibes::Time& t, const lunaticvibes::Time& rt, int slot);
     void judgeNoteRelease(Input::Pad k, const lunaticvibes::Time& t, const lunaticvibes::Time& rt, int slot);

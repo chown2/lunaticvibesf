@@ -98,23 +98,23 @@ protected:
 	void handleRecv(const boost::system::error_code& error, size_t bytes_transferred);
 
 	void handleRequest(const unsigned char* recv_buf, size_t recv_buf_len);
-	void handleResponse(std::shared_ptr<ArenaMessage> msg);
+	void handleResponse(const std::shared_ptr<ArenaMessage>& msg);
 
-	void handleJoinLobbyResp(std::shared_ptr<ArenaMessage> msg);
-	void handleHeartbeat(std::shared_ptr<ArenaMessage> msg);
-	void handleNotice(std::shared_ptr<ArenaMessage> msg);
-	void handleDisbandLobby(std::shared_ptr<ArenaMessage> msg);
-	void handlePlayerJoined(std::shared_ptr<ArenaMessage> msg);
-	void handlePlayerLeft(std::shared_ptr<ArenaMessage> msg);
-	void handleCheckChartExist(std::shared_ptr<ArenaMessage> msg);
-	void handleHostRequestChart(std::shared_ptr<ArenaMessage> msg);
-	void handleHostReadyStat(std::shared_ptr<ArenaMessage> msg);
-	void handleHostStartPlaying(std::shared_ptr<ArenaMessage> msg);
-	void handleHostPlayInit(std::shared_ptr<ArenaMessage> msg);
-	void handleHostFinishedLoading(std::shared_ptr<ArenaMessage> msg);
-	void handleHostPlayData(std::shared_ptr<ArenaMessage> msg);
-	void handleHostFinishedPlaying(std::shared_ptr<ArenaMessage> msg);
-	void handleHostFinishedResult(std::shared_ptr<ArenaMessage> msg);
+	void handleJoinLobbyResp(const std::shared_ptr<ArenaMessage>& msg);
+	void handleHeartbeat(const std::shared_ptr<ArenaMessage>& msg);
+	void handleNotice(const std::shared_ptr<ArenaMessage>& msg);
+	void handleDisbandLobby(const std::shared_ptr<ArenaMessage>& msg);
+	void handlePlayerJoined(const std::shared_ptr<ArenaMessage>& msg);
+	void handlePlayerLeft(const std::shared_ptr<ArenaMessage>& msg);
+	void handleCheckChartExist(const std::shared_ptr<ArenaMessage>& msg);
+	void handleHostRequestChart(const std::shared_ptr<ArenaMessage>& msg);
+	void handleHostReadyStat(const std::shared_ptr<ArenaMessage>& msg);
+	void handleHostStartPlaying(const std::shared_ptr<ArenaMessage>& msg);
+	void handleHostPlayInit(const std::shared_ptr<ArenaMessage>& msg);
+	void handleHostFinishedLoading(const std::shared_ptr<ArenaMessage>& msg);
+	void handleHostPlayData(const std::shared_ptr<ArenaMessage>& msg);
+	void handleHostFinishedPlaying(const std::shared_ptr<ArenaMessage>& msg);
+	void handleHostFinishedResult(const std::shared_ptr<ArenaMessage>& msg);
 
 protected:
 	void update();

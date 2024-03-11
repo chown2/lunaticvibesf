@@ -1,13 +1,13 @@
 #include "ruleset_bms.h"
-#include "common/log.h"
-#include "common/chartformat/chartformat_bms.h"
+
+#include <utility>
+
+#include "game/arena/arena_data.h"
+#include "game/chart/chart_bms.h"
 #include "game/runtime/state.h"
 #include "game/scene/scene_context.h"
 #include "game/sound/sound_mgr.h"
 #include "game/sound/sound_sample.h"
-#include "game/chart/chart_types.h"
-#include "config/config_mgr.h"
-#include "game/arena/arena_data.h"
 
 using namespace chart;
 
@@ -53,7 +53,7 @@ void setJudgeInternalTimer2P(RulesetBMS::JudgeType judge, long long t)
 
 RulesetBMS::RulesetBMS(std::shared_ptr<ChartFormatBase> format, std::shared_ptr<ChartObjectBase> chart,
     PlayModifierGaugeType gauge, GameModeKeys keys, RulesetBMS::JudgeDifficulty difficulty, double health, RulesetBMS::PlaySide side) :
-    RulesetBase(format, chart), _judgeDifficulty(difficulty)
+    RulesetBase(std::move(format), std::move(chart)), _judgeDifficulty(difficulty)
 {
 
     static const NoteLaneTimerMap bombTimer5k[] = {
@@ -583,7 +583,7 @@ void RulesetBMS::initGaugeParams(PlayModifierGaugeType gauge)
     }
 }
 
-RulesetBMS::JudgeRes RulesetBMS::_judge(const Note& note, lunaticvibes::Time time)
+RulesetBMS::JudgeRes RulesetBMS::_judge(const Note& note, const lunaticvibes::Time& time)
 {
     // spot judge area
     JudgeArea a = JudgeArea::NOTHING;
@@ -661,7 +661,7 @@ static const std::map<RulesetBMS::JudgeArea, ReplayChart::Commands::Type> judgeA
     }
 };
 
-void RulesetBMS::_judgePress(NoteLaneCategory cat, NoteLaneIndex idx, HitableNote& note, JudgeRes judge, const lunaticvibes::Time& t, int slot)
+void RulesetBMS::_judgePress(NoteLaneCategory cat, NoteLaneIndex idx, HitableNote& note, const JudgeRes& judge, const lunaticvibes::Time& t, int slot)
 {
     if (cat == NoteLaneCategory::LN && 
         (note.flags & Note::LN_TAIL) &&
@@ -789,7 +789,7 @@ void RulesetBMS::_judgePress(NoteLaneCategory cat, NoteLaneIndex idx, HitableNot
         }
     }
 }
-void RulesetBMS::_judgeHold(NoteLaneCategory cat, NoteLaneIndex idx, HitableNote& note, JudgeRes judge, const lunaticvibes::Time& t, int slot)
+void RulesetBMS::_judgeHold(NoteLaneCategory cat, NoteLaneIndex idx, HitableNote& note, const JudgeRes& judge, const lunaticvibes::Time& t, int slot)
 {
     switch (cat)
     {
@@ -889,7 +889,7 @@ void RulesetBMS::_judgeHold(NoteLaneCategory cat, NoteLaneIndex idx, HitableNote
         break;
     }
 }
-void RulesetBMS::_judgeRelease(NoteLaneCategory cat, NoteLaneIndex idx, HitableNote& note, JudgeRes judge, const lunaticvibes::Time& t, int slot)
+void RulesetBMS::_judgeRelease(NoteLaneCategory cat, NoteLaneIndex idx, HitableNote& note, const JudgeRes& judge, const lunaticvibes::Time& t, int slot)
 {
     bool pushReplayCommand = false;
     switch (cat)

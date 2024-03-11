@@ -2851,7 +2851,7 @@ ParseRet SkinLR2::DST_NOTE()
 
     NoteLaneIndex idx = NoteIdxToLane(info.mode, d._null, info.scratchSide1P, info.scratchSide2P);
 
-    auto setDstNoteSprite = [&](NoteLaneCategory i, std::shared_ptr<SpriteLaneVertical> e)
+    auto setDstNoteSprite = [&](NoteLaneCategory i, const std::shared_ptr<SpriteLaneVertical>& e)
     {
         if (e->isMotionKeyFramesEmpty())
         {
@@ -3679,7 +3679,7 @@ void SkinLR2::IF(const Tokens &t, std::istream& lr2skin, eFileEncoding enc, bool
 
 ////////////////////////////////////////////////////////////////////////////////
 
-SkinLR2::SkinLR2(Path p, int loadMode): loadMode(loadMode)
+SkinLR2::SkinLR2(const Path& p, int loadMode): loadMode(loadMode)
 {
     _version = SkinVersion::LR2beta3;
 
@@ -3917,7 +3917,7 @@ bool SkinLR2::loadCSV(Path p)
             {
                 LOG_WARNING << "[Skin] Bad customize config file: " << pCustomize;
             }
-            for (auto c : customize)
+            for (const auto& c : customize)
             {
                 if (c.dst_op != 0)
                 {
@@ -4329,7 +4329,7 @@ void SkinLR2::findAndExtractDXA(const Path& path)
     {
         std::string archiveName;
         Path lr2skinFolder = fs::absolute(filePath).parent_path();
-        auto lr2skinFolderStr = lr2skinFolder.native();
+        const auto& lr2skinFolderStr = lr2skinFolder.native();
         Path folder = path.parent_path();
         Path::string_type folderStr;
         do

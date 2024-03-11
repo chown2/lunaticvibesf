@@ -159,7 +159,7 @@ ChartObjectBase::ChartObjectBase(int slot, size_t pn, size_t en) :
 }
 
 
-std::shared_ptr<ChartObjectBase> ChartObjectBase::createFromChartFormat(int slot, std::shared_ptr<ChartFormatBase> p)
+std::shared_ptr<ChartObjectBase> ChartObjectBase::createFromChartFormat(int slot, const std::shared_ptr<ChartFormatBase>& p)
 {
     switch (p->type())
     {
@@ -333,7 +333,7 @@ Metre ChartObjectBase::getBarMetrePosition(size_t bar)
 void ChartObjectBase::update(const lunaticvibes::Time& rt)
 {
     lunaticvibes::Time vt = rt + lunaticvibes::Time(State::get(IndexNumber::TIMING_ADJUST_VISUAL), false);
-    lunaticvibes::Time at = rt;
+    const lunaticvibes::Time& at = rt;
 
     noteExpired.clear();
     noteBgmExpired.clear();

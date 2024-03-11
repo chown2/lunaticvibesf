@@ -10,7 +10,7 @@ class EntryFolderBase: public EntryBase
 {
 public:
     EntryFolderBase() = delete;
-    EntryFolderBase(HashMD5 md5, StringContentView name = "", StringContentView name2 = "");
+    EntryFolderBase(const HashMD5& md5, StringContentView name = "", StringContentView name2 = "");
     ~EntryFolderBase() override = default;
 
 protected:

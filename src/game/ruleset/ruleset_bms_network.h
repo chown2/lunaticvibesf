@@ -63,7 +63,7 @@ public:
             ar(modifierTextShort);
         }
     };
-    static std::vector<unsigned char> packInit(std::shared_ptr<RulesetBMS> local);
+    static std::vector<unsigned char> packInit(const std::shared_ptr<RulesetBMS>& local);
     bool unpackInit(const std::vector<unsigned char>& payload) override;
 
     struct PayloadFrame
@@ -99,7 +99,7 @@ public:
             ar(isFailed);
         }
     };
-    static std::vector<unsigned char> packFrame(std::shared_ptr<RulesetBMS> local);
+    static std::vector<unsigned char> packFrame(const std::shared_ptr<RulesetBMS>& local);
     bool unpackFrame(std::vector<unsigned char>& payload) override;
 };
 

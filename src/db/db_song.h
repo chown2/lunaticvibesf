@@ -87,9 +87,9 @@ public:
     std::pair<bool, Path> getFolderPath(const HashMD5& folder) const;
     HashMD5 getFolderHash(Path path) const;
 
-    std::shared_ptr<EntryFolderRegular> browse(HashMD5 root, bool recursive = true);
-    std::shared_ptr<EntryFolderSong> browseSong(HashMD5 root);
-    std::shared_ptr<EntryFolderRegular> search(HashMD5 root, std::string key);
+    std::shared_ptr<EntryFolderRegular> browse(const HashMD5& root, bool recursive = true);
+    std::shared_ptr<EntryFolderSong> browseSong(const HashMD5& root);
+    std::shared_ptr<EntryFolderRegular> search(const HashMD5& root, const std::string& key);
 
 private:
     void* threadPool = nullptr;
