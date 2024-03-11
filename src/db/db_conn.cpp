@@ -6,7 +6,12 @@
 
 SQLite::SQLite(const char* path, std::string tag_) : tag(std::move(tag_))
 {
-    sqlite3_open(path, &_db);
+    int ret = sqlite3_open(path, &_db);
+    if (ret != SQLITE_OK)
+    {
+        LOG_ERROR << "[sqlite3] sql failed to open db at path '" << path << "' (tag '" << tag << "'): [" << ret << "] "
+                  << errmsg();
+    }
 
     exec("PRAGMA temp_store = memory");
     exec("PRAGMA mmap_size = 536870912"); // 512MB
