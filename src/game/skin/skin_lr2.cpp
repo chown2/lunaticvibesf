@@ -794,10 +794,10 @@ int SkinLR2::HELPFILE()
     auto encoding = getFileEncoding(ifs);
 
     std::string help_file;
-    for (std::array<char, 1024> buf; !ifs.eof();)
+    for (std::string line_; std::getline(ifs, line_);)
     {
-        ifs.read(buf.data(), buf.size());
-        help_file += to_utf8({buf.data(), static_cast<size_t>(ifs.gcount())}, encoding);
+        help_file += to_utf8(line_, encoding);
+        help_file += '\n';
     }
 
     _helpFiles.push_back(std::move(help_file));
