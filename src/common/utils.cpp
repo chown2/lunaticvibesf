@@ -277,6 +277,7 @@ HashMD5 md5file(const Path &filePath)
 {
     if (!fs::exists(filePath) || !fs::is_regular_file(filePath))
     {
+        LOG_WARNING << "path is not a file or does not exist";
         return {};
     }
     std::ifstream ifs{filePath, std::ios::binary};
