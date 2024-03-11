@@ -1,5 +1,6 @@
 #pragma once
 #include <any>
+#include <string>
 #include <vector>
 #include <exception>
 
@@ -31,7 +32,7 @@ private:
     bool inTransaction = false;
 public:
     SQLite() = delete;
-    SQLite(const char* path, const char* tag = "UNNAMED");
+    SQLite(const char* path, std::string tag);
     virtual ~SQLite();
 
 protected:

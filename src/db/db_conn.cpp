@@ -4,7 +4,7 @@
 #include "db_conn.h"
 #include "common/log.h"
 
-SQLite::SQLite(const char* path, const char* tag) : tag(tag)
+SQLite::SQLite(const char* path, std::string tag_) : tag(std::move(tag_))
 {
     sqlite3_open(path, &_db);
 
