@@ -195,16 +195,6 @@ void ScoreDB::updateScoreBMS(const char* tableName, const HashMD5& hash, const S
     {
         auto record = *pRecord;
 
-        if (score.notes != record.notes)
-        {
-            record.notes = score.notes;
-        }
-
-        if (score.score > record.score)
-        {
-            record.score = score.score;
-        }
-
         if (score.exscore > record.exscore)
         {
             record.rate = score.rate;
@@ -226,34 +216,16 @@ void ScoreDB::updateScoreBMS(const char* tableName, const HashMD5& hash, const S
                 record.replayFileName = score.replayFileName;
         }
 
-        if (score.maxcombo > record.maxcombo)
-        {
-            record.maxcombo = score.maxcombo;
-        }
-
-        if (score.bp < record.bp)
-        {
-            record.bp = score.bp;
-        }
-
-        if (score.playcount > record.playcount)
-        {
-            record.playcount = score.playcount;
-        }
-
-        if (score.clearcount > record.clearcount)
-        {
-            record.clearcount = score.clearcount;
-        }
+        record.bp = std::min(record.bp, score.bp);
+        record.clearcount = std::max(record.clearcount, score.clearcount);
+        record.maxcombo = std::max(record.maxcombo, score.maxcombo);
+        record.notes = score.notes;
+        record.playcount = std::max(record.playcount, score.playcount);
+        record.score = std::max(record.score, score.score);
 
         if ((int)score.lamp > (int)record.lamp)
         {
             record.lamp = score.lamp;
-        }
-
-        if (score.bp < record.bp)
-        {
-            record.bp = score.bp;
         }
 
         char sqlbuf[224] = { 0 };
