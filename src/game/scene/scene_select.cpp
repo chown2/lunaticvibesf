@@ -2778,6 +2778,35 @@ std::optional<DeleteScoreResult> try_delete_score(const std::string_view query, 
     abort(); // unreachable
 }
 
+// LR2 behavior:
+// MD5 digest or an empty text box if no chart is highlighted.
+std::optional<HashResult> try_get_hash(const std::string_view query, const SelectContextParams& select_context)
+{
+    if (query != "/hash")
+    {
+        return {};
+    }
+
+    if (select_context.entries.empty())
+    {
+        LOG_DEBUG << "select entries list is empty";
+        return HashResult{std::nullopt};
+    }
+
+    const auto entryIndex = select_context.selectedEntryIndex;
+    const auto& [entry, _score] = select_context.entries.at(entryIndex);
+    const auto entryType = entry->type();
+    const auto& entryHash = entry->md5;
+
+    if (entryType != eEntryType::CHART && entryType != eEntryType::RIVAL_CHART)
+    {
+        LOG_DEBUG << "not a chart but " << static_cast<int>(entryType);
+        return HashResult{std::nullopt};
+    }
+
+    return HashResult{entryHash.hexdigest()};
+}
+
 [[nodiscard]] SearchQueryResult execute_search_query(SelectContextParams& select_context, SongDB& song_db,
                                                    ScoreDB& score_db, const std::string& text)
 {
@@ -2786,6 +2815,8 @@ std::optional<DeleteScoreResult> try_delete_score(const std::string_view query, 
     {
         LOG_DEBUG << "search query is a command";
         if (auto res = try_delete_score(text, score_db, select_context); res.has_value())
+            return *res;
+        if (auto res = try_get_hash(text, select_context); res.has_value())
             return *res;
         return BadCommand{};
     }
@@ -2819,6 +2850,14 @@ void SceneSelect::searchSong(const std::string& text)
                 // TODO: translations.
                 State::set(IndexText::EDIT_JUKEBOX_NAME, "INVALID USAGE");
             }
+        },
+        [](const lunaticvibes::HashResult& res) {
+            if (!res.hash.has_value()) {
+                // TODO: translations.
+                State::set(IndexText::EDIT_JUKEBOX_NAME, "INVALID USAGE");
+                return;
+            }
+            State::set(IndexText::EDIT_JUKEBOX_NAME, *res.hash);
         },
         [](lunaticvibes::BadCommand /* bc */) {
             // TODO: translations.

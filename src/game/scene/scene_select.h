@@ -297,7 +297,12 @@ enum class DeleteScoreResult
     Error,
 };
 
-using SearchQueryResult = std::variant<std::shared_ptr<EntryFolderRegular>, DeleteScoreResult, BadCommand>;
+struct HashResult {
+    // std::nullopt if error.
+    std::optional<std::string> hash;
+};
+
+using SearchQueryResult = std::variant<std::shared_ptr<EntryFolderRegular>, DeleteScoreResult, HashResult, BadCommand>;
 
 std::optional<DeleteScoreResult> try_delete_score(const std::string_view query, ScoreDB& score_db,
                                                   const SelectContextParams& select_context);
