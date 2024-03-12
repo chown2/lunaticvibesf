@@ -157,6 +157,17 @@ ScoreDB::ScoreDB(const char* path): SQLite(path, "SCORE")
     }
 }
 
+void ScoreDB::deleteScoreBMS(const char* tableName, const HashMD5& hash)
+{
+    const auto hashStr = hash.hexdigest();
+
+    char sqlbuf[128] = { 0 };
+    snprintf(static_cast<char*>(sqlbuf), sizeof(sqlbuf) - 1, "DELETE FROM %s WHERE md5=?", tableName);
+    exec(static_cast<char*>(sqlbuf), {hashStr});
+
+    cache[tableName].erase(hashStr);
+}
+
 std::shared_ptr<ScoreBMS> ScoreDB::getScoreBMS(const char* tableName, const HashMD5& hash) const
 {
     std::string hashStr = hash.hexdigest();
@@ -262,6 +273,11 @@ void ScoreDB::updateScoreBMS(const char* tableName, const HashMD5& hash, const S
     }
 }
 
+void ScoreDB::deleteChartScoreBMS(const HashMD5& hash)
+{
+    return deleteScoreBMS("score_bms", hash);
+}
+
 std::shared_ptr<ScoreBMS> ScoreDB::getChartScoreBMS(const HashMD5& hash) const
 {
     return getScoreBMS("score_bms", hash);
@@ -270,6 +286,11 @@ std::shared_ptr<ScoreBMS> ScoreDB::getChartScoreBMS(const HashMD5& hash) const
 void ScoreDB::updateChartScoreBMS(const HashMD5& hash, const ScoreBMS& score)
 {
     return updateScoreBMS("score_bms", hash, score);
+}
+
+void ScoreDB::deleteCourseScoreBMS(const HashMD5& hash)
+{
+    return deleteScoreBMS("score_course_bms", hash);
 }
 
 std::shared_ptr<ScoreBMS> ScoreDB::getCourseScoreBMS(const HashMD5& hash) const

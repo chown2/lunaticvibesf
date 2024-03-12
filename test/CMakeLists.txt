@@ -14,7 +14,9 @@ add_executable(apptest
     common/test_path.cpp
     db/test_score_db.cpp
     game/test_graphics.cpp
- "game/test_lr2skin.cpp")
+    game/test_lr2skin.cpp
+    game/test_scene_select.cpp
+)
 target_link_libraries(apptest PUBLIC
     GTest::gtest GTest::gmock)
 

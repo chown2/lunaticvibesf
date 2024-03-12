@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <memory>
+#include <optional>
 
 #include "scene_select.h"
 #include "scene_mgr.h"
@@ -30,6 +31,13 @@
 #include "game/arena/arena_host.h"
 
 ////////////////////////////////////////////////////////////////////////////////
+
+template <class... Ts> struct overloaded : Ts...
+{
+    using Ts::operator()...;
+};
+// TODO(C++20): remove.
+template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 #pragma region save config
 
@@ -2731,14 +2739,96 @@ void SceneSelect::resetJukeboxText()
         State::set(IndexText::EDIT_JUKEBOX_NAME, gSelectContext.backtrace.front().name);
 }
 
+namespace lunaticvibes {
+
+// LR2 behavior:
+// Always says `deleted` regardless of whether there was a score or not.
+std::optional<DeleteScoreResult> try_delete_score(const std::string_view query, ScoreDB& score_db, const SelectContextParams& select_context)
+{
+    if (query != "/deletescore")
+    {
+        return {};
+    }
+
+    if (select_context.entries.empty())
+    {
+        LOG_DEBUG << "select entries list is empty";
+        return DeleteScoreResult::Error;
+    }
+
+    const auto entryIndex = select_context.selectedEntryIndex;
+    const auto& [entry, _score] = select_context.entries.at(entryIndex);
+    const auto entryType = entry->type();
+    const auto& entryHash = entry->md5;
+
+    switch (entryType)
+    {
+    case eEntryType::CHART:
+        score_db.deleteChartScoreBMS(entryHash);
+        LOG_DEBUG << "deleted chart score";
+        return DeleteScoreResult::Ok;
+    case eEntryType::COURSE:
+        score_db.deleteCourseScoreBMS(entryHash);
+        LOG_DEBUG << "deleted course score";
+        return DeleteScoreResult::Ok;
+    default:
+        LOG_DEBUG << "not a chart/course";
+        return DeleteScoreResult::Error;
+    }
+    abort(); // unreachable
+}
+
+[[nodiscard]] SearchQueryResult execute_search_query(SelectContextParams& select_context, SongDB& song_db,
+                                                   ScoreDB& score_db, const std::string& text)
+{
+    const auto text_view = std::string_view{text};
+    if (!text_view.empty() && text_view.front() == '/')
+    {
+        LOG_DEBUG << "search query is a command";
+        if (auto res = try_delete_score(text, score_db, select_context); res.has_value())
+            return *res;
+        return BadCommand{};
+    }
+
+    return song_db.search(ROOT_FOLDER_HASH, text);
+}
+
+} // namespace lunaticvibes
+
 void SceneSelect::searchSong(const std::string& text)
 {
     LOG_DEBUG << "Search: " << text;
 
-    auto top = g_pSongDB->search(ROOT_FOLDER_HASH, text);
+    std::shared_ptr<EntryFolderRegular> top;
+
+    auto visit_query = overloaded{
+        [&top](std::shared_ptr<EntryFolderRegular> e) {
+            top = std::move(e);
+            State::set(IndexText::EDIT_JUKEBOX_NAME, i18n::s(i18nText::SEARCH_FAILED));
+        },
+        [](lunaticvibes::DeleteScoreResult res) {
+            if (res == lunaticvibes::DeleteScoreResult::Ok)
+            {
+                // TODO: translations.
+                State::set(IndexText::EDIT_JUKEBOX_NAME, "SCORE DELETED");
+                updateEntryScore(gSelectContext.selectedEntryIndex);
+                setEntryInfo();
+            }
+            else
+            {
+                // TODO: translations.
+                State::set(IndexText::EDIT_JUKEBOX_NAME, "INVALID USAGE");
+            }
+        },
+        [](lunaticvibes::BadCommand /* bc */) {
+            // TODO: translations.
+            State::set(IndexText::EDIT_JUKEBOX_NAME, "UNKNOWN COMMAND");
+        },
+    };
+    std::visit(visit_query, lunaticvibes::execute_search_query(gSelectContext, *g_pSongDB, *g_pScoreDB, text));
+
     if (!top || top->empty())
     {
-        State::set(IndexText::EDIT_JUKEBOX_NAME, i18n::s(i18nText::SEARCH_FAILED));
         return;
     }
 

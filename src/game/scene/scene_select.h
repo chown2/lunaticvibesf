@@ -1,4 +1,5 @@
 #pragma once
+
 #include <mutex>
 #include <string>
 #include <thread>
@@ -6,6 +7,8 @@
 #include <array>
 #include <list>
 #include <memory>
+#include <optional>
+
 #include "scene.h"
 #include "scene_context.h"
 #include "scene_pre_select.h"
@@ -281,3 +284,24 @@ private:
     bool imgui_play_adjustLanecoverWithMousewheel = false;
     bool imgui_play_adjustLanecoverWithLeftRight = false;
 };
+
+namespace lunaticvibes {
+
+struct BadCommand
+{
+};
+
+enum class DeleteScoreResult
+{
+    Ok,
+    Error,
+};
+
+using SearchQueryResult = std::variant<std::shared_ptr<EntryFolderRegular>, DeleteScoreResult, BadCommand>;
+
+std::optional<DeleteScoreResult> try_delete_score(const std::string_view query, ScoreDB& score_db,
+                                                  const SelectContextParams& select_context);
+[[nodiscard]] SearchQueryResult execute_search_query(SelectContextParams& select_context, SongDB& song_db,
+                                                   ScoreDB& score_db, const std::string& text);
+
+} // lunaticvibes

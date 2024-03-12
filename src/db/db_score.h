@@ -32,13 +32,16 @@ public:
     ScoreDB& operator= (ScoreDB&) = delete;
 
 protected:
+    void deleteScoreBMS(const char* tableName, const HashMD5& hash);
     std::shared_ptr<ScoreBMS> getScoreBMS(const char* tableName, const HashMD5& hash) const;
     void updateScoreBMS(const char* tableName, const HashMD5& hash, const ScoreBMS& score);
 
 public:
+    void deleteChartScoreBMS(const HashMD5& hash);
     std::shared_ptr<ScoreBMS> getChartScoreBMS(const HashMD5& hash) const;
     void updateChartScoreBMS(const HashMD5& hash, const ScoreBMS& score);
 
+    void deleteCourseScoreBMS(const HashMD5& hash);
     std::shared_ptr<ScoreBMS> getCourseScoreBMS(const HashMD5& hash) const;
     void updateCourseScoreBMS(const HashMD5& hash, const ScoreBMS& score);
 
