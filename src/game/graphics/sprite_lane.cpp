@@ -72,7 +72,7 @@ void SpriteLaneVertical::appendMotionKeyFrame(const MotionKeyFrame& f)
 	if (pNote) pNote->appendMotionKeyFrame(f);
 }
 
-std::pair<NoteLaneCategory, NoteLaneIndex> SpriteLaneVertical::getLane() const
+NoteLane SpriteLaneVertical::getLane() const
 {
 	return std::make_pair(_category, _index); 
 }

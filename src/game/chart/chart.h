@@ -23,7 +23,6 @@ namespace chart
 enum class NoteLaneCategory : size_t
 {
     _ = -1ull, // INVALID
-
     Note = 0,
     Mine,
     Invs,
@@ -58,8 +57,6 @@ enum NoteLaneIndex : size_t
     NOTELANEINDEX_COUNT,
 };
 
-typedef std::pair<NoteLaneCategory, NoteLaneIndex> NoteLane;
-
 enum NoteLaneExtra : size_t
 {
     EXTRA_BARLINE_1P,
@@ -67,6 +64,8 @@ enum NoteLaneExtra : size_t
 
     NOTELANEEXTRA_COUNT = NOTELANEINDEX_COUNT,
 };
+
+using NoteLane = std::pair<NoteLaneCategory, size_t>;
 
 constexpr size_t LANE_ALL_KEY_COUNT = size_t(NoteLaneCategory::NOTECATEGORY_COUNT) * NOTELANEINDEX_COUNT;
 constexpr size_t LANE_BARLINE_1P = LANE_ALL_KEY_COUNT + 0;
@@ -173,25 +172,25 @@ protected:
     decltype(_bpmNoteList)::iterator                                _bpmNoteListIter;
 
 public:
-    auto firstNote            (chart::NoteLaneCategory cat, chart::NoteLaneIndex idx) -> NoteIterator;
+    auto firstNote            (chart::NoteLaneCategory cat, size_t idx) -> NoteIterator;
 
-    auto incomingNote         (chart::NoteLaneCategory cat, chart::NoteLaneIndex idx) -> NoteIterator;
+    auto incomingNote         (chart::NoteLaneCategory cat, size_t idx) -> NoteIterator;
     auto incomingNoteBgm      (size_t idx) -> decltype(_bgmNoteLists)::value_type::iterator;
     auto incomingNoteSpecial  (size_t idx) -> decltype(_specialNoteLists)::value_type::iterator;
     auto incomingNoteBpm      () -> decltype(_bpmNoteList)::iterator;
 
-    bool isLastNote           (chart::NoteLaneCategory cat, chart::NoteLaneIndex idx);
+    bool isLastNote           (chart::NoteLaneCategory cat, size_t idx);
     bool isLastNoteBgm        (size_t idx);
     bool isLastNoteSpecial    (size_t idx);
     bool isLastNoteBpm        ();
 
-    bool isLastNote           (chart::NoteLaneCategory cat, chart::NoteLaneIndex idx, const NoteIterator& it);
+    bool isLastNote           (chart::NoteLaneCategory cat, size_t idx, const NoteIterator& it);
     bool isLastNoteBgm        (size_t idx, const decltype(_bgmNoteLists)::value_type::iterator& it);
     bool isLastNoteSpecial    (size_t idx, const decltype(_specialNoteLists)::value_type::iterator& it);
     bool isLastNoteBpm        (const decltype(_bpmNoteList)::iterator& it);
 
 protected:
-    auto nextNote             (chart::NoteLaneCategory cat, chart::NoteLaneIndex idx) -> NoteIterator&;
+    auto nextNote             (chart::NoteLaneCategory cat, size_t idx) -> NoteIterator&;
     auto nextNoteBgm          (size_t idx) -> decltype(_bgmNoteLists)::value_type::iterator&;
     auto nextNoteSpecial      (size_t idx) -> decltype(_specialNoteLists)::value_type::iterator&;
     auto nextNoteBpm          () -> decltype(_bpmNoteList)::iterator&;

@@ -47,7 +47,7 @@ public:
     void setMotionStartTimer(IndexTimer t) override;
     void appendMotionKeyFrame(const MotionKeyFrame& f) override;
 
-    std::pair<chart::NoteLaneCategory, chart::NoteLaneIndex> getLane() const;
+    chart::NoteLane getLane() const;
     void getRectSize(int& w, int& h);
     bool update(const lunaticvibes::Time& t) override;
     virtual void updateNoteRect(const lunaticvibes::Time& t);
