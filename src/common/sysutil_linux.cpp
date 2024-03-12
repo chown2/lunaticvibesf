@@ -58,6 +58,8 @@ long long getFileLastWriteTime(const Path& p)
 }
 
 namespace portable_strerror_r_detail {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
 
 // Use the output of XSI-compliant (from POSIX.1-2001) strerror_r().
 static char* impl(int strerror_r_ret, char* buffer, const size_t buffer_length)
@@ -76,17 +78,13 @@ static char* impl(char* strerror_r_ret, char* /*buffer*/, const size_t /*buffer_
     return strerror_r_ret;
 }
 
+#pragma GCC diagnostic pop
 } // namespace portable_strerror_r_detail
 
 // Interface to support both GNU's and XSI's (from POSIX.1-2001) strerror_r().
-static const char* portable_strerror_r(const int errnum, char* buffer, const size_t buffer_length)
-{
-    return portable_strerror_r_detail::impl(strerror_r(errnum, buffer, buffer_length), buffer, buffer_length);
-}
-
 const char* safe_strerror(const int errnum, char* buffer, const size_t buffer_length)
 {
-    return portable_strerror_r(errnum, buffer, buffer_length);
+    return portable_strerror_r_detail::impl(strerror_r(errnum, buffer, buffer_length), buffer, buffer_length);
 }
 
 bool lunaticvibes::open(const std::string& link)
