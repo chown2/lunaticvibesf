@@ -74,3 +74,25 @@ Path PathFromUTF8(std::string_view s);
 void preciseSleep(long long nanoseconds);
 
 double normalizeLinearGrowth(double prev, double curr);
+
+namespace lunaticvibes {
+
+// Trim leading and trailing symbols 'markers' from string 's'.
+[[nodiscard]] constexpr std::string_view trim(const std::string_view s, const std::string_view markers)
+{
+    auto l = s.find_first_not_of(markers);
+    if (l == std::string_view::npos)
+        return {};
+    const auto r = s.find_last_not_of(markers);
+    return s.substr(l, r - l + 1);
+}
+// Trim spaces from string 's'.
+[[nodiscard]] inline constexpr std::string_view trim(const std::string_view s)
+{
+    constexpr std::string_view WHITESPACE_MARKERS = " \t\n\v\f\r";
+    return trim(s, WHITESPACE_MARKERS);
+}
+
+void trim_in_place(std::string& s);
+
+} // lunaticvibes

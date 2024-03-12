@@ -3345,13 +3345,7 @@ int SkinLR2::parseHeader(const Tokens& raw)
     for (size_t idx = 0; idx < 24 && idx < raw.size() - 1; ++idx)
     {
         parseParamBuf[idx] = raw[idx + 1];
-
-#ifdef _WIN32
-        static const auto localeUTF8 = std::locale(".65001");
-#else
-        static const auto localeUTF8 = std::locale("en_US.UTF-8");
-#endif
-        boost::trim(parseParamBuf[idx], localeUTF8);
+        lunaticvibes::trim_in_place(parseParamBuf[idx]);
     }
 
     if (matchToken(parseKeyBuf, "#INFORMATION"))
@@ -3487,13 +3481,7 @@ int SkinLR2::parseBody(const Tokens &raw)
     for (size_t idx = 0; idx < 24 && idx < raw.size() - 1; ++idx)
     {
         parseParamBuf[idx] = raw[idx + 1];
-
-#ifdef _WIN32
-        static const auto localeUTF8 = std::locale(".65001");
-#else
-        static const auto localeUTF8 = std::locale("en_US.UTF-8");
-#endif
-        boost::trim(parseParamBuf[idx], localeUTF8);
+        lunaticvibes::trim_in_place(parseParamBuf[idx]);
     }
 
     try {

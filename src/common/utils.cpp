@@ -1,6 +1,8 @@
 #include "utils.h"
 
+#include <algorithm>
 #include <array>
+#include <cctype>
 #include <charconv>
 #include <chrono>
 #include <cstdio>
@@ -417,26 +419,9 @@ std::string convertLR2Path(const std::string& lr2path, const char* relative_path
     return convertLR2Path(lr2path, std::string_view(relative_path_utf8));
 }
 
-// Trim leading and trailing symbols 'markers' from string 's'.
-[[nodiscard]] constexpr std::string_view trim(const std::string_view s, const std::string_view markers)
-{
-    auto l = s.find_first_not_of(markers);
-    if (l == std::string_view::npos)
-        return {};
-    const auto r = s.find_last_not_of(markers);
-    return s.substr(l, r - l + 1);
-}
-
-// Trim spaces from string 's'.
-[[nodiscard]] constexpr std::string_view trim(std::string_view s)
-{
-    constexpr std::string_view WHITESPACE_MARKERS = " \t\n\v\f\r";
-    return trim(s, WHITESPACE_MARKERS);
-}
-
 std::string convertLR2Path(const std::string& lr2path, std::string_view relative_path_utf8)
 {
-    std::string_view raw = trim(relative_path_utf8, "\"");
+    std::string_view raw = lunaticvibes::trim(relative_path_utf8, "\"");
     if (raw.empty())
         return {};
     if (auto p = PathFromUTF8(raw); p.is_absolute())
@@ -533,4 +518,10 @@ double normalizeLinearGrowth(double prev, double curr)
 
     assert(delta >= -1.0 && delta <= 1.0);
     return delta;
+}
+
+void lunaticvibes::trim_in_place(std::string& s) {
+    static auto not_space = [](int c) { return !std::isspace(c); };
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), not_space));
+    s.erase(std::find_if(s.rbegin(), s.rend(), not_space).base(), s.end());
 }

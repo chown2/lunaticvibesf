@@ -110,14 +110,7 @@ void SoundSetLR2::loadCSV(Path p)
 
         // convert codepage
         std::string rawUTF8 = to_utf8(raw, encoding);
-
-        // remove not needed spaces
-#ifdef _WIN32
-        static const auto localeUTF8 = std::locale(".65001");
-#else
-        static const auto localeUTF8 = std::locale("en_US.UTF-8");
-#endif
-        boost::trim_right(rawUTF8, localeUTF8);
+        lunaticvibes::trim_in_place(rawUTF8);
 
         static boost::char_separator<char> sep(",");
         boost::tokenizer<boost::char_separator<char>> tokens(rawUTF8, sep);
