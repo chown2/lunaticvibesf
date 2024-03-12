@@ -55,11 +55,7 @@ void SkinBase::update()
 		s->update(gUpdateContext.updateTime);
     };
 
-#ifdef _DEBUG
-	std::for_each(std::execution::par_unseq, _sprites.begin(), _sprites.end(), updateSpriteLambda);
-#else
     std::for_each(std::execution::par_unseq, _sprites.begin(), _sprites.end(), updateSpriteLambda);
-#endif
 
     for (auto& s : _sprites)
     {
@@ -91,11 +87,7 @@ void SkinBase::update_mouse(int x, int y)
         }
     };
 
-#ifdef _DEBUG
-        std::for_each(std::execution::par_unseq, _sprites.begin(), _sprites.end(), clickSpriteLambda);
-#else
-        std::for_each(std::execution::par_unseq, _sprites.begin(), _sprites.end(), clickSpriteLambda);
-#endif
+    std::for_each(std::execution::par_unseq, _sprites.begin(), _sprites.end(), clickSpriteLambda);
 }
 
 void SkinBase::update_mouse_click(int x, int y)
