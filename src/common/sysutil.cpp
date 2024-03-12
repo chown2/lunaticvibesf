@@ -33,7 +33,7 @@ void pushMainThreadTask(std::function<void()> f)
         if (handleMainThreadTask)
         {
             std::unique_lock l(mainThreadTaskQueueMutex);
-            mainThreadTaskQueue.push(f);
+            mainThreadTaskQueue.push(std::move(f));
         }
     }
 }
