@@ -34,9 +34,9 @@
         },
         {
             "name": "windows-vcpkg-release",
-            "displayName": "Release",
+            "displayName": "RelWithDebInfo",
             "inherits": "windows-vcpkg-base",
-            "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+            "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo" }
         },
         {
             "name": "linux-vcpkg",
