@@ -16,7 +16,7 @@ inline Path executablePath;
 // path may include wildcard (*, ?)
 std::vector<Path> findFiles(Path path, bool recursive = false);
 
-bool isParentPath(Path parent, Path dir);
+[[nodiscard]] bool isParentPath(const Path& parent, const Path& dir);
 
 // string to int
 int toInt(std::string_view str, int defVal = 0) noexcept;
