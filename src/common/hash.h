@@ -1,7 +1,9 @@
 #pragma once
 
 #include <cstring>
+#include <functional>
 #include <string>
+#include <string_view>
 
 #include "utils.h"
 
@@ -61,21 +63,7 @@ struct std::hash<Hash<_Len>>
 {
     size_t operator()(const Hash<_Len>& obj) const
     {
-        size_t h = 0;
-        int i = 0;
-        if (_Len >= sizeof(size_t))
-        {
-            for (; i <= _Len - sizeof(size_t); i += sizeof(size_t))
-            {
-                h ^= *(size_t*)&obj.data[i];
-            }
-        }
-        unsigned char* p = (unsigned char*)&h;
-        for (; i < _Len; i++)
-        {
-            p[i % sizeof(size_t)] ^= obj.data[i];
-        }
-        return h;
+        return std::hash<std::string_view>()({reinterpret_cast<const char*>(obj.data), _Len});
     }
 };
 
