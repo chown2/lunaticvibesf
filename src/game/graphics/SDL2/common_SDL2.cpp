@@ -152,6 +152,9 @@ Image::Image(const char* path, std::shared_ptr<SDL_RWops>&& rw): _path(path), _p
         }
         return;
     }
+    if (_path.empty())
+        return;
+    assert(_pRWop);
     if (isTGA(path))
     {
         _pSurface = std::shared_ptr<SDL_Surface>(
