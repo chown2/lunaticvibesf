@@ -2,6 +2,7 @@
 
 #include <execution>
 #include <fstream>
+#include <optional>
 #include <regex>
 #include <set>
 #include <sstream>
@@ -582,10 +583,10 @@ bool matchToken(const StringContent& str1, std::string_view str2) noexcept
 
 // For LR2 skin .csv parsing:
 // op1~4 may include a '!' before the number, split it out
-std::pair<unsigned, bool> toPairUIntBool(const std::string_view& str) noexcept
+[[nodiscard]] std::optional<std::pair<unsigned, bool>> toPairUIntBool(const std::string_view str) noexcept
 {
     if (str.empty())
-        return { -1, false };
+        return {};
 
     int val;
     bool notPref;
@@ -600,12 +601,11 @@ std::pair<unsigned, bool> toPairUIntBool(const std::string_view& str) noexcept
         notPref = false;
     }
 
-    if (val >= 0)
-        return { val, notPref };
-    else
-        return { -1, false };
+    if (val < 0)
+        return {};
+
+    return std::pair{ val, notPref };
 }
-std::pair<unsigned, bool> toPairUIntBool(const std::string& str) noexcept { return toPairUIntBool(std::string_view(str)); }
 
 std::string_view csvLineNormalize(const std::string& raw)
 {
@@ -3572,15 +3572,15 @@ void SkinLR2::IF(const Tokens &t, std::istream& lr2skin, eFileEncoding enc, bool
         {
             if (it->empty()) continue;
 
-            auto [idx, val] = toPairUIntBool(*it);
-            if (idx == -1)
+            auto res = toPairUIntBool(*it);
+            if (!res.has_value())
             {
                 LOG_DEBUG << "[Skin] " << csvLineNumber << ": Invalid DST_OPTION Index, deal as false (Line " << csvLineNumber << ")";
                 ifStmtTrue = false;
                 break;
             }
-            bool dst = getDstOpt((dst_option)idx);
-            if (val) dst = !dst;
+            bool dst = getDstOpt(res->first);
+            if (res->second) dst = !dst;
             ifStmtTrue = ifStmtTrue && dst;
         }
     }
