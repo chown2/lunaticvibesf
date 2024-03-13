@@ -21,6 +21,8 @@
 #include "game/arena/arena_client.h"
 #include "game/arena/arena_host.h"
 
+static constexpr size_t GRAPH_GAUGE_UPDATE_INTERVAL{500};
+
 bool ScenePlay::isPlaymodeDP() const
 {
     return gPlayContext.mode == SkinType::PLAY10 || gPlayContext.mode == SkinType::PLAY14;
@@ -2263,7 +2265,7 @@ void ScenePlay::updatePlaying()
     changeKeySampleMapping(rt);
 
     // graphs
-    if (rt.norm() / 500 >= gPlayContext.graphGauge[PLAYER_SLOT_PLAYER].size())
+    if (rt.norm() / GRAPH_GAUGE_UPDATE_INTERVAL >= gPlayContext.graphGauge[PLAYER_SLOT_PLAYER].size())
     {
         auto& g = gPlayContext.graphGauge[PLAYER_SLOT_PLAYER];
         auto& r = gPlayContext.ruleset[PLAYER_SLOT_PLAYER];
@@ -2415,6 +2417,19 @@ void ScenePlay::updateFadeout()
 
     if (ft >= pSkin->info.timeOutro)
     {
+        // LR2 stores 1000 points for any chart, we make a point once in a time period.
+        // This helps with graph accuracy on long(er) charts (although fails on really short charts).
+        {
+            const auto& chart = gPlayContext.chartObj[PLAYER_SLOT_PLAYER];
+            auto& gauge = gPlayContext.graphGauge[PLAYER_SLOT_PLAYER];
+            const auto totalLength = chart->getTotalLength().norm();
+            auto graphGaugePoints =
+                totalLength / GRAPH_GAUGE_UPDATE_INTERVAL + (totalLength % GRAPH_GAUGE_UPDATE_INTERVAL != 0);
+            assert(gauge.size() <= graphGaugePoints);
+            // FIXME: judge remaining notes correctly.
+            gauge.resize(graphGaugePoints);
+        }
+
         sceneEnding = true;
         if (_loadChartFuture.valid())
             _loadChartFuture.wait();
