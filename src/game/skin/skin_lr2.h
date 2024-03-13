@@ -209,7 +209,7 @@ namespace LR2SkinDef
     };
     
     // bool
-    enum dst_option
+    enum dst_option : int
     {
         DST_TRUE = 0,
 
