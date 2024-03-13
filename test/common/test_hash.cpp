@@ -19,3 +19,11 @@ TEST(Hash, HashStdHash)
     EXPECT_EQ(hasher(hash), hasher(hash));
     EXPECT_NE(hasher(hash), hasher({"f431c993d79c6714a9ba11cc896611df"}));
 }
+
+TEST(Hash, HexToBinToHex)
+{
+    static const std::string hash = "40e94aa51dc5c0ccc5aad4e6aefdde2a";
+    const std::string hex = hex2bin(hash);
+    static constexpr size_t NULL_TERMINATOR_SIZE = 1;
+    EXPECT_EQ(bin2hex(hex.data(), hex.size() - NULL_TERMINATOR_SIZE), hash);
+}
