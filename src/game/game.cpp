@@ -247,7 +247,7 @@ int main(int argc, char* argv[])
     }
 
     /*
-#ifndef _DEBUG
+#ifdef NDEBUG
     // preload all skins
     LOG_INFO << "==============================================";
     LOG_INFO << "Preload all skins";

@@ -24,7 +24,7 @@ class SceneSelect;
 class ArenaMessage;
 class ArenaClient: public AsyncLooper
 {
-#if _DEBUG
+#ifndef NDEBUG
 	friend class SceneSelect;
 #endif
 

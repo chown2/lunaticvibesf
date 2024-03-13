@@ -52,7 +52,7 @@ void AsyncLooper::setRate(unsigned rate_per_sec)
 
 void AsyncLooper::run()
 {
-#if _DEBUG
+#ifndef NDEBUG
     _runThreadID = GetCurrentThreadID();
 #endif
     if (_running && !_inLoopBody)

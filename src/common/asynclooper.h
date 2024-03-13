@@ -32,7 +32,7 @@ protected:
 
     LooperHandler handler;
 
-#ifdef _DEBUG
+#ifndef NDEBUG
     int64_t _runThreadID = 0;
 #endif
 

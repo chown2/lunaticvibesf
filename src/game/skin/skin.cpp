@@ -97,7 +97,7 @@ void SkinBase::update_mouse_click(int x, int y)
     // sprite inserted last has priority
     bool invoked = false;
     pSpriteLastClicked = nullptr;
-#if _DEBUG
+#ifndef NDEBUG
     for (auto it = _sprites.rbegin(); it != _sprites.rend() && !invoked; ++it)
     {
         if ((*it)->type() != SpriteTypes::MOUSE_CURSOR && (*it)->isDraw() && !(*it)->isHidden())

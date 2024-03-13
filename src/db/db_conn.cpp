@@ -87,7 +87,7 @@ std::vector<std::vector<std::any>> SQLite::query(const char* zsql, size_t retSiz
         ++idx;
     }
 
-#if _DEBUG
+#ifndef NDEBUG
     std::stringstream ss;
     ss << "[sqlite3] " << tag << ": " << " query " << zsql;
     ss << " (args: ";
@@ -127,7 +127,7 @@ int SQLite::exec(const char* zsql, std::initializer_list<std::any> args)
         return ret;
     }
 
-#if _DEBUG
+#ifndef NDEBUG
     std::stringstream ss;
     ss << "[sqlite3] " << tag << ": " << " exec " << zsql;
     ss << " (args: ";

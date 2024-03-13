@@ -44,7 +44,7 @@ int graphics_init()
 
         std::string title;
         title += PROJECT_NAME;
-#ifdef _DEBUG
+#ifndef NDEBUG
         title += " Debug";
 #endif
 

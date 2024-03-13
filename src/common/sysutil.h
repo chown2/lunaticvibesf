@@ -21,7 +21,7 @@ void getWindowHandle(void* handle);
 bool IsWindowForeground();
 void SetWindowForeground(bool foreground);
 
-#ifdef _DEBUG
+#ifndef NDEBUG
 #define SetDebugThreadName(x) SetThreadName(x)
 #else
 #define SetDebugThreadName(x) do {} while(0)

@@ -206,7 +206,7 @@ void SceneSelect::imguiSettings()
 
                     ImGui::Dummy( { mainTagWidth, ImGui::GetWindowHeight() - (height + interval) * MENU_COUNT - 20.0f });
 
-#if _DEBUG
+#ifndef NDEBUG
                     if (ImGui::Button("ARENA", {-1.f, height}))
                     {
                         imgui_main_index = MENU_ARENADIAGNOSE;
@@ -425,7 +425,7 @@ void SceneSelect::imguiPageArenaDiagnose()
         ImGui::Text("isPlayingFinished: %d", c.isPlayingFinished());
         ImGui::Text("isResultFinished: %d", c.isResultFinished());
 
-#if _DEBUG
+#ifndef NDEBUG
         ImGui::Spacing();
         ImGui::Separator();
 
@@ -446,7 +446,7 @@ void SceneSelect::imguiPageArenaDiagnose()
         ImGui::Text("isPlayingFinished: %d", s.isPlayingFinished());
         ImGui::Text("isResultFinished: %d", s.isResultFinished());
 
-#if _DEBUG
+#ifndef NDEBUG
         ImGui::Spacing();
         ImGui::Separator();
 
@@ -994,7 +994,7 @@ void SceneSelect::imguiPageAbout()
             ImGui::TextUnformatted("\"Lunatic Vibes\" 2017-2022");
             ImGui::TextUnformatted((boost::format("Version: %s %s (%s %s)")
                 % PROJECT_VERSION
-#if _DEBUG
+#ifndef NDEBUG
                 % "Debug" 
 #else
                 % "Release"

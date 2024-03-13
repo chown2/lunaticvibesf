@@ -329,7 +329,7 @@ void SceneBase::updateImgui()
         ImGui::PopStyleColor();
     }
 
-#ifdef _DEBUG
+#ifndef NDEBUG
     if (imguiShowMonitorLR2DST)
     {
         imguiMonitorLR2DST();
@@ -367,7 +367,7 @@ void SceneBase::updateImgui()
 
 void SceneBase::DebugToggle(InputMask& p, const lunaticvibes::Time& t)
 {
-#ifdef _DEBUG
+#ifndef NDEBUG
     if (!(!gInCustomize || _type == SceneType::CUSTOMIZE)) return;
 
     if (p[Input::F1])

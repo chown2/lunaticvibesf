@@ -412,7 +412,7 @@ void ScenePreSelect::loadFinished()
         {
             textHint = (boost::format("%s %s %s (%s %s)")
                 % PROJECT_NAME % PROJECT_VERSION
-#if _DEBUG
+#ifndef NDEBUG
                 % "Debug"
 #else
                 % ""

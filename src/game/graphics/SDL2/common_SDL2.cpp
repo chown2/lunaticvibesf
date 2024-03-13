@@ -437,7 +437,7 @@ void Texture::_draw(SDL_Texture* pTex, const Rect* srcRect, RectF dstRectF,
         center ? &scenter : NULL, SDL_RendererFlip(flipFlags)
     );
 
-//#if _DEBUG
+//#ifndef NDEBUG
 //    SDL_FRect& d = dstRectF;
 //    SDL_FPoint lines[5] = { {d.x, d.y}, {d.x + d.w, d.y}, {d.x + d.w, d.y + d.h}, {d.x, d.y + d.h}, {d.x, d.y} };
 //    SDL_SetRenderDrawColor(gFrameRenderer, 255, 255, 255, 255);
