@@ -4,7 +4,9 @@
 
 #include <common/entry/entry_course.h>
 #include <common/entry/entry_song.h>
+#include <common/entry/entry_table.h>
 #include <common/hash.h>
+#include <common/utils.h>
 #include <game/scene/scene_context.h>
 #include <game/scene/scene_select.h>
 
@@ -108,5 +110,66 @@ TEST(SceneSelect, HashQueryingWorks)
         HashResult result;
         EXPECT_NO_THROW(result = std::get<HashResult>(result_variant));
         EXPECT_EQ(result.hash, std::nullopt);
+    }
+}
+
+TEST(SceneSelect, PathQueryingWorks)
+{
+    using lunaticvibes::PathResult;
+
+    SelectContextParams select_context;
+    SongDB song_db{IN_MEMORY_DB_PATH};
+    ScoreDB score_db{IN_MEMORY_DB_PATH};
+
+    auto chart = std::make_shared<ChartFormatBase>();
+    chart->absolutePath = PathFromUTF8(u8"/mnt/games/привет");
+    CourseLr2crs::Course course;
+    select_context.entries.emplace_back(std::make_shared<EntryChart>(chart), nullptr);
+    select_context.entries.emplace_back(std::make_shared<EntryCourse>(course, 0), nullptr);
+    select_context.entries.emplace_back(std::make_shared<EntryBase>(), nullptr);
+    select_context.entries.emplace_back(
+        std::make_shared<EntryFolderSong>(md5("lul"), PathFromUTF8(u8"/some/cool/path/草")), nullptr);
+    select_context.entries.emplace_back(std::make_shared<EntryFolderTable>("name", 0), nullptr);
+
+    {
+        select_context.selectedEntryIndex = 0;
+        auto result_variant = lunaticvibes::execute_search_query(select_context, song_db, score_db, "/path");
+        PathResult result;
+        EXPECT_NO_THROW(result = std::get<PathResult>(result_variant));
+        EXPECT_EQ(result.path, u8"/mnt/games/привет");
+    }
+
+    {
+        select_context.selectedEntryIndex = 1;
+        auto result_variant = lunaticvibes::execute_search_query(select_context, song_db, score_db, "/path");
+        PathResult result;
+        EXPECT_NO_THROW(result = std::get<PathResult>(result_variant));
+        EXPECT_TRUE(result.path.empty());
+        // TODO: idk path. What does LR2 do?
+    }
+
+    {
+        select_context.selectedEntryIndex = 2;
+        auto result_variant = lunaticvibes::execute_search_query(select_context, song_db, score_db, "/path");
+        PathResult result;
+        EXPECT_NO_THROW(result = std::get<PathResult>(result_variant));
+        EXPECT_TRUE(result.path.empty());
+    }
+
+    {
+        select_context.selectedEntryIndex = 3;
+        auto result_variant = lunaticvibes::execute_search_query(select_context, song_db, score_db, "/path");
+        PathResult result;
+        EXPECT_NO_THROW(result = std::get<PathResult>(result_variant));
+        EXPECT_EQ(result.path, u8"/some/cool/path/草");
+    }
+
+    {
+        select_context.selectedEntryIndex = 4;
+        auto result_variant = lunaticvibes::execute_search_query(select_context, song_db, score_db, "/path");
+        PathResult result;
+        EXPECT_NO_THROW(result = std::get<PathResult>(result_variant));
+        EXPECT_TRUE(result.path.empty());
+        // TODO: show table link or home page?
     }
 }

@@ -56,6 +56,11 @@ public:
     // extend info
     std::shared_ptr<EntryFolderSong> _song = nullptr;
 
+    Path getPath() override
+    {
+        return _file->absolutePath;
+    }
+
 public:
     EntryChart() = default;
     EntryChart(std::shared_ptr<ChartFormatBase> p, std::shared_ptr<EntryFolderSong> ps = nullptr)

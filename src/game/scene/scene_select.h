@@ -303,7 +303,13 @@ struct HashResult
     std::optional<std::string> hash;
 };
 
-using SearchQueryResult = std::variant<std::shared_ptr<EntryFolderRegular>, DeleteScoreResult, HashResult, BadCommand>;
+struct PathResult
+{
+    // Empty if error on unsupported.
+    std::string path;
+};
+
+using SearchQueryResult = std::variant<std::shared_ptr<EntryFolderRegular>, DeleteScoreResult, HashResult, PathResult, BadCommand>;
 
 std::optional<DeleteScoreResult> try_delete_score(const std::string_view query, ScoreDB& score_db,
                                                   const SelectContextParams& select_context);

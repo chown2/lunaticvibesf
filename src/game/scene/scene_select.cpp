@@ -2807,6 +2807,25 @@ std::optional<HashResult> try_get_hash(const std::string_view query, const Selec
     return HashResult{entryHash.hexdigest()};
 }
 
+std::optional<PathResult> try_get_path(const std::string_view query, const SelectContextParams& select_context)
+{
+    if (query != "/path")
+    {
+        return {};
+    }
+
+    if (select_context.entries.empty())
+    {
+        LOG_DEBUG << "select entries list is empty";
+        return PathResult{};
+    }
+
+    const auto entryIndex = select_context.selectedEntryIndex;
+    const auto& [entry, _score] = select_context.entries.at(entryIndex);
+
+    return PathResult{entry->getPath().u8string()};
+}
+
 [[nodiscard]] SearchQueryResult execute_search_query(SelectContextParams& select_context, SongDB& song_db,
                                                    ScoreDB& score_db, const std::string& text)
 {
@@ -2817,6 +2836,8 @@ std::optional<HashResult> try_get_hash(const std::string_view query, const Selec
         if (auto res = try_delete_score(text, score_db, select_context); res.has_value())
             return *res;
         if (auto res = try_get_hash(text, select_context); res.has_value())
+            return *res;
+        if (auto res = try_get_path(text, select_context); res.has_value())
             return *res;
         return BadCommand{};
     }
@@ -2858,6 +2879,14 @@ void SceneSelect::searchSong(const std::string& text)
                 return;
             }
             State::set(IndexText::EDIT_JUKEBOX_NAME, *res.hash);
+        },
+        [](const lunaticvibes::PathResult& res) {
+            if (res.path.empty()) {
+                // TODO: translations.
+                State::set(IndexText::EDIT_JUKEBOX_NAME, "INVALID USAGE");
+                return;
+            }
+            State::set(IndexText::EDIT_JUKEBOX_NAME, res.path);
         },
         [](lunaticvibes::BadCommand /* bc */) {
             // TODO: translations.
