@@ -20,6 +20,7 @@ public:
         reset();
         if (!hex.empty())
         {
+            assert(hex.size() == _Len * 2);
             set = true;
             std::string bin = hex2bin(hex);
             unsigned char* ubin = (unsigned char*)bin.data();

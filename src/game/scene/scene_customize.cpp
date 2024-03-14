@@ -1,5 +1,6 @@
 #include "scene_customize.h"
 
+#include "common/hash.h"
 #include "common/types.h"
 #include "config/config_mgr.h"
 #include "game/skin/skin_lr2.h"
@@ -374,7 +375,7 @@ void SceneCustomize::updateFadeout()
 StringPath SceneCustomize::getConfigFileName(StringPathView skinPath) 
 {
     Path p(skinPath);
-    std::string md5 = HashMD5(p.u8string()).hexdigest();
+    std::string md5 = ::md5(p.u8string()).hexdigest();
     md5 += ".yaml";
     return Path(md5).native();
 }
