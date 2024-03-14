@@ -8,7 +8,8 @@
 #include <sstream>
 #include <variant>
 
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/split.hpp>
 #include <re2/re2.h>
 
 #include "common/log.h"
@@ -640,15 +641,7 @@ Tokens csvLineTokenizeSimple(const std::string& raw)
 
     Tokens res;
     res.reserve(32);
-    size_t idx = 0;
-    size_t pos = 0;
-    do 
-    {
-        pos = linecsv.find(',', idx);
-        auto token = linecsv.substr(idx, pos - idx);
-        res.emplace_back(token);
-        idx = pos + 1;
-    } while (pos != linecsv.npos);
+    boost::split(res, linecsv, boost::is_any_of(","));
     return res;
 }
 
