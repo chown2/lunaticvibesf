@@ -1,8 +1,11 @@
 #pragma once
 #include <any>
 #include <string>
+#include <utility>
 #include <vector>
 #include <exception>
+
+#include <common/types.h>
 
 struct sqlite3;
 
@@ -33,6 +36,9 @@ private:
 public:
     SQLite() = delete;
     SQLite(const char* path, std::string tag);
+    SQLite(const Path &path, std::string tag) : SQLite(path.u8string().c_str(), std::move(tag))
+    {
+    }
     virtual ~SQLite();
 
 protected:

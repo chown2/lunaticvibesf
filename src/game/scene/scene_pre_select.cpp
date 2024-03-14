@@ -38,8 +38,7 @@ ScenePreSelect::ScenePreSelect(): SceneBase(SkinType::PRE_SELECT, 240)
     {
         // score db
         LOG_INFO << "[List] Initializing score.db...";
-        std::string scoreDBPath = (ConfigMgr::Profile()->getPath() / "score.db").u8string();
-        g_pScoreDB = std::make_shared<ScoreDB>(scoreDBPath.c_str());
+        g_pScoreDB = std::make_shared<ScoreDB>(ConfigMgr::Profile()->getPath() / "score.db");
         g_pScoreDB->preloadScore();
 
         // song db

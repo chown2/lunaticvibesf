@@ -27,6 +27,7 @@ protected:
 public:
     ScoreDB() = delete;
     ScoreDB(const char* path);
+    ScoreDB(const Path& path) : ScoreDB(path.u8string().c_str()) {}
     ~ScoreDB() override = default;
     ScoreDB(ScoreDB&) = delete;
     ScoreDB& operator= (ScoreDB&) = delete;
