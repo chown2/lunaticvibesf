@@ -9,7 +9,7 @@ void imguiMonitorLR2DST()
 	assert(IsMainThread());
 	if (!imguiShowMonitorLR2DST) return;
 
-	if (ImGui::Begin("LR2 dst_option (F1)", NULL, ImGuiWindowFlags_NoCollapse))
+	if (ImGui::Begin("LR2 dst_option (F1)", &imguiShowMonitorLR2DST, ImGuiWindowFlags_NoCollapse))
 	{
 		char titleBuf[32] = { 0 };
 		for (int i = 0; i <= 1099; i += 100)
@@ -42,7 +42,7 @@ void imguiMonitorNumber()
 	assert(IsMainThread());
 	if (!imguiShowMonitorNumber) return;
 
-	if (ImGui::Begin("Numbers (F2)", NULL, ImGuiWindowFlags_NoCollapse))
+	if (ImGui::Begin("Numbers (F2)", &imguiShowMonitorNumber, ImGuiWindowFlags_NoCollapse))
 	{
 		char titleBuf[32] = { 0 };
 		for (int i = 0; i <= 699; i += 20)
@@ -77,7 +77,7 @@ void imguiMonitorOption()
 	assert(IsMainThread());
 	if (!imguiShowMonitorOption) return;
 
-	if (ImGui::Begin("Options (F3)", NULL, ImGuiWindowFlags_NoCollapse))
+	if (ImGui::Begin("Options (F3)", &imguiShowMonitorOption, ImGuiWindowFlags_NoCollapse))
 	{
 		char titleBuf[32] = { 0 };
 		for (int i = 0; i <= 149; i += 20)
@@ -100,7 +100,7 @@ void imguiMonitorSlider()
 	assert(IsMainThread());
 	if (!imguiShowMonitorSlider) return;
 
-	if (ImGui::Begin("Sliders (F4)", NULL, ImGuiWindowFlags_NoCollapse))
+	if (ImGui::Begin("Sliders (F4)", &imguiShowMonitorSlider, ImGuiWindowFlags_NoCollapse))
 	{
 		char titleBuf[32] = { 0 };
 		for (int i = 0; i <= 99; i += 20)
@@ -123,7 +123,7 @@ void imguiMonitorSwitch()
 	assert(IsMainThread());
 	if (!imguiShowMonitorSwitch) return;
 
-	if (ImGui::Begin("Switches (F5)", NULL, ImGuiWindowFlags_NoCollapse))
+	if (ImGui::Begin("Switches (F5)", &imguiShowMonitorSwitch, ImGuiWindowFlags_NoCollapse))
 	{
 		char titleBuf[32] = { 0 };
 		for (int i = 0; i <= 149; i += 100)
@@ -156,7 +156,7 @@ void imguiMonitorText()
 	assert(IsMainThread());
 	if (!imguiShowMonitorText) return;
 
-	if (ImGui::Begin("Text (F6)", NULL, ImGuiWindowFlags_NoCollapse))
+	if (ImGui::Begin("Text (F6)", &imguiShowMonitorText, ImGuiWindowFlags_NoCollapse))
 	{
 		char titleBuf[32] = { 0 };
 		for (int i = 0; i <= (int)IndexText::TEXT_COUNT; i += 20)
@@ -179,7 +179,7 @@ void imguiMonitorBargraph()
 	assert(IsMainThread());
 	if (!imguiShowMonitorBargraph) return;
 
-	if (ImGui::Begin("Bar graphs (F7)", NULL, ImGuiWindowFlags_NoCollapse))
+	if (ImGui::Begin("Bar graphs (F7)", &imguiShowMonitorBargraph, ImGuiWindowFlags_NoCollapse))
 	{
 		char titleBuf[32] = { 0 };
 		for (int i = 0; i <= 99; i += 20)
@@ -202,7 +202,7 @@ void imguiMonitorTimer()
 	assert(IsMainThread());
 	if (!imguiShowMonitorTimer) return;
 
-	if (ImGui::Begin("Timers (F8)", NULL, ImGuiWindowFlags_NoCollapse))
+	if (ImGui::Begin("Timers (F8)", &imguiShowMonitorTimer, ImGuiWindowFlags_NoCollapse))
 	{
 		char titleBuf[32] = { 0 };
 		for (int i = 0; i <= 299; i += 20)
