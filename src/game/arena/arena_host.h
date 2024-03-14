@@ -4,6 +4,7 @@
 #include <future>
 #include <shared_mutex>
 #include <boost/asio.hpp>
+#include <utility>
 
 #include "common/asynclooper.h"
 #include "common/beat.h"
@@ -87,7 +88,7 @@ private:
 		void addTaskWaitingForResponse(int messageIndex, std::shared_ptr<std::vector<unsigned char>> msg)
 		{
 			std::unique_lock l(tasksWaitingForResponseMutex);
-			tasksWaitingForResponse[messageIndex] = {lunaticvibes::Time(), msg, 0, false};
+			tasksWaitingForResponse[messageIndex] = {lunaticvibes::Time(), std::move(msg), 0, false};
 		}
 	};
 	int clientID = 0;

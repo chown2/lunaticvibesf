@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <string>
+#include <utility>
 #include <vector>
 #include <future>
 #include <boost/asio.hpp>
@@ -70,7 +71,7 @@ private:
 	void addTaskWaitingForResponse(int messageIndex, std::shared_ptr<std::vector<unsigned char>> msg)
 	{
 		std::unique_lock l(tasksWaitingForResponseMutex);
-		tasksWaitingForResponse[messageIndex] = { lunaticvibes::Time(), msg, 0, false };
+		tasksWaitingForResponse[messageIndex] = { lunaticvibes::Time(), std::move(msg), 0, false };
 	}
 
 public:
