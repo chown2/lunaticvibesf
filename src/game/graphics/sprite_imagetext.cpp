@@ -14,11 +14,7 @@ SpriteImageText::SpriteImageText(const SpriteImageTextBuilder& builder) : Sprite
 
 void SpriteImageText::updateTextTexture(std::string&& text)
 {
-    if (text.empty())
-    {
-        _draw = false;
-        return;
-    }
+    // NOTE: we need to draw empty text too, to keep empty input fields selectable.
 
     text = text;
 
