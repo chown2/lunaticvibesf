@@ -297,7 +297,8 @@ enum class DeleteScoreResult
     Error,
 };
 
-struct HashResult {
+struct HashResult
+{
     // std::nullopt if error.
     std::optional<std::string> hash;
 };
