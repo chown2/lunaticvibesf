@@ -57,7 +57,7 @@ void SpriteImageText::updateTextRect()
 
     // size
     double sizeFactor = 1.0;
-    if (_current.rect.h != _drawRect.h)
+    if (_current.rect.h != _drawRect.h && _drawRect.h != 0)
     {
         sizeFactor = (double)_current.rect.h / _drawRect.h;
         for (auto& [c, r] : _drawList)
