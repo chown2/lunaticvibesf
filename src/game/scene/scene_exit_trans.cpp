@@ -1,4 +1,5 @@
 #include "scene_exit_trans.h"
+#include "common/log.h"
 #include "scene_context.h"
 
 SceneExitTrans::SceneExitTrans() : SceneBase(SkinType::EXIT_TRANS, 240)

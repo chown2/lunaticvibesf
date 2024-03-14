@@ -3,6 +3,7 @@
 #include <plog/Init.h>
 #include <plog/Appenders/ColorConsoleAppender.h>
 #include <plog/Formatters/TxtFormatter.h>
+#include "common/sysutil.h"
 #include "config/config_mgr.h"
 
 bool gEventQuit;

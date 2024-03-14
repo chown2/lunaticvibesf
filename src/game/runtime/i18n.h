@@ -3,6 +3,7 @@
 #include <array>
 #include <vector>
 #include <map>
+#include "common/sysutil.h"
 #include "common/types.h"
 namespace i18nText
 {

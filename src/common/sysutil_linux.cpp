@@ -13,6 +13,7 @@
 #include <unistd.h>
 
 #include "common/utils.h"
+#include <common/log.h>
 
 static std::thread::id s_main_thread {};
 

@@ -1,4 +1,7 @@
 #include "arena_host.h"
+
+#include "common/encoding.h"
+#include "common/log.h"
 #include "arena_data.h"
 #include "arena_internal.h"
 #include "cereal/cereal.hpp"

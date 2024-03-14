@@ -4,6 +4,8 @@
 #include "fmod_errors.h"
 #include <cstdlib>
 
+#include "common/log.h"
+#include "common/types.h"
 #include "common/utils.h"
 #include "config/config_mgr.h"
 

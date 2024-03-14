@@ -13,6 +13,8 @@
 #include <string>
 #include <vector>
 
+#include "common/types.h"
+
 // global control pointer, do not modify
 inline SDL_Renderer* gFrameRenderer;
 inline SDL_Texture* gInternalRenderTarget;

@@ -7,6 +7,7 @@
 #include <boost/format.hpp>
 #include <imgui.h>
 
+#include "common/sysutil.h"
 #include "common/coursefile/lr2crs.h"
 #include "common/entry/entry_arena.h"
 #include "common/entry/entry_course.h"

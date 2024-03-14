@@ -5,6 +5,7 @@
 #include "game/sound/sound_sample.h"
 
 #include "game/arena/arena_data.h"
+#include "common/log.h"
 
 SceneDecide::SceneDecide() : SceneBase(SkinType::DECIDE, 1000)
 {

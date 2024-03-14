@@ -1,4 +1,6 @@
 #include "scene_mgr.h"
+
+#include "common/log.h"
 #include "scene_context.h"
 #include "scene_pre_select.h"
 #include "scene_select.h"

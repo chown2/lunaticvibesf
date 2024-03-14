@@ -4,6 +4,8 @@
 
 #include "cereal/archives/portable_binary.hpp"
 
+#include "common/log.h"
+
 using namespace Arena;
 
 struct NetworkPayload

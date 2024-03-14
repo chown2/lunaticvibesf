@@ -1,4 +1,6 @@
 #include "skin_lr2_debug.h"
+
+#include "common/sysutil.h"
 #include "game/runtime/state.h"
 #include "imgui.h"
 

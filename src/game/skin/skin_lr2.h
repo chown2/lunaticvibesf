@@ -6,6 +6,8 @@
 #include <map>
 #include <functional>
 #include <stack>
+
+#include "common/encoding.h"
 #include "common/types.h"
 #include "skin.h"
 #include "game/graphics/sprite_lane.h"

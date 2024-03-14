@@ -5,6 +5,8 @@
 #include <future>
 #include <boost/asio.hpp>
 
+#include "common/beat.h"
+#include "common/hash.h"
 #include "common/types.h"
 #include "common/asynclooper.h"
 

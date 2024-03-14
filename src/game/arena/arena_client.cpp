@@ -2,6 +2,8 @@
 #include "arena_data.h"
 #include "arena_internal.h"
 #include "cereal/archives/portable_binary.hpp"
+#include "common/encoding.h"
+#include "common/log.h"
 #include "game/scene/scene_context.h"
 #include "game/runtime/i18n.h"
 #include "re2/re2.h"

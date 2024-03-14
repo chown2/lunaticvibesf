@@ -1,8 +1,10 @@
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 
+#include "common/utils.h"
 #include "sysutil.h"
 
+#include <chrono>
 #include <cstdio>
 #include <filesystem>
 

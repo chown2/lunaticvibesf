@@ -3,6 +3,7 @@
 #include <array>
 #include <string>
 #include <thread>
+#include "common/beat.h"
 #include "sound_driver.h"
 #include "fmod.hpp"
 #include "common/types.h"

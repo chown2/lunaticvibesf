@@ -1,6 +1,7 @@
 #include <execution>
 #include "scene.h"
 #include "common/beat.h"
+#include "common/sysutil.h"
 #include "game/runtime/state.h"
 #include "game/runtime/generic_info.h"
 #include "game/skin/skin_mgr.h"
