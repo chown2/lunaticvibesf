@@ -7,6 +7,7 @@
 #include <SDL_video.h>
 
 #include <filesystem>
+#include <limits>
 #include <memory>
 #include <shared_mutex>
 #include <string>
@@ -101,7 +102,7 @@ public:
     bool operator== (const Rect& rhs) const;
     bool operator!= (const Rect& rhs) const;
 };
-inline static Rect RECT_FULL = Rect(0, 0, 0xDEADBEEF, 0xDEADBEEF);
+inline static const Rect RECT_FULL = Rect(0, 0, std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
 
 // RectF: x, y, w, h
 class RectF : public SDL_FRect
@@ -118,7 +119,8 @@ public:
     bool operator== (const RectF& rhs) const;
     bool operator!= (const RectF& rhs) const;
 };
-inline static RectF RECTF_FULL = RectF(0, 0, HUGE_VALF, HUGE_VALF);
+inline static const RectF RECTF_FULL =
+    RectF(0, 0, std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
 
 ////////////////////////////////////////////////////////////////////////////////
 // SDL_Image loads pictures into SDL_Surface instances
