@@ -79,4 +79,5 @@ endif()
 
 #########################################################################
 # PACKAGING
+set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 include(CPack)
