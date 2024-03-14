@@ -1,21 +1,5 @@
 #pragma once
 
-// DO NOT ADD IMPLEMENTATIONS HERE
-
-// common
-#include "asynclooper.h"
-#include "beat.h"
-#include "encoding.h"
-#include "fraction.h"
-#include "log.h"
-#include "meta.h"
-#include "sysutil.h"
-#include "types.h"
-#include "hash.h"
-#include "utils.h"
-#include "chartformat/chartformat.h"
-#include "entry/entry.h"
-
 // std
 #include <algorithm>
 #include <array>
