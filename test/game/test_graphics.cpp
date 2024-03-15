@@ -9,7 +9,7 @@ public:
 };
 
 static Rect TEST_RECT{ 0, 0, 256, 256 };
-static lunaticvibes::Time t0{ 1 }, t1{ 2 }, t2{ 3 }, t3{ 4 }, t4{ 5 }, t5{ 6 }, t6{ 7 }, t7{ 8 };
+static constexpr lunaticvibes::Time t0{1}, t1{2}, t2{3}, t3{4}, t4{5}, t5{6}, t6{7}, t7{8};
 class mock_Texture : public Texture
 {
 public:

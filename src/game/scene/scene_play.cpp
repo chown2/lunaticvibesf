@@ -2788,7 +2788,7 @@ void ScenePlay::procCommonNotes()
 
 void ScenePlay::changeKeySampleMapping(const lunaticvibes::Time& t)
 {
-    static const lunaticvibes::Time MIN_REMAP_INTERVAL{ 1000 };
+    static constexpr lunaticvibes::Time MIN_REMAP_INTERVAL{ 1000 };
 
     auto changeKeySample = [&](Input::Pad k, int slot)
     {

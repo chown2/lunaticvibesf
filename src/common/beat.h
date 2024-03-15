@@ -43,13 +43,14 @@ private:
 	decltype(std::declval<timeNormRes>().count()) _regular;
 	decltype(std::declval<timeHighRes>().count()) _highres;
 public:
+	// TODO: have a separate helper that would construct with current time.
 	Time()
 	{
 		auto now = std::chrono::system_clock::now().time_since_epoch();
 		_regular = std::chrono::duration_cast<timeNormRes>(now).count();
 		_highres = std::chrono::duration_cast<timeHighRes>(now).count();
 	}
-	Time(long long n, bool init_with_high_resolution_timestamp = false)
+	constexpr Time(long long n, bool init_with_high_resolution_timestamp = false) : _regular(), _highres()
 	{
 		if (init_with_high_resolution_timestamp || n > LLONG_MAX / 1000000)
 		{
@@ -62,31 +63,29 @@ public:
 			_highres = std::chrono::duration_cast<timeHighRes>(timeNormRes(n)).count();
 		}
 	}
-	Time(const Time& t) :_regular(t._regular), _highres(t._highres) {}
-	~Time() {}
 
-	static Time singleBeatLengthFromBPM(BPM bpm)
+	[[nodiscard]] static constexpr Time singleBeatLengthFromBPM(BPM bpm)
 	{
 		using namespace std::chrono;
 		return Time(6e4 / bpm * duration_cast<timeHighRes>(1ms).count(), true);
 	}
 
-	Time operator-  () const { return Time(-_highres, true); }
-	Time operator+  (const Time& rhs) const { Time tmp(*this); tmp._highres += rhs._highres; tmp._regular = tmp._highres / 1000000; return tmp; }
-	Time operator-  (const Time& rhs) const { Time tmp(*this); tmp._highres -= rhs._highres; tmp._regular = tmp._highres / 1000000; return tmp; }
-	Time operator*  (const double rhs) const { Time tmp(*this); tmp._highres *= rhs; tmp._regular = tmp._highres / 1000000; return tmp; }
-	Time& operator+= (const Time& rhs) { _highres += rhs._highres; _regular = _highres / 1000000; return *this; }
-	Time& operator-= (const Time& rhs) { _highres -= rhs._highres; _regular = _highres / 1000000; return *this; }
-	bool   operator<  (const Time& rhs) const { return _highres < rhs._highres; }
-	bool   operator>  (const Time& rhs) const { return _highres > rhs._highres; }
-	bool   operator<= (const Time& rhs) const { return _highres <= rhs._highres; }
-	bool   operator>= (const Time& rhs) const { return _highres >= rhs._highres; }
-	bool   operator== (const Time& rhs) const { return _highres == rhs._highres; }
-	bool   operator!= (const Time& rhs) const { return _highres != rhs._highres; }
+	constexpr Time operator- () const { return Time(-_highres, true); }
+	constexpr Time operator+ (const Time& rhs) const { return {_highres + rhs._highres, true}; }
+	constexpr Time operator- (const Time& rhs) const { return {_highres - rhs._highres, true}; }
+	constexpr Time operator* (const double rhs) const { return {static_cast<long>(_highres * rhs), true}; }
+	constexpr Time& operator+= (const Time& rhs) { _highres += rhs._highres; _regular = _highres / 1000000; return *this; }
+	constexpr Time& operator-= (const Time& rhs) { _highres -= rhs._highres; _regular = _highres / 1000000; return *this; }
+	constexpr bool operator< (const Time& rhs) const { return _highres < rhs._highres; }
+	constexpr bool operator> (const Time& rhs) const { return _highres > rhs._highres; }
+	constexpr bool operator<= (const Time& rhs) const { return _highres <= rhs._highres; }
+	constexpr bool operator>= (const Time& rhs) const { return _highres >= rhs._highres; }
+	constexpr bool operator== (const Time& rhs) const { return _highres == rhs._highres; }
+	constexpr bool operator!= (const Time& rhs) const { return _highres != rhs._highres; }
 	friend inline std::ostream& operator<< (std::ostream& os, const Time& t) { return os << t._regular << "ms / " << t._highres << "ns"; }
 
-	constexpr decltype(_regular) norm() const { return _regular; }  // ms
-	constexpr decltype(_highres) hres() const { return _highres; }  // ns
+	[[nodiscard]] constexpr auto norm() const { return _regular; }  // ms
+	[[nodiscard]] constexpr auto hres() const { return _highres; }  // ns
 };
 #pragma warning(pop)
 
