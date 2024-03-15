@@ -562,11 +562,6 @@ void funEditing(const SDL_TextEditingEvent& e)
     }
     else
     {
-        if (e.length > 0)
-        {
-            textBufSuffix = textBuf.substr(e.start + e.length);
-            textBuf.erase(e.start, textBuf.npos);
-        }
         funUpdateText(textBuf + e.text + textBufSuffix);
     }
 }
