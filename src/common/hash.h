@@ -27,15 +27,6 @@ public:
             std::memcpy(data, ubin, _Len);
         }
     }
-    Hash(const Hash<_Len>& rhs)
-    {
-        reset();
-        if (!rhs.empty())
-        {
-            set = true;
-            std::memcpy(data, rhs.data, _Len);
-        }
-    }
 
     constexpr size_t length() const { return _Len; }
     bool empty() const { return !set; }
