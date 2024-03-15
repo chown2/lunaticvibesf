@@ -47,13 +47,14 @@ private:
     std::shared_mutex previewMutex;
     enum
     {
-        PREVIEW_NONE,
-        PREVIEW_CHART,
-        PREVIEW_LOAD,
-        PREVIEW_LOADED,
+        PREVIEW_START_CHART_LOADING,
+        PREVIEW_LOADING_CHART,
+        PREVIEW_START_SAMPLE_LOADING,
+        PREVIEW_LOADING_SAMPLES,
+        PREVIEW_READY,
         PREVIEW_PLAY,
         PREVIEW_FINISH,
-    } previewState = PREVIEW_NONE;
+    } previewState = PREVIEW_START_CHART_LOADING;
     bool previewStandalone = false; // true if chart has a preview sound track
     long long previewStandaloneLength = 0;
     std::shared_ptr<ChartFormatBase> previewChart = nullptr;
@@ -145,7 +146,7 @@ protected:
 
 protected:
     void updatePreview();
-    void postStopPreview();
+    void postStartPreview();
 
 /// //////////////////////////////////////////////////////
 protected:

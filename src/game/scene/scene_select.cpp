@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <functional>
 #include <memory>
 #include <optional>
 
@@ -503,7 +504,7 @@ SceneSelect::~SceneSelect()
         }
     }
 
-    postStopPreview();
+    postStartPreview();
     {
         // safe end loading
         std::unique_lock l(previewMutex);
@@ -541,7 +542,7 @@ void SceneSelect::_updateAsync()
 
         State::set(IndexTimer::LIST_MOVE, t.norm());
         navigateTimestamp = t;
-        postStopPreview();
+        postStartPreview();
     }
 
     if (gSelectContext.cursorClick != gSelectContext.highlightBarIndex)
@@ -553,7 +554,7 @@ void SceneSelect::_updateAsync()
         gSelectContext.highlightBarIndex = gSelectContext.cursorClick;
 
         navigateTimestamp = t;
-        postStopPreview();
+        postStartPreview();
 
         std::unique_lock<std::shared_mutex> u(gSelectContext._mutex);
         setBarInfo();
@@ -630,7 +631,7 @@ void SceneSelect::_updateAsync()
         if (gSelectContext.selectedEntryIndex != idx_new)
         {
             navigateTimestamp = t;
-            postStopPreview();
+            postStartPreview();
 
             std::unique_lock<std::shared_mutex> u(gSelectContext._mutex);
             gSelectContext.selectedEntryIndex = idx_new;
@@ -670,7 +671,7 @@ void SceneSelect::_updateAsync()
         sortSongList();
 
         navigateTimestamp = t;
-        postStopPreview();
+        postStartPreview();
 
         std::unique_lock<std::shared_mutex> u(gSelectContext._mutex);
         gSelectContext.selectedEntryIndex = 0;
@@ -2417,7 +2418,7 @@ void SceneSelect::navigateUpBy1(const lunaticvibes::Time& t)
     if (!gSelectContext.entries.empty())
     {
         navigateTimestamp = t;
-        postStopPreview();
+        postStartPreview();
 
         std::unique_lock<std::shared_mutex> u(gSelectContext._mutex);
         gSelectContext.selectedEntryIndex = (gSelectContext.entries.size() + gSelectContext.selectedEntryIndex - 1) % gSelectContext.entries.size();
@@ -2438,7 +2439,7 @@ void SceneSelect::navigateDownBy1(const lunaticvibes::Time& t)
     if (!gSelectContext.entries.empty())
     {
         navigateTimestamp = t;
-        postStopPreview();
+        postStartPreview();
 
         std::unique_lock<std::shared_mutex> u(gSelectContext._mutex);
         gSelectContext.selectedEntryIndex = (gSelectContext.selectedEntryIndex + 1) % gSelectContext.entries.size();
@@ -2456,7 +2457,7 @@ void SceneSelect::navigateEnter(const lunaticvibes::Time& t)
     if (!gSelectContext.entries.empty())
     {
         navigateTimestamp = t;
-        postStopPreview();
+        postStartPreview();
 
         std::unique_lock<std::shared_mutex> u(gSelectContext._mutex);
 
@@ -2571,7 +2572,7 @@ void SceneSelect::navigateBack(const lunaticvibes::Time& t, bool sound)
     if (gSelectContext.backtrace.size() >= 2)
     {
         navigateTimestamp = t;
-        postStopPreview();
+        postStartPreview();
 
         std::unique_lock<std::shared_mutex> u(gSelectContext._mutex);
 
@@ -2922,7 +2923,7 @@ void SceneSelect::searchSong(const std::string& text)
     sortSongList();
 
     navigateTimestamp = lunaticvibes::Time();
-    postStopPreview();
+    postStartPreview();
 
     gSelectContext.selectedEntryIndex = 0;
     setBarInfo();
@@ -2946,13 +2947,71 @@ void SceneSelect::searchSong(const std::string& text)
     SoundMgr::playSysSample(SoundChannelType::KEY_SYS, eSoundSample::SOUND_F_OPEN);
 }
 
+// returns empty Path on error.
+Path getChartPath(const std::shared_ptr<EntryBase>& entry)
+{
+    if (entry == nullptr)
+        return {};
+
+    const auto type = entry->type();
+
+    if (type == eEntryType::SONG || type == eEntryType::RIVAL_SONG)
+    {
+        auto chart = std::reinterpret_pointer_cast<EntryFolderSong>(entry)->getCurrentChart();
+        if (chart)
+            return chart->absolutePath;
+    }
+    else if (type == eEntryType::CHART || type == eEntryType::RIVAL_CHART)
+    {
+        auto chart = std::reinterpret_pointer_cast<EntryChart>(entry)->_file;
+        if (chart)
+            return chart->absolutePath;
+    }
+
+    return {};
+}
+
+static constexpr int STANDALONE_PREVIEW_SAMPLE_INDEX = 0;
+
+bool tryLoadStandalonePreview(ChartFormatBMS& bms)
+{
+    for (auto &[key, val] : bms.extraCommands)
+    {
+        if (!lunaticvibes::iequals(key, "PREVIEW") || val.empty())
+            continue;
+
+        Path pWav = PathFromUTF8(val);
+        if (pWav.is_absolute())
+        {
+            LOG_WARNING << "[Select] #PREVIEW contains absolute path, this is forbidden";
+            continue;
+        }
+        pWav = bms.getDirectory() / pWav;
+        if (SoundMgr::loadNoteSample(pWav, STANDALONE_PREVIEW_SAMPLE_INDEX) == 0)
+            return true;
+        // TODO: else: warn
+    }
+
+    // check if preview(*).ogg is valid
+    for (auto& f : fs::directory_iterator(bms.getDirectory()))
+    {
+        if (!lunaticvibes::iequals(f.path().filename().u8string().substr(0, 7), "preview"))
+            continue;
+        const Path& pWav = f.path();
+        if (SoundMgr::loadNoteSample(pWav, STANDALONE_PREVIEW_SAMPLE_INDEX) == 0)
+            return true;
+    }
+
+    return false;
+}
+
 void SceneSelect::updatePreview()
 {
     const EntryList& e = gSelectContext.entries;
     if (e.empty()) return;
 
-    bool previewDedicated = ConfigMgr::get('P', cfg::P_PREVIEW_DEDICATED, false);
-    bool previewDirect = ConfigMgr::get('P', cfg::P_PREVIEW_DIRECT, false);
+    const bool previewDedicated = ConfigMgr::get('P', cfg::P_PREVIEW_DEDICATED, false);
+    const bool previewDirect = ConfigMgr::get('P', cfg::P_PREVIEW_DIRECT, false);
     if (!previewDedicated && !previewDirect)
     {
         std::unique_lock l(previewMutex);
@@ -2962,74 +3021,54 @@ void SceneSelect::updatePreview()
 
     switch (previewState)
     {
-    case PREVIEW_NONE:
+    case PREVIEW_START_CHART_LOADING:
     {
-        {
-            std::unique_lock l(previewMutex);
-            previewState = PREVIEW_LOAD;
-        }
-
         Path previewChartPath;
-        eEntryType type = eEntryType::UNKNOWN;
+        size_t entryIndex;
         {
-            std::shared_lock<std::shared_mutex> s(gSelectContext._mutex);
-            if (!gSelectContext.entries.empty())
-            {
-                const auto& entry = gSelectContext.entries[gSelectContext.selectedEntryIndex].first;
-                type = entry->type();
-
-                if (type == eEntryType::SONG || type == eEntryType::RIVAL_SONG)
-                {
-                    auto pFile = std::reinterpret_pointer_cast<EntryFolderSong>(entry)->getCurrentChart();
-                    if (pFile) previewChartPath = pFile->absolutePath;
-                }
-                else if (type == eEntryType::CHART || type == eEntryType::RIVAL_CHART)
-                {
-                    auto pFile = std::reinterpret_pointer_cast<EntryChart>(entry)->_file;
-                    if (pFile) previewChartPath = pFile->absolutePath;
-                }
-            }
+            std::shared_lock l{gSelectContext._mutex};
+            entryIndex = gSelectContext.selectedEntryIndex;
+            previewChartPath = getChartPath(gSelectContext.entries[entryIndex].first);
         }
         if (previewChartPath.empty())
         {
+            // No chart path for current entry, e.g. not a song entry.
             std::unique_lock l(previewMutex);
             previewState = PREVIEW_FINISH;
             return;
         }
 
-        // create Chart object
         {
+            LOG_DEBUG << "[Select] Starting chart loading -> PREVIEW_LOADING_CHART";
             std::unique_lock l(previewMutex);
-            previewState = PREVIEW_CHART;
+            previewState = PREVIEW_LOADING_CHART;
             previewChart.reset();
         }
+
         if (_previewChartLoading.joinable())
             _previewChartLoading.join();
-        _previewChartLoading = std::thread([&, previewChartPath, type]()
+        _previewChartLoading = std::thread([&, previewChartPath, entryIndex]() {
+            std::shared_ptr<ChartFormatBase> previewChartTmp =
+                ChartFormatBase::createFromFile(previewChartPath, gPlayContext.randomSeed);
+            if (std::shared_lock l{gSelectContext._mutex}; entryIndex != gSelectContext.selectedEntryIndex)
             {
-                std::shared_ptr<ChartFormatBase> previewChartTmp;
-                if (type == eEntryType::SONG || type == eEntryType::RIVAL_SONG)
-                {
-                    previewChartTmp = ChartFormatBase::createFromFile(previewChartPath, gPlayContext.randomSeed);
-                }
-                else
-                {
-                    previewChartTmp = ChartFormatBase::createFromFile(previewChartPath, gPlayContext.randomSeed);
-                }
+                LOG_DEBUG << "[Select] Chart changed, discarding";
+                return;
+            }
 
-                {
-                    std::unique_lock l(previewMutex);
-                    if (previewState == PREVIEW_CHART)
-                    {
-                        previewChart = previewChartTmp;
-                    }
-                }
-            });
+            LOG_DEBUG << "[Select] Chart loaded -> PREVIEW_START_SAMPLE_LOADING";
+            std::unique_lock l(previewMutex);
+            previewChart = std::move(previewChartTmp);
+            previewState = PREVIEW_START_SAMPLE_LOADING;
+        });
 
-            break;
+        break;
     }
 
-    case PREVIEW_CHART:
+    case PREVIEW_LOADING_CHART:
+        break;
+
+    case PREVIEW_START_SAMPLE_LOADING:
     {
         std::shared_ptr<ChartFormatBase> previewChartTmp;
         {
@@ -3038,10 +3077,9 @@ void SceneSelect::updatePreview()
                 break;
 
             previewChartTmp = previewChart;
+            previewStandalone = false;
+            previewStandaloneLength = 0;
         }
-
-        previewStandalone = false;
-        previewStandaloneLength = 0;
 
         // load chart object from Chart object
         switch (previewChartTmp->type())
@@ -3051,53 +3089,21 @@ void SceneSelect::updatePreview()
             auto bms = std::reinterpret_pointer_cast<ChartFormatBMS>(previewChartTmp);
 
             if (previewDedicated)
-            {
-                // check if #PREVIEW is valid
-                for (auto& [key, val] : bms->extraCommands)
-                {
-                    if (lunaticvibes::iequals(key, "PREVIEW") && !val.empty())
-                    {
-                        Path pWav = PathFromUTF8(val);
-                        if (!pWav.is_absolute())
-                            pWav = bms->getDirectory() / pWav;
-                        if (SoundMgr::loadNoteSample(pWav, 0) == 0)
-                            previewStandalone = true;
-
-                        break;
-                    }
-                }
-                // check if preview(*).ogg is valid
-                if (!previewStandalone)
-                {
-                    for (auto& f : fs::directory_iterator(bms->getDirectory()))
-                    {
-                        if (lunaticvibes::iequals(f.path().filename().u8string().substr(0, 7), "preview"))
-                        {
-                            const Path& pWav = f.path();
-                            if (SoundMgr::loadNoteSample(pWav, 0) == 0)
-                            {
-                                previewStandalone = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
+                previewStandalone = tryLoadStandalonePreview(*bms);
 
             if (previewStandalone)
             {
-                LOG_DEBUG << "[Select] Preview dedicated";
-
+                LOG_DEBUG << "[Select] Preview dedicated -> PREVIEW_READY";
                 std::unique_lock l(previewMutex);
-                previewState = PREVIEW_LOADED;
+                previewState = PREVIEW_READY;
             }
             else if (previewDirect)
             {
-                LOG_DEBUG << "[Select] Preview direct";
+                LOG_DEBUG << "[Select] Preview direct -> PREVIEW_LOADING_SAMPLES";
 
                 {
                     std::unique_lock l(previewMutex);
-                    previewState = PREVIEW_LOAD;
+                    previewState = PREVIEW_LOADING_SAMPLES;
                 }
 
                 gChartContext.isSampleLoaded = false;
@@ -3114,62 +3120,57 @@ void SceneSelect::updatePreview()
                     SoundMgr::freeNoteSamples();
                     auto chartDir = bms->getDirectory();
 
-                    int wavTotal = 0;
-                    for (const auto& it : bms->wavFiles)
-                    {
-                        if (!it.empty()) ++wavTotal;
-                    }
+                    const int wavTotal =
+                        std::count_if(bms->wavFiles.begin(), bms->wavFiles.end(), std::not_fn(&std::string::empty));
                     if (wavTotal != 0)
                     {
+                        // FIXME: also account for scene changes. As is, it hangs while loading samples on scene change.
+                        static const auto shouldDiscard = [](SceneSelect& s, const std::shared_ptr<ChartFormatBMS>& bms) {
+                            if (gAppIsExiting) return true;
+                            // Preview chart changed, don't process remaining files.
+                            if (std::shared_lock l(s.previewMutex); bms != s.previewChart) return true;
+                            return false;
+                        };
+
                         boost::asio::thread_pool pool(std::max(1u, std::thread::hardware_concurrency() - 2));
+                        // TODO(C++20): use std::span.
                         for (size_t i = 0; i < bms->wavFiles.size(); ++i)
                         {
                             const auto& wav = bms->wavFiles[i];
                             if (wav.empty()) continue;
 
-                            boost::asio::post(pool, std::bind([&](size_t i)
+                            boost::asio::post(pool, [&, i]() {
+                                if (shouldDiscard(*this, bms)) return;
+                                Path pWav = PathFromUTF8(wav);
+                                if (pWav.is_absolute())
                                 {
-                                    Path pWav = PathFromUTF8(wav);
-                                    if (pWav.is_absolute())
-                                        SoundMgr::loadNoteSample(pWav, i);
-                                    else
-                                        SoundMgr::loadNoteSample((chartDir / pWav), i);
-
-                                    std::shared_lock l(previewMutex);
-                                    if (sceneEnding || previewState != PREVIEW_LOAD)
-                                    {
-                                        LOG_DEBUG << "[Select] Preview loading interrupted";
-                                        return;
-                                    }
-                                }, i));
+                                    LOG_WARNING << "[Select] Absolute path to sample, this is forbidden";
+                                    return;
+                                }
+                                SoundMgr::loadNoteSample((chartDir / pWav), i);
+                            });
                         }
                         pool.wait();
 
+                        if (shouldDiscard(*this, bms))
+                        {
+                            LOG_DEBUG << "[Select] Preview chart has changed, discarding";
+                            return;
+                        }
+
                         gChartContext.isSampleLoaded = true;
                         gChartContext.sampleLoadedHash = bms->fileHash;
-
-                        {
-                            std::unique_lock l(previewMutex);
-                            if (bms == previewChart)
-                            {
-                                LOG_DEBUG << "[Select] Preview loading finished";
-                                previewChartObj = previewChartObjTmp;
-                                previewRuleset = previewRulesetTmp;
-                                previewState = PREVIEW_LOADED;
-                            }
-                            else
-                            {
-                                LOG_DEBUG << "[Select] Preview chart has changed, stop";
-                                previewState = PREVIEW_FINISH;
-                            }
-                        }
+                        LOG_DEBUG << "[Select] Preview loading finished -> PREVIEW_READY";
+                        std::unique_lock l(previewMutex);
+                        previewChartObj = previewChartObjTmp;
+                        previewRuleset = previewRulesetTmp;
+                        previewState = PREVIEW_READY;
                     }
                     });
             }
             else
             {
-                std::unique_lock l(previewMutex);
-                previewState = PREVIEW_FINISH;
+                abort(); // unreachable
             }
             break;
         }
@@ -3181,42 +3182,41 @@ void SceneSelect::updatePreview()
         break;
     }
 
-    case PREVIEW_LOAD:
-    {
-        // wait for the loading thread
+    case PREVIEW_LOADING_SAMPLES:
         break;
-    }
 
-    case PREVIEW_LOADED:
+    case PREVIEW_READY:
     {
         if (previewStandalone)
         {
-            std::unique_lock l(previewMutex);
-
-            LOG_DEBUG << "[Select] Preview start";
-
-            previewStartTime = 0;
-            previewStandaloneLength = SoundMgr::getNoteSampleLength(0);
+            LOG_DEBUG << "[Select] Standalone preview ready -> PREVIEW_PLAY";
 
             SoundMgr::setSysVolume(0.1, 200);
+            auto len = SoundMgr::getNoteSampleLength(STANDALONE_PREVIEW_SAMPLE_INDEX);
+
+            std::unique_lock l(previewMutex);
+            previewStartTime = 0;
+            previewStandaloneLength = len;
             previewState = PREVIEW_PLAY;
         }
         else if (gChartContext.isSampleLoaded)
         {
-            std::unique_lock l(previewMutex);
+            LOG_DEBUG << "[Select] Direct preview ready -> PREVIEW_PLAY";
 
-            LOG_DEBUG << "[Select] Preview start";
+            SoundMgr::setSysVolume(0.1, 200);
+
+            std::unique_lock l(previewMutex);
 
             // start from beginning. It's difficult to seek a chart for playback due to lengthy BGM samples...
             previewStartTime = lunaticvibes::Time() - previewChartObj->getLeadInTime();
             previewEndTime = 0;
             previewRuleset->setStartTime(previewStartTime);
 
-            SoundMgr::setSysVolume(0.1, 200);
             previewState = PREVIEW_PLAY;
         }
         else
         {
+            LOG_WARNING << "[Select] Previews samples are not loaded but the state is 'ready', stopping -> PREVIEW_FINISH";
             std::unique_lock l(previewMutex);
             previewState = PREVIEW_FINISH;
         }
@@ -3232,14 +3232,15 @@ void SceneSelect::updatePreview()
         {
             if (previewStartTime == 0)
             {
+                LOG_DEBUG << "[Select] Starting standalone preview";
                 previewStartTime = lunaticvibes::Time();
 
-                size_t idx = 0;
+                size_t idx = STANDALONE_PREVIEW_SAMPLE_INDEX;
                 SoundMgr::playNoteSample(SoundChannelType::KEY_LEFT, 1, &idx);
             }
             else if ((lunaticvibes::Time() - previewStartTime).norm() > previewStandaloneLength)
             {
-                LOG_DEBUG << "[Select] Preview finished";
+                LOG_DEBUG << "[Select] Standalone preview finished -> PREVIEW_FINISH";
 
                 previewState = PREVIEW_FINISH;
                 SoundMgr::setSysVolume(1.0, 400);
@@ -3286,7 +3287,7 @@ void SceneSelect::updatePreview()
                 }
                 else if ((t - previewEndTime).norm() > 1000)
                 {
-                    LOG_DEBUG << "[Select] Preview finished";
+                    LOG_DEBUG << "[Select] Direct preview finished -> PREVIEW_FINISH";
 
                     previewState = PREVIEW_FINISH;
                     SoundMgr::setSysVolume(1.0, 400);
@@ -3301,18 +3302,15 @@ void SceneSelect::updatePreview()
     }
 }
 
-void SceneSelect::postStopPreview()
+void SceneSelect::postStartPreview()
 {
+    // TODO: print this less often.
+    LOG_DEBUG << "[Select] Preview start -> PREVIEW_START_CHART_LOADING";
     std::unique_lock l(previewMutex);
-
-    if (previewState != PREVIEW_NONE && previewState != PREVIEW_FINISH)
-    {
-        LOG_DEBUG << "[Select] Preview stop";
-    }
 
     SoundMgr::stopNoteSamples();
     SoundMgr::setSysVolume(1.0, 400);
-    previewState = PREVIEW_NONE;
+    previewState = PREVIEW_START_CHART_LOADING;
 }
 
 

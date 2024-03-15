@@ -53,6 +53,7 @@ int SoundMgr::loadNoteSample(const Path& path, size_t sample)
     if (!_inst._initialized) return -255;
     return _inst.driver->loadNoteSample(path, sample);
 }
+// TODO(C++20): use std::span.
 void SoundMgr::playNoteSample(SoundChannelType ch, size_t count, size_t* samples)
 {
     if (!_inst._initialized) return;
