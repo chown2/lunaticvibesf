@@ -523,10 +523,16 @@ void startTextInput(const RectF& textBox, const std::string& oldText, const std:
     ::funUpdateText = funUpdateText;
 
     SDL_Rect r;
-    r.x = (int)std::floor(textBox.x);
-    r.y = (int)std::floor(textBox.y);
-    r.w = (int)std::ceil(textBox.w);
-    r.h = (int)std::ceil(textBox.h);
+    const RectF scaledTextBox{
+        static_cast<float>(textBox.x * canvasScaleX),
+        static_cast<float>(textBox.y * canvasScaleY),
+        static_cast<float>(textBox.w * canvasScaleX),
+        static_cast<float>(textBox.h * canvasScaleY),
+    };
+    r.x = static_cast<int>(std::floor(scaledTextBox.x));
+    r.y = static_cast<int>(std::floor(scaledTextBox.y));
+    r.w = static_cast<int>(std::ceil(scaledTextBox.w));
+    r.h = static_cast<int>(std::ceil(scaledTextBox.h));
     SDL_SetTextInputRect(&r);
     SDL_StartTextInput();
     isEditing = true;
