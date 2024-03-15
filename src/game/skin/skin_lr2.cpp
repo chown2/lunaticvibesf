@@ -3771,7 +3771,7 @@ bool SkinLR2::loadCSV(Path p)
     std::ifstream ifsFile(p, std::ios::binary);
     if (!ifsFile.is_open())
     {
-        LOG_ERROR << "[Skin] File Not Found: " << std::filesystem::absolute(p);
+        LOG_ERROR << "[Skin] File Not Found: " << p;
         csvLineNumber = srcLineNumberParent;
         return false;
     }
