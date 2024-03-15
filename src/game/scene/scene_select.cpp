@@ -3110,9 +3110,8 @@ void SceneSelect::updatePreview()
                         std::count_if(bms->wavFiles.begin(), bms->wavFiles.end(), std::not_fn(&std::string::empty));
                     if (wavTotal != 0)
                     {
-                        // FIXME: also account for scene changes. As is, it hangs while loading samples on scene change.
                         static const auto shouldDiscard = [](SceneSelect& s, const std::shared_ptr<ChartFormatBMS>& bms) {
-                            if (gAppIsExiting) return true;
+                            if (gAppIsExiting || gNextScene != SceneType::PLAY) return true;
                             // Preview chart changed, don't process remaining files.
                             if (std::shared_lock l(s.previewMutex); bms != s.previewChart) return true;
                             return false;
