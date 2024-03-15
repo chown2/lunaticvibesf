@@ -554,7 +554,7 @@ void stopTextInput()
 void funEditing(const SDL_TextEditingEvent& e)
 {
     LOG_DEBUG << "Editing " << e.start << " " << e.length << " " << e.text;
-    if (strlen(e.text) == 0)
+    if (e.length == 0)
     {
         textBuf += textBufSuffix;
         textBufSuffix.clear();
