@@ -2710,7 +2710,6 @@ void ScenePlay::updatePlayTime(const lunaticvibes::Time& rt)
 {
     if (gPlayContext.chartObj[PLAYER_SLOT_PLAYER] != nullptr)
     {
-        auto startTime = rt - State::get(IndexTimer::PLAY_START);
         auto totalTime = gPlayContext.chartObj[PLAYER_SLOT_PLAYER]->getTotalLength().norm();
         auto playtime_s = rt.norm() / 1000;
         auto remaintime_s = totalTime / 1000 - playtime_s;
