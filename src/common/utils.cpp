@@ -426,7 +426,7 @@ std::string convertLR2Path(const std::string& lr2path, std::string_view relative
         return {};
     if (auto p = PathFromUTF8(raw); p.is_absolute())
     {
-        LOG_WARNING << "absolute path in LR2 path, this is forbidden";
+        LOG_WARNING << "absolute path in an LR2 path, this is forbidden, raw=" << raw;
         return {};
     }
 
