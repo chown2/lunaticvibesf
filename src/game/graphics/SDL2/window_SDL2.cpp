@@ -3,6 +3,7 @@
 #include <climits>
 #include <cstdint>
 #include <string>
+#include <utility>
 
 #include <SDL_syswm.h>
 #include <SDL.h>
@@ -513,14 +514,14 @@ void ImGuiNewFrame()
 }
 
 static std::function<void(const std::string&)> funUpdateText;
-void startTextInput(const RectF& textBox, const std::string& oldText, const std::function<void(const std::string&)>& funUpdateText)
+void startTextInput(const RectF& textBox, const std::string& oldText, std::function<void(const std::string&)> funUpdateText)
 {
     LOG_DEBUG << "Start Text Input";
 
     textBuf = oldText;
     textBuf.reserve(32);
 
-    ::funUpdateText = funUpdateText;
+    ::funUpdateText = std::move(funUpdateText);
 
     SDL_Rect r;
     const RectF scaledTextBox{
@@ -537,7 +538,7 @@ void startTextInput(const RectF& textBox, const std::string& oldText, const std:
     SDL_StartTextInput();
     isEditing = true;
 
-    funUpdateText(textBuf);
+    ::funUpdateText(textBuf);
 }
 
 void stopTextInput()
