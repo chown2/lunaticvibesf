@@ -1032,7 +1032,7 @@ int SkinLR2::INCLUDE()
 
         LOG_DEBUG << "[Skin] " << csvLineNumber << ": INCLUDE: " << path;
         loadCSV(path);
-        LOG_DEBUG << "[Skin] " << csvLineNumber << ": INCLUDE END //" << path;
+        LOG_DEBUG << "[Skin] " << csvLineNumber << ": INCLUDE END: " << path;
         return 1;
     }
     return 0;
