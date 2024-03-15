@@ -101,8 +101,6 @@ protected:
     std::function<void()> _updateCallback;
     void updatePrepare();
     void updateSelect();
-    void updateSearch();
-    void updatePanel(unsigned idx);
     void updateFadeout();
 
     void update() override;

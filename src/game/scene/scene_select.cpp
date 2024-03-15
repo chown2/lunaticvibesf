@@ -866,7 +866,6 @@ void SceneSelect::updatePrepare()
 void SceneSelect::updateSelect()
 {
     lunaticvibes::Time t;
-    lunaticvibes::Time rt = t - State::get(IndexTimer::SCENE_START);
 
     if (!refreshingSongList)
     {
@@ -1077,22 +1076,9 @@ void SceneSelect::updateSelect()
     }
 }
 
-void SceneSelect::updateSearch()
-{
-    lunaticvibes::Time t;
-    lunaticvibes::Time rt = t - State::get(IndexTimer::SCENE_START);
-}
-
-void SceneSelect::updatePanel(unsigned idx)
-{
-    lunaticvibes::Time t;
-    lunaticvibes::Time rt = t - State::get(IndexTimer::SCENE_START);
-}
-
 void SceneSelect::updateFadeout()
 {
     lunaticvibes::Time t;
-    lunaticvibes::Time rt = t - State::get(IndexTimer::SCENE_START);
     lunaticvibes::Time ft = t - State::get(IndexTimer::FADEOUT_BEGIN);
 
     if (ft >= pSkin->info.timeOutro)
