@@ -1149,6 +1149,12 @@ void ScenePlay::loadChart()
         gChartContext.bgaLoadedHash.reset();
     }
 
+    static const auto shouldDiscard = [](const ScenePlay& s) {
+        if (gAppIsExiting) return true;
+        if (s.state != ePlayState::LOADING) return true;
+        return false;
+    };
+
     // load samples
     if ((!gChartContext.isSampleLoaded || gChartContext.hash != gChartContext.sampleLoadedHash) && !sceneEnding)
     {
@@ -1176,28 +1182,34 @@ void ScenePlay::loadChart()
             boost::asio::thread_pool pool(std::max(1u, std::thread::hardware_concurrency() - 2));
             for (size_t i = 0; i < _pChart->wavFiles.size(); ++i)
             {
-				if (sceneEnding) break;
+                if (shouldDiscard(*this)) break;
 
                 const auto& wav = _pChart->wavFiles[i];
                 if (wav.empty()) continue;
 
-                boost::asio::post(pool, std::bind([&](size_t i)
+                boost::asio::post(pool, [&, i]() {
+                    if (shouldDiscard(*this)) return;
+                    Path pWav = PathFromUTF8(wav);
+                    if (pWav.is_absolute())
                     {
-                        Path pWav = PathFromUTF8(wav);
-                        if (pWav.is_absolute())
-                            SoundMgr::loadNoteSample(pWav, i);
-                        else
-                            SoundMgr::loadNoteSample((chartDir / pWav), i);
-                        ++wavLoaded;
-                    }, i));
+                        LOG_WARNING << "[Play] Absolute path to sample, this is forbidden";
+                        return;
+                    }
+                    SoundMgr::loadNoteSample((chartDir / pWav), i);
+                    ++wavLoaded;
+                });
             }
             pool.wait();
 
-            if (!sceneEnding)
+            if (shouldDiscard(*this))
             {
-                gChartContext.isSampleLoaded = true;
-                gChartContext.sampleLoadedHash = gChartContext.hash;
+                LOG_DEBUG << "[Play] State changed, discarding samples";
+                return;
             }
+
+            LOG_DEBUG << "[Play] Samples loaded";
+            gChartContext.isSampleLoaded = true;
+            gChartContext.sampleLoadedHash = gChartContext.hash;
         });
     }
     else
@@ -1231,8 +1243,8 @@ void ScenePlay::loadChart()
                 }
 
                 std::list<std::pair<size_t, Path>> mapBgaFiles;
-                auto loadBgaFiles = [&]
-                {
+                auto loadBgaFiles = [&]() {
+                    if (shouldDiscard(*this)) return;
                     for (auto& [i, pBmp] : mapBgaFiles)
                     {
                         if (pBmp.is_absolute())
@@ -1244,7 +1256,7 @@ void ScenePlay::loadChart()
                 };
                 for (size_t i = 0; i < _pChart->bgaFiles.size(); ++i)
                 {
-                    if (sceneEnding) return;
+                    if (shouldDiscard(*this)) return;
                     const auto& bmp = _pChart->bgaFiles[i];
                     if (bmp.empty()) continue;
 
@@ -1257,21 +1269,23 @@ void ScenePlay::loadChart()
                         mapBgaFiles.clear();
                     }
                 }
-                if (!sceneEnding)
+
+                if (shouldDiscard(*this))
                 {
-                    loadBgaFiles();
-                    mapBgaFiles.clear();
+                    LOG_DEBUG << "[Play] State changed, discarding BGA";
+                    return;
                 }
-                if (!sceneEnding)
+
+                LOG_DEBUG << "[Play] BGA loaded";
+                loadBgaFiles();
+                mapBgaFiles.clear();
+                if (bmpLoaded > 0)
                 {
-                    if (bmpLoaded > 0)
-                    {
-                        gPlayContext.bgaTexture->setLoaded();
-                    }
-                    gPlayContext.bgaTexture->setSlotFromBMS(*std::reinterpret_pointer_cast<ChartObjectBMS>(gPlayContext.chartObj[PLAYER_SLOT_PLAYER]));
-                    gChartContext.isBgaLoaded = true;
-                    gChartContext.bgaLoadedHash = gChartContext.hash;
+                    gPlayContext.bgaTexture->setLoaded();
                 }
+                gPlayContext.bgaTexture->setSlotFromBMS(*std::reinterpret_pointer_cast<ChartObjectBMS>(gPlayContext.chartObj[PLAYER_SLOT_PLAYER]));
+                gChartContext.isBgaLoaded = true;
+                gChartContext.bgaLoadedHash = gChartContext.hash;
                 });
         }
         else
