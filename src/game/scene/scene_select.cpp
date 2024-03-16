@@ -842,7 +842,6 @@ void SceneSelect::updatePrepare()
         _input.register_h("SCENE_HOLD", std::bind(&SceneSelect::inputGameHold, this, _1, _2));
         _input.register_r("SCENE_RELEASE", std::bind(&SceneSelect::inputGameRelease, this, _1, _2));
         _input.register_a("SCENE_AXIS", std::bind(&SceneSelect::inputGameAxisSelect, this, _1, _2, _3));
-        _input.loopStart();
 
         State::set(IndexTimer::LIST_MOVE, t.norm());
         State::set(IndexTimer::LIST_MOVE_STOP, t.norm());

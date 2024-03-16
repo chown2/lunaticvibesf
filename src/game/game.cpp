@@ -374,8 +374,8 @@ void mainLoop()
                 scene = SceneMgr::get(currentScene);
                 assert(scene != nullptr);
                 scene->loopStart();
-                scene->inputLoopStart();
-                if (gInCustomize) scene->disableMouseInput();
+                if (!gInCustomize)
+                    scene->inputLoopStart();
             }
         }
 
