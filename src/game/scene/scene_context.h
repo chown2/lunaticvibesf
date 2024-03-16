@@ -119,7 +119,8 @@ struct PlayContextParams
     bool shift2PNotes5KFor7KSkin = false;
 };
 
-std::pair<bool, Option::e_lamp_type> getSaveScoreType();
+// byGauge - ignore full combo+ and limit lamp type by gauge.
+std::pair<bool, Option::e_lamp_type> getSaveScoreType(bool byGauge = true);
 void clearContextPlayForRetry();
 void clearContextPlay();
 

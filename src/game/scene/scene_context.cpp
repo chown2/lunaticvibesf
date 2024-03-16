@@ -21,7 +21,7 @@ OverlayContextParams gOverlayContext;
 std::shared_ptr<SongDB> g_pSongDB;
 std::shared_ptr<ScoreDB> g_pScoreDB;
 
-std::pair<bool, Option::e_lamp_type> getSaveScoreType()
+std::pair<bool, Option::e_lamp_type> getSaveScoreType(bool byGauge)
 {
     if (gInCustomize) return { false, Option::LAMP_NOPLAY };
 
@@ -64,6 +64,21 @@ std::pair<bool, Option::e_lamp_type> getSaveScoreType()
     }
 
     Option::e_lamp_type lampType = Option::e_lamp_type::LAMP_FULLCOMBO; // FIXME change to PERFECT / MAX
+    if (byGauge)
+    {
+        const auto gaugeType = static_cast<Option::e_gauge_type>(State::get(IndexOption::PLAY_GAUGE_TYPE_1P));
+        switch (gaugeType)
+        {
+        case Option::GAUGE_NORMAL: lampType = Option::e_lamp_type::LAMP_NORMAL; break;
+        case Option::GAUGE_HARD: lampType = Option::e_lamp_type::LAMP_HARD; break;
+        case Option::GAUGE_DEATH: lampType = Option::e_lamp_type::LAMP_FULLCOMBO; break;
+        case Option::GAUGE_EASY: lampType = Option::e_lamp_type::LAMP_EASY; break;
+        case Option::GAUGE_PATTACK: lampType = Option::e_lamp_type::LAMP_HARD; break; // TODO: pattack support
+        case Option::GAUGE_GATTACK: lampType = Option::e_lamp_type::LAMP_HARD; break; // TODO gattack support
+        case Option::GAUGE_ASSISTEASY: lampType = Option::e_lamp_type::LAMP_ASSIST; break;
+        case Option::GAUGE_EXHARD: lampType = Option::e_lamp_type::LAMP_EXHARD; break;
+        }
+    }
     return { true, lampType };
 }
 

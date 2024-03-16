@@ -377,7 +377,7 @@ RulesetBMS::RulesetBMS(std::shared_ptr<ChartFormatBase> format, std::shared_ptr<
     }
     modifierTextShort = ssMod.str();
 
-    saveLampMax = getSaveScoreType().second;
+    saveLampMax = getSaveScoreType(false).second;
 
     _lnJudge.fill(JudgeArea::NOTHING);
 
