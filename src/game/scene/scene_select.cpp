@@ -3111,8 +3111,7 @@ void SceneSelect::updatePreview()
                     if (wavTotal != 0)
                     {
                         static const auto shouldDiscard = [](SceneSelect& s, const std::shared_ptr<ChartFormatBMS>& bms) {
-                            if (gAppIsExiting || gNextScene != SceneType::PLAY) return true;
-                            // Preview chart changed, don't process remaining files.
+                            if (gAppIsExiting || gNextScene != SceneType::SELECT) return true;
                             if (std::shared_lock l(s.previewMutex); bms != s.previewChart) return true;
                             return false;
                         };
@@ -3139,7 +3138,7 @@ void SceneSelect::updatePreview()
 
                         if (shouldDiscard(*this, bms))
                         {
-                            LOG_DEBUG << "[Select] Preview chart has changed, discarding";
+                            LOG_DEBUG << "[Select] Scene or preview chart has changed, discarding";
                             return;
                         }
 
