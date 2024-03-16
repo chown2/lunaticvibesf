@@ -3112,7 +3112,9 @@ void SceneSelect::updatePreview()
                     {
                         static const auto shouldDiscard = [](SceneSelect& s, const std::shared_ptr<ChartFormatBMS>& bms) {
                             if (gAppIsExiting || gNextScene != SceneType::SELECT) return true;
-                            if (std::shared_lock l(s.previewMutex); bms != s.previewChart) return true;
+                            if (std::shared_lock l(s.previewMutex);
+                                s.previewChart != bms || s.previewState != PREVIEW_LOADING_SAMPLES)
+                                return true;
                             return false;
                         };
 
