@@ -324,6 +324,7 @@ std::string toUpper(std::string_view s)
 //
 // This function assumes paths without drive letter assignments and
 // operates on strings directly.
+// In addition, directories must be separated by forward slashes.
 //
 // Example:
 // On your system there is a `/tmp/AFileWithUpperCaseInIt`.
@@ -452,8 +453,8 @@ std::string convertLR2Path(const std::string& lr2path, std::string_view relative
     }
 
 #ifndef _WIN32
-    out_path = resolveCaseInsensitivePath(out_path);
     std::replace(out_path.begin(), out_path.end(), '\\', '/');
+    out_path = resolveCaseInsensitivePath(out_path);
 #endif // _WIN32
 
     return out_path;
