@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
     ConfigMgr::selectProfile(ConfigMgr::get('E', cfg::E_PROFILE, cfg::PROFILE_DEFAULT));
     SetLogLevel(ConfigMgr::get("E", cfg::E_LOG_LEVEL, 1));
 
-    Path lr2path = Path(utf8_to_utf32(convertLR2Path(ConfigMgr::get('E', cfg::E_LR2PATH, "."), "LR2files/")));
+    Path lr2path = Path(PathFromUTF8(convertLR2Path(ConfigMgr::get('E', cfg::E_LR2PATH, "."), "LR2files/")));
     if (!fs::is_directory(lr2path))
     {
         LOG_FATAL << "LR2files directory not found! " << lr2path;
