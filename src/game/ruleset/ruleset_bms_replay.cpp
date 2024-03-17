@@ -223,13 +223,6 @@ void RulesetBMSReplay::update(const lunaticvibes::Time& t)
             // TODO: pass lane index in here.
             updateJudge(t, NoteLaneIndex::_, judge->first, judge->second, true);
 
-        if (cmd >= ReplayChart::Commands::Type::JUDGE_LEFT_EXACT_0 && cmd <= ReplayChart::Commands::Type::JUDGE_RIGHT_LANDMINE)
-        {
-            unsigned max = getNoteCount() * 2;
-            _basic.total_acc = 100.0 * exScore / max;
-            _basic.acc = notesExpired ? (100.0 * exScore / notesExpired / 2) : 0;
-        }
-
         itReplayCommand++;
     }
 
