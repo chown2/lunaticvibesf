@@ -121,6 +121,7 @@ void RulesetBMSReplay::update(const lunaticvibes::Time& t)
     while (itReplayCommand != replay->commands.end() && rt.norm() >= (long long)std::round(itReplayCommand->ms * playbackSpeed / gSelectContext.pitchSpeed))
     {
         auto cmd = itReplayCommand->type;
+        auto cmdTime = _startTime.norm() + itReplayCommand->ms;
 
         if (_side == PlaySide::AUTO_2P)
         {
@@ -221,7 +222,7 @@ void RulesetBMSReplay::update(const lunaticvibes::Time& t)
 
         if (auto judge = command_to_judge(cmd); judge.has_value())
             // TODO: pass lane index in here.
-            updateJudge(t, NoteLaneIndex::_, judge->first, judge->second, true);
+            updateJudge(cmdTime, NoteLaneIndex::_, judge->first, judge->second, true);
 
         itReplayCommand++;
     }
