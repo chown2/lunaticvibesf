@@ -776,8 +776,8 @@ void updateDstOpt()
 		case RANK_5: set(324); break;
 		case RANK_6: set(325); break;
 		case RANK_7: set(326); break;
+		case RANK_NONE: [[fallthrough]];
 		case RANK_8: set(327); break;
-		case RANK_NONE: break;
 		}
 	}
 
