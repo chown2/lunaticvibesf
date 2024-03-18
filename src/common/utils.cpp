@@ -367,7 +367,7 @@ static std::string resolveCaseInsensitivePath(std::string input)
             if (!out.empty() && out.back() != '/') {
                 out += '/';
             }
-            out += CURRENT_PATH_RELATIVE_PREFIX;
+            out += prefix;
             segments_traversed += 1;
             continue;
         }
