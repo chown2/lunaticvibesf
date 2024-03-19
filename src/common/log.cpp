@@ -1,6 +1,7 @@
 #include "log.h"
 
 #include <memory>
+#include <ostream>
 #include <sstream>
 
 #include "common/utils.h"
@@ -62,21 +63,45 @@ int InitLogger()
     return 0;
 }
 
-void SetLogLevel(int level)
+namespace lunaticvibes {
+
+static plog::Severity plogSeverityFromLogLevel(const LogLevel level)
 {
-    auto severity = plog::info;
     switch (level)
     {
-    case 0: severity = plog::debug; break;
-    case 1: severity = plog::info; break;
-    case 2: severity = plog::warning; break;
-    case 3: severity = plog::error; break;
-    default: severity = plog::fatal; break;
+    case LogLevel::Fatal: return plog::fatal;
+    case LogLevel::Error: return plog::error;
+    case LogLevel::Warning: return plog::warning;
+    case LogLevel::Info: return plog::info;
+    case LogLevel::Debug: return plog::debug;
+    case LogLevel::Verbose: return plog::verbose;
     }
-    plog::get()->setMaxSeverity(severity);
+    // Normally unreachable.
+    return plog::verbose;
+}
 
+std::ostream& operator<<(std::ostream& os, const LogLevel& level)
+{
+    switch (level)
+    {
+    case LogLevel::Fatal: return os << "Fatal";
+    case LogLevel::Error: return os << "Error";
+    case LogLevel::Warning: return os << "Warning";
+    case LogLevel::Info: return os << "Info";
+    case LogLevel::Debug: return os << "Debug";
+    case LogLevel::Verbose: return os << "Verbose";
+    }
+    // Normally unreachable.
+    return os << "INVALID";
+}
+
+void SetLogLevel(const LogLevel level)
+{
+    plog::get()->setMaxSeverity(plogSeverityFromLogLevel(level));
     LOG_INFO << "[Log] log level set to " << level;
 }
+
+} // namespace lunaticvibes
 
 int FreeLogger()
 {

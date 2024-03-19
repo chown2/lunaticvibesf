@@ -1,4 +1,9 @@
 #include "scene_select.h"
+
+#include <array>
+#include <string>
+
+#include "common/log.h"
 #include "config/config_mgr.h"
 #include "game/sound/sound_mgr.h"
 #include "game/sound/sound_sample.h"
@@ -43,7 +48,6 @@ void SceneSelect::imguiInit()
     old_language_index = imgui_language_index;
 
     imgui_log_level = ConfigMgr::get("E", cfg::E_LOG_LEVEL, 1);
-    SetLogLevel(imgui_log_level);
 
     imguiRefreshFolderList();
     imguiRefreshTableList();
@@ -568,16 +572,13 @@ void SceneSelect::imguiPageOptionsGeneral()
 
         ImGui::TextUnformatted(i18n::c(LOG_LEVEL));
         ImGui::SameLine(infoRowWidth);
-        static const char* imgui_log_level_display[] =
+        static constexpr std::array<const char *, static_cast<size_t>(lunaticvibes::LogLevel::Verbose) + 1>
+            imgui_log_level_display = {
+                "Fatal", "Error", "Warning", "Info", "Debug", "Verbose",
+            };
+        if (ImGui::Combo("##loglevel", &imgui_log_level, imgui_log_level_display.data(), imgui_log_level_display.size()))
         {
-            "Debug",
-            "Info",
-            "Warning",
-            "Error"
-        };
-        if (ImGui::Combo("##loglevel", &imgui_log_level, imgui_log_level_display, sizeof(imgui_log_level_display) / sizeof(char*)))
-        {
-            SetLogLevel(imgui_log_level);
+            lunaticvibes::SetLogLevel(static_cast<lunaticvibes::LogLevel>(imgui_log_level));
             ConfigMgr::set('E', cfg::E_LOG_LEVEL, imgui_log_level);
         }
 
