@@ -95,8 +95,8 @@ public:
 	virtual ~sVideo();
 	int setVideo(const Path& file, double speed, bool loop = false);
 	int unsetVideo();
-	int getW() { return w; }
-	int getH() { return h; }
+	int getW() const { return w; }
+	int getH() const { return h; }
 	bool isPlaying() const { return playing; }
 
 public:
@@ -109,8 +109,8 @@ public:
 	void stopPlaying();
 	void decodeLoop();
 
-	int getDecodedFrames() { return decoded_frames; }
-	AVFrame* getFrame() { return valid ? pFrame.get() : NULL; }
+	int64_t getDecodedFrames() const { return decoded_frames; }
+	AVFrame* getFrame() const { return valid ? pFrame.get() : NULL; }
 
 public:
 	std::shared_mutex video_frame_mutex;
