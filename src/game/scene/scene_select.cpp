@@ -437,6 +437,22 @@ SceneSelect::SceneSelect() : SceneBase(SkinType::MUSIC_SELECT, 250)
     State::set(IndexNumber::GREEN_NUMBER_1P, ConfigMgr::get('P', cfg::P_GREENNUMBER, 300));
     State::set(IndexNumber::GREEN_NUMBER_2P, ConfigMgr::get('P', cfg::P_GREENNUMBER_2P, 300));
 
+    const auto stats = g_pScoreDB->getStats();
+    State::set(IndexNumber::PROFILE_PLAY_COUNT, stats.play_count);
+    State::set(IndexNumber::PROFILE_CLEAR_COUNT, stats.clear_count);
+    State::set(IndexNumber::PROFILE_FAIL_COUNT, stats.play_count - stats.clear_count);
+    State::set(IndexNumber::PROFILE_PERFECT, stats.pgreat);
+    State::set(IndexNumber::PROFILE_GREAT, stats.great);
+    State::set(IndexNumber::PROFILE_GOOD, stats.good);
+    State::set(IndexNumber::PROFILE_BAD, stats.bad);
+    State::set(IndexNumber::PROFILE_POOR, stats.poor);
+    State::set(IndexNumber::PROFILE_RUNNING_COMBO, stats.running_combo);
+    State::set(IndexNumber::PROFILE_RUNNING_COMBO_MAX, stats.max_running_combo);
+    // TODO: if profile was imported from LR2, show trial level from
+    // there, otherwise a static value.
+    State::set(IndexNumber::PROFILE_TRIAL_LEVEL, 0);
+    State::set(IndexNumber::PROFILE_TRIAL_LEVEL_PREV, 0);
+
     lr2skin::button::target_type(0);
 
     if (!gInCustomize)
