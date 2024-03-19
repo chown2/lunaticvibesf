@@ -9,7 +9,7 @@ class TextureVideo : public Texture
 {
 protected:
 	std::shared_ptr<sVideo> pVideo;
-	unsigned decoded_frames = ~0;
+	int64_t decoded_frames = ~0;
 	PixelFormat format;
 	bool updated = false;
 

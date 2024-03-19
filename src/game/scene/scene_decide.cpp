@@ -64,7 +64,6 @@ void SceneDecide::updateStart()
 void SceneDecide::updateSkip()
 {
     auto t = lunaticvibes::Time();
-    auto rt = t - State::get(IndexTimer::SCENE_START);
     auto ft = t - State::get(IndexTimer::FADEOUT_BEGIN);
 
     if (ft.norm() >= pSkin->info.timeOutro)
@@ -76,7 +75,6 @@ void SceneDecide::updateSkip()
 void SceneDecide::updateCancel()
 {
     auto t = lunaticvibes::Time();
-    auto rt = t - State::get(IndexTimer::SCENE_START);
     auto ft = t - State::get(IndexTimer::FADEOUT_BEGIN);
 
     if (ft.norm() >= pSkin->info.timeOutro)

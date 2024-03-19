@@ -381,9 +381,9 @@ void SceneKeyConfig::inputGamePressJoystick(JoystickMask& mask, size_t device, c
         auto s1a = ConfigMgr::Input(keys)->getBindings(Input::Pad::S1A);
         auto s2a = ConfigMgr::Input(keys)->getBindings(Input::Pad::S2A);
 
-        if (pad != Input::Pad::S1A && pad != Input::Pad::S2A ||
-            (pad == Input::Pad::S1L || pad == Input::Pad::S1R) && s1a.getType() == KeyMap::DeviceType::UNDEF ||
-            (pad == Input::Pad::S2L || pad == Input::Pad::S2R) && s2a.getType() == KeyMap::DeviceType::UNDEF)
+        if ((pad != Input::Pad::S1A && pad != Input::Pad::S2A) ||
+            ((pad == Input::Pad::S1L || pad == Input::Pad::S1R) && s1a.getType() == KeyMap::DeviceType::UNDEF) ||
+            ((pad == Input::Pad::S2L || pad == Input::Pad::S2R) && s2a.getType() == KeyMap::DeviceType::UNDEF))
         {
             // Relative Axis +
             for (size_t index = 0; index < InputMgr::MAX_JOYSTICK_AXIS_COUNT; ++index)

@@ -122,7 +122,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
             auto spacePos = std::min(buf.length(), buf.find_first_of(' '));
 
             // supporting single level control flow (#RANDOM, #IF, etc.), matching with LR2's capability
-            if (!randomUsedValues.empty() && randomUsedValues.top().size() < randomValue.top())
+            if (!randomUsedValues.empty() && static_cast<int>(randomUsedValues.top().size()) < randomValue.top())
             {
                 StringContentView v = buf;
                 if (ifValue.empty() && !v.empty() && v[0] == '#' &&
@@ -222,7 +222,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
                     }
                 }
 
-                if (!randomUsedValues.empty() && randomUsedValues.top().size() == randomValueMax.top())
+                if (!randomUsedValues.empty() && static_cast<int>(randomUsedValues.top().size()) == randomValueMax.top())
                 {
                     randomValueMax.pop();
                     randomValue.pop();
@@ -566,7 +566,7 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
             { R"((?i)(hard|hyper))" },
             { R"((?i)(ex|another|insane|lunatic|maniac))" },
         };
-        difficulty = -1;
+        difficulty = 2; // defaults to normal
         for (int i = 4; i >= 1; --i)
         {
             if (RE2::PartialMatch(version, *difficultyRegex[i]))
@@ -585,8 +585,6 @@ int ChartFormatBMS::initWithFile(const Path& filePath, uint64_t randomSeed)
                 break;
             }
         }
-        if (difficulty == -1)
-            difficulty = 2; // defaults to normal
     }
 
     for (size_t i = 0; i <= lastBarIdx; i++)

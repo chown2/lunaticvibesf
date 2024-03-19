@@ -1,4 +1,3 @@
-#include <execution>
 #include "scene.h"
 #include "common/beat.h"
 #include "common/sysutil.h"
@@ -106,7 +105,7 @@ SceneBase::SceneBase(SkinType skinType, unsigned rate, bool backgroundInput) :
         pSkin->setHandleMouseEvents(true);
     }
 
-    if (!gInCustomize && skinType == SkinType::THEME_SELECT || gInCustomize && skinType != SkinType::THEME_SELECT)
+    if ((!gInCustomize && skinType == SkinType::THEME_SELECT) || (gInCustomize && skinType != SkinType::THEME_SELECT))
         _input.disableCountFPS();
 }
 
@@ -271,7 +270,7 @@ void SceneBase::_updateAsync1()
 {
     _updateAsync();
 
-    if (!gInCustomize && _type != SceneType::CUSTOMIZE || gInCustomize && _type == SceneType::CUSTOMIZE)
+    if ((!gInCustomize && _type != SceneType::CUSTOMIZE) || (gInCustomize && _type == SceneType::CUSTOMIZE))
         gFrameCount[FRAMECOUNT_IDX_SCENE]++;
 }
 

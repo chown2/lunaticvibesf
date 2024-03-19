@@ -355,7 +355,7 @@ void mainLoop()
                 gNextScene = SceneType::SELECT;
             }
         }
-        if (gInCustomize && gCustomizeSceneChanged || !gInCustomize && currentScene != gNextScene || gExitingCustomize)
+        if ((gInCustomize && gCustomizeSceneChanged) || (!gInCustomize && currentScene != gNextScene) || gExitingCustomize)
         {
             if (!gInCustomize) gExitingCustomize = false;
             gCustomizeSceneChanged = false;

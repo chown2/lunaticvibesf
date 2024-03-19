@@ -184,8 +184,7 @@ GetResult GET(const std::string& url, std::string& result)
 
 void DifficultyTableBMS::updateFromUrl(std::function<void(DifficultyTable::UpdateResult)> finishedCallback)
 {
-	if (!lunaticvibes::iequals(url.substr(0, 7), "http://") && !lunaticvibes::iequals(url.substr(0, 8), "https://") ||
-		url.substr(8).find('/') == url.npos)
+	if (!lunaticvibes::iequals(url.substr(0, 7), "http://") && !lunaticvibes::iequals(url.substr(0, 8), "https://"))
 	{
 		LOG_ERROR << "[TableBMS] URL error: " << url;
 		finishedCallback(UpdateResult::WEB_PATH_ERROR);

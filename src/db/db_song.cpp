@@ -97,43 +97,40 @@ struct song_all_params
 
     song_all_params(const std::vector<std::any>& queryResult)
     {
-        try 
-        {
-            md5         = ANY_STR(queryResult.at(0));
-            parent      = ANY_STR(queryResult.at(1));
-            file        = ANY_STR(queryResult.at(2));
-            type        = ANY_INT(queryResult.at(3));
-            title       = ANY_STR(queryResult.at(4));
-            title2      = ANY_STR(queryResult.at(5));
-            artist      = ANY_STR(queryResult.at(6));
-            artist2     = ANY_STR(queryResult.at(7));
-            genre       = ANY_STR(queryResult.at(8));
-            version     = ANY_STR(queryResult.at(9));
-            level       = ANY_REAL(queryResult.at(10));
-            bpm         = ANY_REAL(queryResult.at(11));
-            minbpm      = ANY_REAL(queryResult.at(12));
-            maxbpm      = ANY_REAL(queryResult.at(13));
-            length      = ANY_INT(queryResult.at(14));
-            totalnotes  = ANY_INT(queryResult.at(15));
-            stagefile   = ANY_STR(queryResult.at(16));
-            bannerfile  = ANY_STR(queryResult.at(17));
-            gamemode    = ANY_INT(queryResult.at(18));
-            judgerank   = ANY_INT(queryResult.at(19));
-            total       = ANY_INT(queryResult.at(20));
-            playlevel   = ANY_INT(queryResult.at(21));
-            difficulty  = ANY_INT(queryResult.at(22));
-            longnote    = ANY_INT(queryResult.at(23));
-            landmine    = ANY_INT(queryResult.at(24));
-            metricmod   = ANY_INT(queryResult.at(25));
-            stop        = ANY_INT(queryResult.at(26));
-            bga         = ANY_INT(queryResult.at(27));
-            random      = ANY_INT(queryResult.at(28));
-            addtime     = ANY_INT(queryResult.at(29));
-        }
-        catch (std::out_of_range&)
-        {
-        }
-    }   
+        if (queryResult.size() < SONG_PARAM_COUNT)
+            return;
+
+        md5         = ANY_STR(queryResult[0]);
+        parent      = ANY_STR(queryResult[1]);
+        file        = ANY_STR(queryResult[2]);
+        type        = ANY_INT(queryResult[3]);
+        title       = ANY_STR(queryResult[4]);
+        title2      = ANY_STR(queryResult[5]);
+        artist      = ANY_STR(queryResult[6]);
+        artist2     = ANY_STR(queryResult[7]);
+        genre       = ANY_STR(queryResult[8]);
+        version     = ANY_STR(queryResult[9]);
+        level       = ANY_REAL(queryResult[10]);
+        bpm         = ANY_REAL(queryResult[11]);
+        minbpm      = ANY_REAL(queryResult[12]);
+        maxbpm      = ANY_REAL(queryResult[13]);
+        length      = ANY_INT(queryResult[14]);
+        totalnotes  = ANY_INT(queryResult[15]);
+        stagefile   = ANY_STR(queryResult[16]);
+        bannerfile  = ANY_STR(queryResult[17]);
+        gamemode    = ANY_INT(queryResult[18]);
+        judgerank   = ANY_INT(queryResult[19]);
+        total       = ANY_INT(queryResult[20]);
+        playlevel   = ANY_INT(queryResult[21]);
+        difficulty  = ANY_INT(queryResult[22]);
+        longnote    = ANY_INT(queryResult[23]);
+        landmine    = ANY_INT(queryResult[24]);
+        metricmod   = ANY_INT(queryResult[25]);
+        stop        = ANY_INT(queryResult[26]);
+        bga         = ANY_INT(queryResult[27]);
+        random      = ANY_INT(queryResult[28]);
+        addtime     = ANY_INT(queryResult[29]);
+    }
 };
 bool convert_bms(const std::shared_ptr<ChartFormatBMSMeta>& chart, const std::vector<std::any>& in)
 {

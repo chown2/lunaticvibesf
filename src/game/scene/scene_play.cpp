@@ -197,8 +197,8 @@ ScenePlay::ScenePlay(): SceneBase(gPlayContext.mode, 1000, true)
         {
             gPlayContext.randomSeed = gArenaData.getRandomSeed();
         }
-        else if (gPlayContext.replay && 
-            gPlayContext.isReplay || (gPlayContext.replay && State::get(IndexOption::PLAY_BATTLE_TYPE) == Option::BATTLE_GHOST))
+        else if ((gPlayContext.replay && gPlayContext.isReplay) ||
+                 (gPlayContext.replay && State::get(IndexOption::PLAY_BATTLE_TYPE) == Option::BATTLE_GHOST))
         {
             gPlayContext.randomSeed = gPlayContext.replay->randomSeed;
         }
@@ -1410,7 +1410,7 @@ void ScenePlay::_updateAsync()
     {
         retryRequestTick = 0;
     }
-    if (retryRequestTick >= getRate() * 1)
+    if (retryRequestTick >= getRate())
     {
         isManuallyRequestedExit = true;
         requestExit();
@@ -1733,7 +1733,7 @@ void ScenePlay::updateAsyncLanecoverDisplay(const lunaticvibes::Time& t)
 void ScenePlay::updateAsyncHSGradient(const lunaticvibes::Time& t)
 {
     const long long HS_GRADIENT_LENGTH_MS = 200;
-    for (int slot = PLAYER_SLOT_PLAYER; slot <= PLAYER_SLOT_TARGET; slot++)
+    for (unsigned slot = PLAYER_SLOT_PLAYER; slot <= PLAYER_SLOT_TARGET; slot++)
     {
         if (gPlayContext.playerState[slot].hispeedGradientStart != TIMER_NEVER)
         {
@@ -2178,7 +2178,7 @@ void ScenePlay::updatePlaying()
         long long exScore1P = 0;
         long long exScore2P = 0;
         long long exScoreMybest = 0;
-        int missMybest = 0;
+        [[maybe_unused]] int missMybest = 0; // FIXME: set but not used
         if (auto pr = std::dynamic_pointer_cast<RulesetBMS>(gPlayContext.ruleset[PLAYER_SLOT_PLAYER]); pr)
         {
             exScore1P = pr->getExScore();
@@ -2277,7 +2277,7 @@ void ScenePlay::updatePlaying()
     changeKeySampleMapping(rt);
 
     // graphs
-    if (rt.norm() / 500 >= gPlayContext.graphGauge[PLAYER_SLOT_PLAYER].size())
+    if (rt.norm() / 500 >= (long)gPlayContext.graphGauge[PLAYER_SLOT_PLAYER].size())
     {
         auto& g = gPlayContext.graphGauge[PLAYER_SLOT_PLAYER];
         auto& r = gPlayContext.ruleset[PLAYER_SLOT_PLAYER];
@@ -2298,8 +2298,11 @@ void ScenePlay::updatePlaying()
     // health check (-> to failed)
     if (!playInterrupted)
     {
-        if (gPlayContext.ruleset[PLAYER_SLOT_PLAYER]->isFailed() && gPlayContext.ruleset[PLAYER_SLOT_PLAYER]->failWhenNoHealth() &&
-            (!gPlayContext.isBattle || gPlayContext.ruleset[PLAYER_SLOT_TARGET] == nullptr || gPlayContext.ruleset[PLAYER_SLOT_TARGET]->isFailed() && gPlayContext.ruleset[PLAYER_SLOT_TARGET]->failWhenNoHealth()))
+        if (gPlayContext.ruleset[PLAYER_SLOT_PLAYER]->isFailed() &&
+            gPlayContext.ruleset[PLAYER_SLOT_PLAYER]->failWhenNoHealth() &&
+            (!gPlayContext.isBattle || gPlayContext.ruleset[PLAYER_SLOT_TARGET] == nullptr ||
+             (gPlayContext.ruleset[PLAYER_SLOT_TARGET]->isFailed() &&
+              gPlayContext.ruleset[PLAYER_SLOT_TARGET]->failWhenNoHealth())))
         {
             pushGraphPoints();
 
@@ -2613,8 +2616,8 @@ void ScenePlay::updateFadeout()
         else if (gChartContext.started)
         {
             // Skip result if no score
-            if (gPlayContext.ruleset[PLAYER_SLOT_PLAYER] && !gPlayContext.ruleset[PLAYER_SLOT_PLAYER]->isNoScore() ||
-                gPlayContext.isBattle && gPlayContext.ruleset[PLAYER_SLOT_TARGET] && !gPlayContext.ruleset[PLAYER_SLOT_TARGET]->isNoScore())
+            if ((gPlayContext.ruleset[PLAYER_SLOT_PLAYER] && !gPlayContext.ruleset[PLAYER_SLOT_PLAYER]->isNoScore()) ||
+                (gPlayContext.isBattle && gPlayContext.ruleset[PLAYER_SLOT_TARGET] && !gPlayContext.ruleset[PLAYER_SLOT_TARGET]->isNoScore()))
             {
                 gNextScene = SceneType::RESULT;
             }
@@ -3348,7 +3351,7 @@ void ScenePlay::inputGameHold(InputMask& m, const lunaticvibes::Time& t)
     auto ttUpdateSide = [&](int slot, Pad ttUp, Pad ttDn)
     {
         bool lanecover = State::get(slot == PLAYER_SLOT_PLAYER ? IndexOption::PLAY_LANE_EFFECT_TYPE_1P : IndexOption::PLAY_LANE_EFFECT_TYPE_2P) != Option::LANE_OFF;
-        bool fnLanecover = isHoldingStart(slot) || !adjustHispeedWithSelect && isHoldingSelect(slot);
+        bool fnLanecover = isHoldingStart(slot) || (!adjustHispeedWithSelect && isHoldingSelect(slot));
         bool fnHispeed = adjustHispeedWithSelect && isHoldingSelect(slot);
 
         int val = 0;
@@ -3363,7 +3366,7 @@ void ScenePlay::inputGameHold(InputMask& m, const lunaticvibes::Time& t)
             playerState[slot].lanecoverAddPending += val;
             playerState[slot].lockspeedResetPending |= val != 0;
         }
-        else if (!lanecover && fnLanecover || fnHispeed)
+        else if ((!lanecover && fnLanecover) || fnHispeed)
         {
             playerState[slot].hispeedAddPending += val;
         }
@@ -3478,7 +3481,7 @@ void ScenePlay::inputGameAxis(double S1, double S2, const lunaticvibes::Time& t)
 		auto ttUpdateSide = [&](int slot, double S)
 		{
 			bool lanecover = State::get(slot == PLAYER_SLOT_PLAYER ? IndexOption::PLAY_LANE_EFFECT_TYPE_1P : IndexOption::PLAY_LANE_EFFECT_TYPE_2P) != Option::LANE_OFF;
-			bool fnLanecover = isHoldingStart(slot) || !adjustHispeedWithSelect && isHoldingSelect(slot);
+			bool fnLanecover = isHoldingStart(slot) || (!adjustHispeedWithSelect && isHoldingSelect(slot));
 			bool fnHispeed = adjustHispeedWithSelect && isHoldingSelect(slot);
 
 			playerState[slot].scratchAccumulator += S;
@@ -3491,7 +3494,7 @@ void ScenePlay::inputGameAxis(double S1, double S2, const lunaticvibes::Time& t)
 				playerState[slot].lanecoverAddPending += val;
 				playerState[slot].lockspeedResetPending |= val != 0;
 			}
-			else if (!lanecover && fnLanecover || fnHispeed)
+			else if ((!lanecover && fnLanecover) || fnHispeed)
 			{
 				playerState[slot].hispeedAddPending += val;
 			}

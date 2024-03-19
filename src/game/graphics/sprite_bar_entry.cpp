@@ -3,6 +3,7 @@
 #include "common/chartformat/chartformat_bms.h"
 #include "common/entry/entry_types.h"
 #include "common/log.h"
+#include "common/sysutil.h"
 #include "game/scene/scene_context.h"
 
 int SpriteBarEntry::setBody(BarType type, const SpriteAnimated::SpriteAnimatedBuilder& builder)
@@ -203,7 +204,7 @@ bool SpriteBarEntry::update(lunaticvibes::Time time)
         if (pEntry->type() == eEntryType::NEW_SONG_FOLDER)
             isNewEntry = true;
         else
-            isNewEntry = (pEntry->_addTime > std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count() - State::get(IndexNumber::NEW_ENTRY_SECONDS));
+            isNewEntry = (pEntry->_addTime > static_cast<unsigned long long>(getFileTimeNow()) - State::get(IndexNumber::NEW_ENTRY_SECONDS));
 
         static const std::map<eEntryType, size_t> BAR_TYPE_MAP =
         {

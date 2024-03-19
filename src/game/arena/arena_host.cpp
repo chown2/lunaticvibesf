@@ -897,7 +897,7 @@ void ArenaHost::update()
 		for (auto& k : clientsRemoving)
 		{
 			Client& c = clients[k];
-			for (int i = 0; i < gArenaData.getPlayerCount(); ++i)
+			for (size_t i = 0; i < gArenaData.getPlayerCount(); ++i)
 			{
 				if (c.id == gArenaData.getPlayerID(i))
 				{
@@ -981,7 +981,7 @@ void ArenaHost::update()
 	if (!gSelectContext.isArenaReady && !clients.empty() && !hostRequestChartHash.empty())
 	{
 		std::shared_lock l(clientsMutex);
-		int ready = 0;
+		size_t ready = 0;
 		for (auto& [k, cc] : clients)
 		{
 			if (cc.requestChartHash == hostRequestChartHash)
@@ -1021,7 +1021,7 @@ void ArenaHost::update()
 	if (!gArenaData.playing && isLoadingFinished())
 	{
 		std::shared_lock l(clientsMutex);
-		int ready = 0;
+		size_t ready = 0;
 		for (auto& [k, cc] : clients)
 		{
 			if (cc.isLoadingFinished)
@@ -1086,7 +1086,7 @@ void ArenaHost::update()
 	if (gArenaData.playing && isPlayingFinished())
 	{
 		std::shared_lock l(clientsMutex);
-		int finished = 0;
+		size_t finished = 0;
 		for (auto& [k, cc] : clients)
 		{
 			if (cc.isPlayingFinished)
@@ -1111,7 +1111,7 @@ void ArenaHost::update()
 	if (isResultFinished())
 	{
 		std::shared_lock l(clientsMutex);
-		int finished = 0;
+		size_t finished = 0;
 		for (auto& [k, cc] : clients)
 		{
 			if (cc.isResultFinished)

@@ -75,7 +75,7 @@ bool SpriteBase::updateMotion(const lunaticvibes::Time& rawTime)
     if (frameCount < 1)
         return false;
 
-	lunaticvibes::Time time;
+    lunaticvibes::Time time;
 
     // Check if timer is valid
     if (State::get(motionStartTimer) < 0 || State::get(motionStartTimer) == TIMER_NEVER)
@@ -357,7 +357,7 @@ bool SpriteAnimated::update(const lunaticvibes::Time& t)
 void SpriteAnimated::updateAnimation(const lunaticvibes::Time& time)
 {
     if (textureRects.empty()) return;
-    if (animationDurationPerLoop == -1) return;
+    if (animationDurationPerLoop == static_cast<unsigned>(-1)) return;
 
     if (double timeEachFrame = double(animationDurationPerLoop) / animationFrames; timeEachFrame >= 1.0)
     {

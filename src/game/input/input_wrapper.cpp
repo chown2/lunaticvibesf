@@ -129,7 +129,7 @@ void InputWrapper::_loop()
         if (!_joystickCallbackMap.empty())
         {
             _joyprev = _joycurr;
-            for (int device = 0; device < InputMgr::MAX_JOYSTICK_COUNT; ++device)
+            for (size_t device = 0; device < InputMgr::MAX_JOYSTICK_COUNT; ++device)
             {
                 JoystickMask mask;
 
@@ -195,7 +195,7 @@ void InputWrapper::_loop()
         if (!_absaxisCallbackMap.empty())
         {
             _joyaxisprev = _joyaxiscurr;
-            for (int device = 0; device < InputMgr::MAX_JOYSTICK_COUNT; ++device)
+            for (size_t device = 0; device < InputMgr::MAX_JOYSTICK_COUNT; ++device)
             {
                 JoystickAxis mask;
                 mask.fill(-1.0);
@@ -268,13 +268,14 @@ bool InputWrapper::_register(unsigned type, const std::string& key, INPUTCALLBAC
     if (_pCallbackMap.find(key) != _pCallbackMap.end())
         return false;
 
-	std::unique_lock _lock(_inputMutex);
+    std::unique_lock _lock(_inputMutex);
 
     switch (type)
     {
     case 0: _pCallbackMap[key] = std::move(f); break;
     case 1: _hCallbackMap[key] = std::move(f); break;
     case 2: _rCallbackMap[key] = std::move(f); break;
+    default: abort(); break;
     }
     return true;
 }
@@ -284,13 +285,14 @@ bool InputWrapper::_unregister(unsigned type, const std::string& key)
     if (_pCallbackMap.find(key) == _pCallbackMap.end())
         return false;
 
-	std::unique_lock _lock(_inputMutex);
+    std::unique_lock _lock(_inputMutex);
 
     switch (type)
     {
     case 0: _pCallbackMap.erase(key); break;
     case 1: _hCallbackMap.erase(key); break;
     case 2: _rCallbackMap.erase(key); break;
+    default: abort(); break;
     }
 
     return true;

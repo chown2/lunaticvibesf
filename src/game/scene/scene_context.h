@@ -88,7 +88,7 @@ struct PlayContextParams
     std::shared_ptr<ReplayChart> replayNew;
 
     bool isCourse = false;
-    int courseStage = 0;
+    size_t courseStage = 0;
     HashMD5 courseHash;
     std::vector<HashMD5> courseCharts;
     std::vector<std::shared_ptr<RulesetBase>> courseStageRulesetCopy[2];
@@ -201,7 +201,7 @@ void sortSongList();
 void setBarInfo();
 void setEntryInfo();
 void setPlayModeInfo();
-void switchVersion(int difficulty);
+void switchVersion(unsigned difficulty);
 
 void setDynamicTextures();
 

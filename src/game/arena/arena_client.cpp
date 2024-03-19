@@ -445,7 +445,7 @@ void ArenaClient::handlePlayerJoined(const std::shared_ptr<ArenaMessage>& msg)
 	{
 		LOG_WARNING << "[Arena] player ID " << pMsg->playerID << " already exists, removing old";
 
-		for (int i = 0; i < gArenaData.getPlayerCount(); ++i)
+		for (size_t i = 0; i < gArenaData.getPlayerCount(); ++i)
 		{
 			if (gArenaData.playerIDs[i] == pMsg->playerID)
 			{
@@ -478,7 +478,7 @@ void ArenaClient::handlePlayerLeft(const std::shared_ptr<ArenaMessage>& msg)
 	}
 	else
 	{
-		for (int i = 0; i < gArenaData.getPlayerCount(); ++i)
+		for (size_t i = 0; i < gArenaData.getPlayerCount(); ++i)
 		{
 			if (gArenaData.playerIDs[i] == pMsg->playerID)
 			{

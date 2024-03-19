@@ -257,13 +257,11 @@ void ScenePreSelect::updateLoadTables()
                         for (const auto& r : t.getEntryList(lv))
                         {
                             auto charts = g_pSongDB->findChartByHash(r->md5, false);
-                            bool added = false;
                             for (auto& c : charts)
                             {
                                 if (fs::exists(c->absolutePath))
                                 {
                                     tblLevel->pushEntry(std::make_shared<EntryFolderSong>(c));
-                                    added = true;
                                     break;
                                 }
                             }

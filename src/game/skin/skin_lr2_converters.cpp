@@ -293,7 +293,7 @@ IndexSwitch::_FALSE,
 
 bool buttonSw(int n, IndexSwitch& out)
 {
-    if (n < 0 || n >= buttonAdapter.size()) 
+    if (n < 0 || n >= static_cast<int>(buttonAdapter.size()))
         return false;
     if (auto sw = std::get_if<IndexSwitch>(&buttonAdapter[n]))
     {
@@ -305,7 +305,7 @@ bool buttonSw(int n, IndexSwitch& out)
 }
 bool buttonOp(int n, IndexOption& out)
 {
-    if (n < 0 || n >= buttonAdapter.size())
+    if (n < 0 || n >= static_cast<int>(buttonAdapter.size()))
         return false;
     if (auto op = std::get_if<IndexOption>(&buttonAdapter[n]))
     {
@@ -317,7 +317,7 @@ bool buttonOp(int n, IndexOption& out)
 }
 bool buttonFixed(int n, unsigned& out)
 {
-    if (n < 0 || n >= buttonAdapter.size())
+    if (n < 0 || n >= static_cast<int>(buttonAdapter.size()))
         return false;
     if (auto sw = std::get_if<unsigned>(&buttonAdapter[n]))
     {

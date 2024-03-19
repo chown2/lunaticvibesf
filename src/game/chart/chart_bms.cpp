@@ -267,7 +267,7 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
 
         // add notes
         {
-            auto push_notes = [&objBms, m, laneCountOneSide](decltype(notes)& notes, eLanePriority priority, LaneCode code, int area)
+            auto push_notes = [&objBms, m](decltype(notes)& notes, eLanePriority priority, LaneCode code, int area)
             {
                 for (unsigned i = 0; i < 10; i++)
                 {
@@ -284,7 +284,7 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
                     }
                 }
             };
-            auto push_notes_ln = [&objBms, m, laneCountOneSide, &isLnTail](decltype(notes)& notes, LaneCode code, int area)
+            auto push_notes_ln = [&objBms, m, &isLnTail](decltype(notes)& notes, LaneCode code, int area)
             {
                 for (unsigned i = 0; i < 10; i++)
                 {
@@ -437,7 +437,7 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
 
         // Calculate note times and push to note list
         Segment lastBPMChangedSegment(0, 1);
-        double stopMetre = 0;
+        double stopMetre = 0; // FIXME: set but unused
         Metre barMetre = objBms.metres[m];      // visual metre
 		lunaticvibes::Time beatLength = lunaticvibes::Time::singleBeatLengthFromBPM(bpm);
 
@@ -515,13 +515,13 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
                     size_t gameLaneIdxMod = gameLaneIdx;
                     size_t laneMin, laneMax;
                     int laneArea;
-                    if (gameLaneIdx == Sc1 || gameLaneIdx >= laneLeftStart && gameLaneIdx <= laneLeftEnd)
+                    if (gameLaneIdx == Sc1 || (gameLaneIdx >= laneLeftStart && gameLaneIdx <= laneLeftEnd))
                     {
                         laneMin = laneLeftStart;
                         laneMax = laneLeftEnd;
                         laneArea = 0;
                     }
-                    else if (gameLaneIdx == Sc2 || gameLaneIdx >= laneRightStart && gameLaneIdx <= laneRightEnd)
+                    else if (gameLaneIdx == Sc2 || (gameLaneIdx >= laneRightStart && gameLaneIdx <= laneRightEnd))
                     {
                         laneMin = laneRightStart;
                         laneMax = laneRightEnd;
@@ -638,7 +638,7 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
 
                             auto laneIdxScratch = channelToIdx(NoteLaneCategory::Note, laneScratch);
                             if (laneOccupiedByLN[laneScratch] ||
-                                !_noteLists[laneIdxScratch].empty() && notetime - _noteLists[laneIdxScratch].back().time >= threshold_scr_ms)
+                                (!_noteLists[laneIdxScratch].empty() && notetime - _noteLists[laneIdxScratch].back().time >= threshold_scr_ms))
                             {
                                 bool availableLaneFound = false;
                                 for (size_t i = laneMin; i != laneMax + laneStep; i += laneStep)
@@ -676,7 +676,7 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
                         {
                             auto laneIdxScratch = channelToIdx(NoteLaneCategory::Note, laneScratch);
                             if (laneOccupiedByLN[laneScratch] ||
-                                !_noteLists[laneIdxScratch].empty() && notetime - _noteLists[laneIdxScratch].back().time >= threshold_scr_ms)
+                                (!_noteLists[laneIdxScratch].empty() && notetime - _noteLists[laneIdxScratch].back().time >= threshold_scr_ms))
                             {
                                 std::vector<NoteLaneIndex> placable;
                                 for (NoteLaneIndex i = NoteLaneIndex(laneMin); i != NoteLaneIndex(laneMax + 1); ++ * (size_t*)&i)

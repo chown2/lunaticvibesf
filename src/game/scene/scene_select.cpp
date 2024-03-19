@@ -737,11 +737,11 @@ void SceneSelect::_updateAsync()
 
     if (!gSelectContext.entries.empty())
     {
-        if (!(isHoldingUp || isHoldingDown) && 
-            (scrollAccumulator > 0 && scrollAccumulator - scrollAccumulatorAddUnit < 0 ||
-                scrollAccumulator < 0 && scrollAccumulator - scrollAccumulatorAddUnit > 0 ||
-                -0.000001 < scrollAccumulator && scrollAccumulator < 0.000001 ||
-                scrollAccumulator * scrollAccumulatorAddUnit < 0))
+        if (!(isHoldingUp || isHoldingDown) &&
+            ((scrollAccumulator > 0 && scrollAccumulator - scrollAccumulatorAddUnit < 0) ||
+             (scrollAccumulator < 0 && scrollAccumulator - scrollAccumulatorAddUnit > 0) ||
+             (-0.000001 < scrollAccumulator && scrollAccumulator < 0.000001) ||
+             scrollAccumulator * scrollAccumulatorAddUnit < 0))
         {
             bool scrollModified = false;
 
@@ -1541,7 +1541,7 @@ void SceneSelect::inputGamePressSelect(InputMask& input, const lunaticvibes::Tim
     // navigate
     if (!gSelectContext.entries.empty())
     {
-        if (bindings9K && (input & INPUT_MASK_DECIDE_9K).any() || !bindings9K && (input & INPUT_MASK_DECIDE).any())
+        if ((bindings9K && (input & INPUT_MASK_DECIDE_9K).any()) || (!bindings9K && (input & INPUT_MASK_DECIDE).any()))
         {
             switch (gSelectContext.entries[gSelectContext.selectedEntryIndex].first->type())
             {
@@ -1566,17 +1566,17 @@ void SceneSelect::inputGamePressSelect(InputMask& input, const lunaticvibes::Tim
                 break;
             }
         }
-        if (bindings9K && (input & INPUT_MASK_CANCEL_9K).any() || !bindings9K && (input & INPUT_MASK_CANCEL).any())
+        if ((bindings9K && (input & INPUT_MASK_CANCEL_9K).any()) || (!bindings9K && (input & INPUT_MASK_CANCEL).any()))
             return navigateBack(t);
 
-        if (bindings9K && (input & INPUT_MASK_NAV_UP_9K).any() || !bindings9K && (input & INPUT_MASK_NAV_UP).any())
+        if ((bindings9K && (input & INPUT_MASK_NAV_UP_9K).any()) || (!bindings9K && (input & INPUT_MASK_NAV_UP).any()))
         {
             isHoldingUp = true;
             scrollAccumulator -= 1.0;
             scrollButtonTimestamp = t;
             scrollAccumulatorAddUnit = scrollAccumulator / gSelectContext.scrollTimeLength * (1000.0 / getRate());
         }
-        if (bindings9K && (input & INPUT_MASK_NAV_DN_9K).any() || !bindings9K && (input & INPUT_MASK_NAV_DN).any())
+        if ((bindings9K && (input & INPUT_MASK_NAV_DN_9K).any()) || (!bindings9K && (input & INPUT_MASK_NAV_DN).any()))
         {
             isHoldingDown = true;
             scrollAccumulator += 1.0;
@@ -1663,11 +1663,11 @@ void SceneSelect::inputGameReleaseSelect(InputMask& input, const lunaticvibes::T
     }
 
     // navigate
-    if (bindings9K && (input & INPUT_MASK_NAV_UP_9K).any() || (input & INPUT_MASK_NAV_UP).any())
+    if ((bindings9K && (input & INPUT_MASK_NAV_UP_9K).any()) || (input & INPUT_MASK_NAV_UP).any())
     {
         isHoldingUp = false;
     }
-    if (bindings9K && (input & INPUT_MASK_NAV_DN_9K).any() || (input & INPUT_MASK_NAV_DN).any())
+    if ((bindings9K && (input & INPUT_MASK_NAV_DN_9K).any()) || (input & INPUT_MASK_NAV_DN).any())
     {
         isHoldingDown = false;
     }
@@ -1706,12 +1706,12 @@ void SceneSelect::inputGamePressPanel(InputMask& input, const lunaticvibes::Time
             if (input[Pad::K13]) lr2skin::button::battle(1);
             if (input[Pad::K14]) lr2skin::button::gauge_type(PLAYER_SLOT_PLAYER, 1);
 
-            if (isHoldingK16 && input[Pad::K17] || isHoldingK17 && input[Pad::K16])
+            if ((isHoldingK16 && input[Pad::K17]) || (isHoldingK17 && input[Pad::K16]))
             {
                 // 6+7: LANE EFFECT
                 lr2skin::button::lane_effect(PLAYER_SLOT_PLAYER, 1);
             }
-            else if (isHoldingK15 && input[Pad::K17] || isHoldingK17 && input[Pad::K15])
+            else if ((isHoldingK15 && input[Pad::K17]) || (isHoldingK17 && input[Pad::K15]))
             {
                 // 5+7: HS FIX
                 lr2skin::button::hs_fix(1);
@@ -1741,12 +1741,12 @@ void SceneSelect::inputGamePressPanel(InputMask& input, const lunaticvibes::Time
                 if (input[Pad::K23]) lr2skin::button::battle(1);
                 if (input[Pad::K24]) lr2skin::button::gauge_type(PLAYER_SLOT_TARGET, 1);
 
-                if (isHoldingK26 && input[Pad::K27] || isHoldingK27 && input[Pad::K26])
+                if ((isHoldingK26 && input[Pad::K27]) || (isHoldingK27 && input[Pad::K26]))
                 {
                     // 6+7: LANE EFFECT
                     lr2skin::button::lane_effect(PLAYER_SLOT_TARGET, 1);
                 }
-                else if (isHoldingK25 && input[Pad::K27] || isHoldingK27 && input[Pad::K25])
+                else if ((isHoldingK25 && input[Pad::K27]) || (isHoldingK27 && input[Pad::K25]))
                 {
                     // 5+7: HS FIX
                     lr2skin::button::hs_fix(1);
@@ -1778,12 +1778,12 @@ void SceneSelect::inputGamePressPanel(InputMask& input, const lunaticvibes::Time
                 if (input[Pad::K23]) lr2skin::button::battle(1);
                 if (input[Pad::K24]) lr2skin::button::gauge_type(PLAYER_SLOT_PLAYER, 1);
 
-                if (isHoldingK26 && input[Pad::K27] || isHoldingK27 && input[Pad::K26])
+                if ((isHoldingK26 && input[Pad::K27]) || (isHoldingK27 && input[Pad::K26]))
                 {
                     // 6+7: LANE EFFECT
                     lr2skin::button::lane_effect(PLAYER_SLOT_PLAYER, 1);
                 }
-                else if (isHoldingK25 && input[Pad::K27] || isHoldingK27 && input[Pad::K25])
+                else if ((isHoldingK25 && input[Pad::K27]) || (isHoldingK27 && input[Pad::K25]))
                 {
                     // 5+7: HS FIX
                     lr2skin::button::hs_fix(1);
@@ -1813,16 +1813,16 @@ void SceneSelect::inputGamePressPanel(InputMask& input, const lunaticvibes::Time
                 if (input[Pad::K23]) lr2skin::button::battle(1);
                 if (input[Pad::K24]) lr2skin::button::gauge_type(PLAYER_SLOT_PLAYER, 1);
 
-                if (isHoldingK26 && input[Pad::K27] || isHoldingK27 && input[Pad::K26] ||
-                    isHoldingK16 && input[Pad::K27] || isHoldingK17 && input[Pad::K26] ||
-                    isHoldingK26 && input[Pad::K17] || isHoldingK27 && input[Pad::K16])
+                if ((isHoldingK26 && input[Pad::K27]) || (isHoldingK27 && input[Pad::K26]) ||
+                    (isHoldingK16 && input[Pad::K27]) || (isHoldingK17 && input[Pad::K26]) ||
+                    (isHoldingK26 && input[Pad::K17]) || (isHoldingK27 && input[Pad::K16]))
                 {
                     // 6+7: LANE EFFECT
                     lr2skin::button::lane_effect(PLAYER_SLOT_PLAYER, 1);
                 }
-                else if (isHoldingK25 && input[Pad::K27] || isHoldingK27 && input[Pad::K25] ||
-                    isHoldingK15 && input[Pad::K27] || isHoldingK17 && input[Pad::K25] ||
-                    isHoldingK25 && input[Pad::K17] || isHoldingK27 && input[Pad::K15])
+                else if ((isHoldingK25 && input[Pad::K27]) || (isHoldingK27 && input[Pad::K25]) ||
+                         (isHoldingK15 && input[Pad::K27]) || (isHoldingK17 && input[Pad::K25]) ||
+                         (isHoldingK25 && input[Pad::K17]) || (isHoldingK27 && input[Pad::K15]))
                 {
                     // 5+7: HS FIX
                     lr2skin::button::hs_fix(1);
@@ -1897,8 +1897,7 @@ void SceneSelect::decide()
 
     int bga = State::get(IndexOption::PLAY_BGA_TYPE);
     State::set(IndexSwitch::_LOAD_BGA,
-        bga == Option::BGA_ON ||
-        bga == Option::BGA_AUTOPLAY && (gPlayContext.isAuto || gPlayContext.isReplay));
+        bga == Option::BGA_ON || (bga == Option::BGA_AUTOPLAY && (gPlayContext.isAuto || gPlayContext.isReplay)));
 
     auto& [entry, score] = gSelectContext.entries[gSelectContext.selectedEntryIndex];
     //auto& chart = entry.charts[entry.chart_idx];

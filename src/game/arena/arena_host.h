@@ -40,7 +40,7 @@ private:
 
 	HashMD5 requestChartPending;
 	std::string requestChartPendingClientKey;		// who has requested this chart
-	int requestChartPendingExistCount = 0;	// if count == clients.size(), inform all clients
+	size_t requestChartPendingExistCount = 0;	// if count == clients.size(), inform all clients
 
 	bool _isLoadingFinished = false; // host status
 	bool _isCreatedRuleset = false;	// host status

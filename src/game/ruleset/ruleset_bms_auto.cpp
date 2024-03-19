@@ -142,7 +142,7 @@ void RulesetBMSAuto::update(const lunaticvibes::Time& t)
 
     auto updateSection = [&](Input::Pad begin, Input::Pad end, int side)
     {
-        for (size_t k = begin; k <= end; ++k)
+        for (size_t k = begin; k <= static_cast<size_t>(end); ++k)
         {
             bool scratch = false;
             switch (k)

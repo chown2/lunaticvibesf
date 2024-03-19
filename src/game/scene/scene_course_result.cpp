@@ -328,15 +328,10 @@ void SceneCourseResult::updateDraw()
 
 void SceneCourseResult::updateStop()
 {
-    auto t = lunaticvibes::Time();
-    auto rt = t - State::get(IndexTimer::SCENE_START);
 }
 
 void SceneCourseResult::updateRecord()
 {
-    auto t = lunaticvibes::Time();
-    auto rt = t - State::get(IndexTimer::SCENE_START);
-
     // TODO sync score in online mode?
     if (true)
     {
@@ -347,7 +342,6 @@ void SceneCourseResult::updateRecord()
 void SceneCourseResult::updateFadeout()
 {
     auto t = lunaticvibes::Time();
-    auto rt = t - State::get(IndexTimer::SCENE_START);
     auto ft = t - State::get(IndexTimer::FADEOUT_BEGIN);
 
     if (ft >= pSkin->info.timeOutro)

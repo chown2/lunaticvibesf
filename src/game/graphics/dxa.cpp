@@ -114,7 +114,7 @@ const char* GetOriginalFileName(u8* FileNameTable)
 // 鍵文字列を作成
 void KeyCreate(const char* Source, unsigned char* Key)
 {
-	int Len;
+	size_t Len;
 
 	if (Source == NULL)
 	{
@@ -130,7 +130,7 @@ void KeyCreate(const char* Source, unsigned char* Key)
 		else
 		{
 			// 鍵文字列が DXA_KEYSTR_LENGTH_VER5 より短かったらループする
-			int i;
+			size_t i;
 
 			for (i = 0; i + Len <= DXA_KEYSTR_LENGTH_VER5; i += Len)
 				memcpy(Key + i, Source, Len);

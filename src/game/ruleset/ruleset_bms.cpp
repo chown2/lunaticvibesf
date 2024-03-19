@@ -792,8 +792,8 @@ void RulesetBMS::_judgeHold(NoteLaneCategory cat, NoteLaneIndex idx, HitableNote
     case NoteLaneCategory::Mine:
     {
         if (judge.area == JudgeArea::EXACT_PERFECT ||
-            judge.area == JudgeArea::EARLY_PERFECT && judge.time < -2 ||
-            judge.area == JudgeArea::LATE_PERFECT && judge.time < 2)
+            (judge.area == JudgeArea::EARLY_PERFECT && judge.time < -2) ||
+            (judge.area == JudgeArea::LATE_PERFECT && judge.time < 2))
         {
             note.hit = true;
             note.expired = true;
@@ -841,8 +841,8 @@ void RulesetBMS::_judgeHold(NoteLaneCategory cat, NoteLaneIndex idx, HitableNote
             _lnJudge[idx] != RulesetBMS::JudgeArea::LATE_BAD)
         {
             if (judge.area == JudgeArea::EXACT_PERFECT ||
-                judge.area == JudgeArea::EARLY_PERFECT && judge.time < -2 ||
-                judge.area == JudgeArea::LATE_PERFECT && judge.time < 2)
+                (judge.area == JudgeArea::EARLY_PERFECT && judge.time < -2) ||
+                (judge.area == JudgeArea::LATE_PERFECT && judge.time < 2))
             {
                 updateJudge(t, idx, _lnJudge[idx], slot);
                 note.hit = true;
@@ -1198,7 +1198,7 @@ void RulesetBMS::updatePress(InputMask& pg, const lunaticvibes::Time& t)
     if (gPlayContext.isAuto) return;
     auto updatePressRange = [&](Input::Pad begin, Input::Pad end, int slot)
     {
-        for (size_t k = begin; k <= end; ++k)
+        for (size_t k = begin; k <= static_cast<size_t>(end); ++k)
         {
             if (!pg[k]) continue;
             judgeNotePress((Input::Pad)k, t, rt, slot);
@@ -1230,7 +1230,7 @@ void RulesetBMS::updateHold(InputMask& hg, const lunaticvibes::Time& t)
 
     auto updateHoldRange = [&](Input::Pad begin, Input::Pad end, int slot)
     {
-        for (size_t k = begin; k <= end; ++k)
+        for (size_t k = begin; k <= static_cast<size_t>(end); ++k)
         {
             if (!hg[k]) continue;
             judgeNoteHold((Input::Pad)k, t, rt, slot);
@@ -1252,7 +1252,7 @@ void RulesetBMS::updateRelease(InputMask& rg, const lunaticvibes::Time& t)
 
     auto updateReleaseRange = [&](Input::Pad begin, Input::Pad end, int slot)
     {
-        for (size_t k = begin; k <= end; ++k)
+        for (size_t k = begin; k <= static_cast<size_t>(end); ++k)
         {
             if (!rg[k]) continue;
             judgeNoteRelease((Input::Pad)k, t, rt, slot);
@@ -1297,7 +1297,7 @@ void RulesetBMS::update(const lunaticvibes::Time& t)
     if (!_hasStartTime)
         setStartTime(t);
 
-	auto rt = t - _startTime.norm();
+    auto rt = t - _startTime.norm();
 
     for (auto& [c, n]: _noteListIterators)
     {
@@ -1328,7 +1328,7 @@ void RulesetBMS::update(const lunaticvibes::Time& t)
 
     auto updateRange = [&](Input::Pad begin, Input::Pad end, int slot)
     {
-        for (size_t k = begin; k <= end; ++k)
+        for (size_t k = begin; k <= static_cast<size_t>(end); ++k)
         {
             bool scratch = false;
             switch (k)

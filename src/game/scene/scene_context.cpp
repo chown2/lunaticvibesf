@@ -149,8 +149,8 @@ void loadSongList()
 {
     HashMD5 currentEntryHash;
     std::shared_ptr<EntryFolderSong> currentEntrySong;
-    int currentEntryGamemode = 0;
-    int currentEntryDifficulty = 0;
+    unsigned currentEntryGamemode = 0;
+    unsigned currentEntryDifficulty = 0;
     if (!gSelectContext.entries.empty())
     {
         currentEntryHash = gSelectContext.entries.at(gSelectContext.selectedEntryIndex).first->md5;
@@ -173,7 +173,7 @@ void loadSongList()
         // TODO replace name/name2 by tag.db
 
         // apply filter
-        auto checkFilterKeys = [](int keys)
+        auto checkFilterKeys = [](unsigned keys)
         {
             if ((keys == 10 || keys == 14) && ConfigMgr::get("P", cfg::P_IGNORE_DP_CHARTS, false))
             {
@@ -213,7 +213,7 @@ void loadSongList()
                 }
             }
         };
-        auto checkFilterDifficulty = [](int difficulty)
+        auto checkFilterDifficulty = [](unsigned difficulty)
         {
             if (gSelectContext.filterDifficulty == 0) return true;
             return difficulty == gSelectContext.filterDifficulty;
@@ -1295,7 +1295,7 @@ void setPlayModeInfo()
     }
 }
 
-void switchVersion(int difficulty)
+void switchVersion(unsigned difficulty)
 {
     const EntryList& e = gSelectContext.entries;
     if (e.empty()) return;

@@ -531,13 +531,12 @@ void pitch_type(int plus)
 // 40, 41
 void gauge_type(int player, int plus)
 {
-    int slot = 0;
     IndexOption op;
     IndexText tx;
     switch (player)
     {
-    case 0: slot = PLAYER_SLOT_PLAYER; op = IndexOption::PLAY_GAUGE_TYPE_1P; tx = IndexText::GAUGE_1P; break;
-    case 1: slot = PLAYER_SLOT_TARGET; op = IndexOption::PLAY_GAUGE_TYPE_2P; tx = IndexText::GAUGE_2P; break;
+    case 0: op = IndexOption::PLAY_GAUGE_TYPE_1P; tx = IndexText::GAUGE_1P; break;
+    case 1: op = IndexOption::PLAY_GAUGE_TYPE_2P; tx = IndexText::GAUGE_2P; break;
     default: return;
     }
 
@@ -1046,8 +1045,10 @@ void favorite_ignore(int plus)
 }
 
 // 91 - 96
-void difficulty(int diff, int plus)
+void difficulty(int diff_, int plus)
 {
+    auto diff = static_cast<unsigned>(diff_);
+
     if (diff == gSelectContext.filterDifficulty)
     {
         std::unique_lock l(gSelectContext._mutex);
@@ -1389,9 +1390,10 @@ static void open_ir_page()
     LOG_DEBUG << "opened the thingy";
 }
 
-void help(int index)
+void help(int index_)
 {
-    assert(index < 10);
+    assert(index_ > 0 && index_ < 10);
+    auto index = static_cast<unsigned>(index_);
     lunaticvibes::Time now{};
 
     std::shared_ptr<SkinLR2> s = std::dynamic_pointer_cast<SkinLR2>(SkinMgr::get(SkinType::MUSIC_SELECT));

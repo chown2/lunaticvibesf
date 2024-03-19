@@ -1,7 +1,7 @@
 #include "sprite_graph.h"
 #include "game/scene/scene_context.h"
 
-const size_t RT_GRAPH_THRESHOLD = 50;
+static constexpr size_t RT_GRAPH_THRESHOLD = 50;
 
 SpriteLine::SpriteLine(const SpriteLineBuilder& builder) : SpriteStatic(builder)
 {
@@ -65,7 +65,7 @@ void SpriteLine::updateRects()
 
     if (!gPlayContext.ruleset[_player]) return;
 
-    auto pushRects = [this](int size, const std::vector<int>& points, unsigned maxh, const std::function<bool(int val1, int val2)>& cond = [](int, int) { return true; })
+    auto pushRects = [this](size_t size, const std::vector<int>& points, unsigned maxh, const std::function<bool(int val1, int val2)>& cond = [](int, int) { return true; })
     {
         std::vector<std::pair<Point, Point>> tmp;
         const auto& r = _current.rect;
@@ -130,7 +130,7 @@ void SpriteLine::updateRects()
         }
     };
 
-    auto pushRectsF = [this](int size, const std::vector<double>& points, double maxh, const std::function<bool(int val1, int val2)>& cond = [](int, int) { return true; })
+    auto pushRectsF = [this](size_t size, const std::vector<double>& points, double maxh, const std::function<bool(int val1, int val2)>& cond = [](int, int) { return true; })
     {
         std::vector<std::pair<Point, Point>> tmp;
         const auto& r = _current.rect;

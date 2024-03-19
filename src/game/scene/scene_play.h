@@ -76,7 +76,7 @@ private:
     } playerState[2];
 
     lunaticvibes::Time delayedReadyTime = 0;
-    int retryRequestTick = 0;
+    unsigned retryRequestTick = 0;
 
     std::vector<ReplayChart::Commands>::iterator itReplayCommand;
     InputMask replayKeyPressing;

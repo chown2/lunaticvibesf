@@ -13,7 +13,6 @@
 #include "game/arena/arena_host.h"
 
 #include "imgui.h"
-#include "imgui_internal.h"
 #include "git_version.h"
 
 #ifdef _WIN32
@@ -393,7 +392,7 @@ void SceneSelect::imguiPageArenaDiagnose()
 
     static bool playing = false;
     playing = d.isPlaying();
-    ImGui::Checkbox("Playing", &expired);
+    ImGui::Checkbox("Playing", &playing);
 
     ImGui::Text("Start Time: %d", d.getPlayStartTimeMs());
 
@@ -462,7 +461,7 @@ void SceneSelect::imguiPageArenaDiagnose()
         reqChartPending = s.requestChartPending.hexdigest();
         ImGui::Text("requestChartPending: %s", reqChartPending.c_str());
         ImGui::Text("requestChartPendingClientKey: %s", s.requestChartPendingClientKey.c_str());
-        ImGui::Text("requestChartPendingExistCount: %d", s.requestChartPendingExistCount);
+        ImGui::Text("requestChartPendingExistCount: %zu", s.requestChartPendingExistCount);
 
         ImGui::Spacing();
         ImGui::Separator();
@@ -1419,7 +1418,7 @@ bool SceneSelect::imguiAddFolder(const char* path)
 
 bool SceneSelect::imguiDelFolder()
 {
-    if (imgui_folder_index < 0 || imgui_folder_index >= imgui_folders_display.size()) return false;
+    if (imgui_folder_index < 0 || imgui_folder_index >= static_cast<int>(imgui_folders_display.size())) return false;
 
     int oldSize = imgui_folders.size();
     imgui_folders.erase(std::next(imgui_folders.begin(), imgui_folder_index));
@@ -1434,7 +1433,7 @@ bool SceneSelect::imguiDelFolder()
 
 bool SceneSelect::imguiBrowseFolder()
 {
-    if (imgui_folder_index < 0 || imgui_folder_index >= imgui_folders_display.size()) return false;
+    if (imgui_folder_index < 0 || imgui_folder_index >= static_cast<int>(imgui_folders_display.size())) return false;
     std::string pathstr = Path(imgui_folders_display[imgui_folder_index]).u8string();
     return lunaticvibes::open(pathstr);
 }
@@ -1468,7 +1467,7 @@ bool SceneSelect::imguiAddTable()
 
 bool SceneSelect::imguiDelTable()
 {
-    if (imgui_table_index < 0 || imgui_table_index >= imgui_tables_display.size()) return false;
+    if (imgui_table_index < 0 || imgui_table_index >= static_cast<int>(imgui_tables_display.size())) return false;
 
     int oldSize = imgui_tables.size();
     imgui_tables.erase(std::next(imgui_tables.begin(), imgui_table_index));
@@ -1483,7 +1482,9 @@ bool SceneSelect::imguiDelTable()
 
 bool SceneSelect::imguiApplyResolution()
 {
-    const auto& [windowW, windowH] = imgui_video_display_resolution_size[imgui_video_display_resolution_index];
+    const auto& windowSize = imgui_video_display_resolution_size[imgui_video_display_resolution_index];
+    const auto windowW = static_cast<int>(windowSize.first);
+    const auto windowH = static_cast<int>(windowSize.second);
     auto [desktopW, desktopH] = graphics_get_desktop_resolution();
 
     if (imgui_video_mode == 2 && windowW == desktopW && windowH == desktopH)

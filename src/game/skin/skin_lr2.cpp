@@ -3,10 +3,8 @@
 #include <execution>
 #include <fstream>
 #include <optional>
-#include <regex>
 #include <set>
 #include <sstream>
-#include <variant>
 
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
@@ -102,6 +100,32 @@ static bool flipSideFlag = false;
 static bool flipResultFlag = false;      // Set in play skin
 static bool flipSide = false;
 
+static int flipTimer(int timer)
+{
+    switch (timer)
+    {
+    case 42: return 43;
+    case 43: return 42;
+    case 44: return 45;
+    case 45: return 44;
+    case 46: return 47;
+    case 47: return 46;
+    case 48: return 49;
+    case 49: return 48;
+    case 143: return 144;
+    case 144: return 143;
+    default: break;
+    }
+    if ((50 <= timer && timer <= 59) || (70 <= timer && timer <= 79) || (100 <= timer && timer <= 109) ||
+        (120 <= timer && timer <= 129))
+        return timer + 10;
+    if ((60 <= timer && timer <= 69) || (80 <= timer && timer <= 89) || (110 <= timer && timer <= 119) ||
+        (130 <= timer && timer <= 139))
+        return timer - 10;
+
+    return timer;
+}
+
     struct s_basic
     {
         int _null = 0;
@@ -134,33 +158,7 @@ static bool flipSide = false;
             }
 
             if (flipSide)
-            {
-                switch (timer)
-                {
-                case 42:    timer = 43; break;
-                case 43:    timer = 42; break;
-                case 44:    timer = 45; break;
-                case 45:    timer = 44; break;
-                case 46:    timer = 47; break;
-                case 47:    timer = 46; break;
-                case 48:    timer = 49; break;
-                case 49:    timer = 48; break;
-                case 143:   timer = 144; break;
-                case 144:   timer = 143; break;
-                default:
-                    if (50 <= timer && timer <= 59 ||
-                        70 <= timer && timer <= 79 ||
-                        100 <= timer && timer <= 109 ||
-                        120 <= timer && timer <= 129)
-                        timer += 10;
-                    else if (60 <= timer && timer <= 69 ||
-                        80 <= timer && timer <= 89 ||
-                        110 <= timer && timer <= 119 ||
-                        130 <= timer && timer <= 139)
-                        timer -= 10;
-                    break;
-                }
-            }
+                timer = flipTimer(timer);
         }
     };
 
@@ -451,33 +449,7 @@ static bool flipSide = false;
             convertOpsToInt(tokens, (int*)this, &op[0] - &_null, sizeof(op) / sizeof(op[0]));
 
             if (flipSide)
-            {
-                switch (timer)
-                {
-                case 42:    timer = 43; break;
-                case 43:    timer = 42; break;
-                case 44:    timer = 45; break;
-                case 45:    timer = 44; break;
-                case 46:    timer = 47; break;
-                case 47:    timer = 46; break;
-                case 48:    timer = 49; break;
-                case 49:    timer = 48; break;
-                case 143:   timer = 144; break;
-                case 144:   timer = 143; break;
-                default:
-                    if (50 <= timer && timer <= 59 ||
-                        70 <= timer && timer <= 79 ||
-                        100 <= timer && timer <= 109 ||
-                        120 <= timer && timer <= 129)
-                        timer += 10;
-                    else if (60 <= timer && timer <= 69 ||
-                        80 <= timer && timer <= 89 ||
-                        110 <= timer && timer <= 119 ||
-                        130 <= timer && timer <= 139)
-                        timer -= 10;
-                    break;
-                }
-            }
+                timer = flipTimer(timer);
         }
     };
 
@@ -908,12 +880,10 @@ int SkinLR2::LR2FONT()
 
         auto pf = std::make_shared<LR2Font>();
 
-        int lr2fontLineNumber = 0;
         while (!lr2font.eof())
         {
             std::string raw;
             std::getline(lr2font, raw);
-            ++lr2fontLineNumber;
 
             // convert codepage
             std::string rawUTF8 = to_utf8(raw, encoding);
@@ -4157,26 +4127,26 @@ void SkinLR2::postLoad()
             const Rect& rcFirst = s->motionKeyFrames.front().param.rect;
             const Rect& rcLast = s->motionKeyFrames.back().param.rect;
             int timer = (int)s->motionStartTimer;
-            if (timer >= 100 && timer <= 109 || timer >= 120 && timer <= 129 ||
+            if ((timer >= 100 && timer <= 109) || (timer >= 120 && timer <= 129) ||
                 timer == (int)IndexTimer::S1L_DOWN || timer == (int)IndexTimer::S1L_UP || timer == (int)IndexTimer::S1R_DOWN || timer == (int)IndexTimer::S1R_UP)
             {
                 // 1P laser
                 if (rcFirst.h <= -100 || rcFirst.h >= 100 || rcLast.h <= -100 || rcLast.h >= 100)
                     spritesMoveWithLift1P.push_back(s);
             }
-            else if (timer >= 110 && timer <= 119 || timer >= 130 && timer <= 139 ||
+            else if ((timer >= 110 && timer <= 119) || (timer >= 130 && timer <= 139) ||
                 timer == (int)IndexTimer::S2L_DOWN || timer == (int)IndexTimer::S2L_UP || timer == (int)IndexTimer::S2R_DOWN || timer == (int)IndexTimer::S2R_UP)
             {
                 // 2P laser
                 if (rcFirst.h <= -100 || rcFirst.h >= 100 || rcLast.h <= -100 || rcLast.h >= 100)
                     spritesMoveWithLift2P.push_back(s);
             }
-            else if (timer >= 50 && timer <= 59 || timer >= 70 && timer <= 79)
+            else if ((timer >= 50 && timer <= 59) || (timer >= 70 && timer <= 79))
             {
                 // 1P bomb
                 spritesMoveWithLift1P.push_back(s);
             }
-            else if (timer >= 60 && timer <= 69 || timer >= 80 && timer <= 89)
+            else if ((timer >= 60 && timer <= 69) || (timer >= 80 && timer <= 89))
             {
                 // 2P bomb
                 spritesMoveWithLift2P.push_back(s);
