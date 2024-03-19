@@ -118,7 +118,7 @@ bool convert_score_bms(ScoreBMS& out, const std::vector<std::any>& in)
     return true;
 }
 
-const char* CREATE_SCORE_COURSE_BMS_TABLE_STR =
+static constexpr auto&& CREATE_SCORE_COURSE_BMS_TABLE_STR =
 "CREATE TABLE IF NOT EXISTS score_course_bms( "
 "md5 TEXT PRIMARY KEY UNIQUE NOT NULL, "
 "notes INTEGER NOT NULL, "

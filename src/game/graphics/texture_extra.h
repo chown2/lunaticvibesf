@@ -1,12 +1,8 @@
 #pragma once
 
 #include <map>
-#include <set>
-#include <variant>
 
-#include "common/asynclooper.h"
 #include "common/beat.h"
-#include "graphics.h"
 #include "video.h"
 
 class TextureVideo : public Texture
