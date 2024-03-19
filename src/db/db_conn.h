@@ -1,6 +1,7 @@
 #pragma once
 #include <any>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 #include <exception>
@@ -42,8 +43,9 @@ public:
     virtual ~SQLite();
 
 protected:
-    std::vector<std::vector<std::any>> query(const char* stmt, size_t retSize, std::initializer_list<std::any> args = {}) const;
-    int exec(const char* zsql, std::initializer_list<std::any> args = {});
+    [[nodiscard]] std::vector<std::vector<std::any>> query(std::string_view stmt,
+                                                           std::initializer_list<std::any> args = {}) const;
+    int exec(std::string_view stmt, std::initializer_list<std::any> args = {});
     void commit();
 
 public:

@@ -9,31 +9,31 @@
 #include "common/types.h"
 #include "common/hash.h"
 
-const char* CREATE_SCORE_BMS_TABLE_STR =
+static constexpr auto&& CREATE_SCORE_BMS_TABLE_STR =
 "CREATE TABLE IF NOT EXISTS score_bms( "
-"md5 TEXT PRIMARY KEY UNIQUE NOT NULL, " // 0
-"notes INTEGER NOT NULL, "               // 1
-"score INTEGER NOT NULL, "               // 2
-"rate REAL NOT NULL, "                   // 3
-"fast INTEGER NOT NULL, "                // 4
-"slow INTEGER NOT NULL, "                // 5
-"maxcombo INTEGER NOT NULL DEFAULT 0, "  // 6
-"addtime INTEGER NOT NULL DEFAULT 0, "   // 7
-"pc INTEGER NOT NULL DEFAULT 0, "        // 8
-"clearcount INTEGER NOT NULL DEFAULT 0, "// 9
-"exscore INTEGER NOT NULL, "             // 10
-"lamp INTEGER NOT NULL, "                // 11
-"pgreat INTEGER NOT NULL, "              // 12
-"great INTEGER NOT NULL, "               // 13
-"good INTEGER NOT NULL, "                // 14
-"bad INTEGER NOT NULL, "                 // 15
-"bpoor INTEGER NOT NULL, "               // 16
-"miss INTEGER NOT NULL, "                // 17
-"bp INTEGER NOT NULL, "                  // 18
-"cb INTEGER NOT NULL, "                  // 19
-"replay TEXT "                           // 20
+"md5 TEXT PRIMARY KEY UNIQUE NOT NULL, "
+"notes INTEGER NOT NULL, "
+"score INTEGER NOT NULL, "
+"rate REAL NOT NULL, "
+"fast INTEGER NOT NULL, "
+"slow INTEGER NOT NULL, "
+"maxcombo INTEGER NOT NULL DEFAULT 0, "
+"addtime INTEGER NOT NULL DEFAULT 0, "
+"pc INTEGER NOT NULL DEFAULT 0, "
+"clearcount INTEGER NOT NULL DEFAULT 0, "
+"exscore INTEGER NOT NULL, "
+"lamp INTEGER NOT NULL, "
+"pgreat INTEGER NOT NULL, "
+"great INTEGER NOT NULL, "
+"good INTEGER NOT NULL, "
+"bad INTEGER NOT NULL, "
+"bpoor INTEGER NOT NULL, "
+"miss INTEGER NOT NULL, "
+"bp INTEGER NOT NULL, "
+"cb INTEGER NOT NULL, "
+"replay TEXT "
 ")";
-constexpr size_t SCORE_BMS_PARAM_COUNT = 21;
+static constexpr size_t SCORE_BMS_PARAM_COUNT = 21;
 struct score_bms_all_params
 {
     std::string md5;
@@ -120,27 +120,27 @@ bool convert_score_bms(ScoreBMS& out, const std::vector<std::any>& in)
 
 const char* CREATE_SCORE_COURSE_BMS_TABLE_STR =
 "CREATE TABLE IF NOT EXISTS score_course_bms( "
-"md5 TEXT PRIMARY KEY UNIQUE NOT NULL, " // 0
-"notes INTEGER NOT NULL, "               // 1
-"score INTEGER NOT NULL, "               // 2
-"rate REAL NOT NULL, "                   // 3
-"fast INTEGER NOT NULL, "                // 4
-"slow INTEGER NOT NULL, "                // 5
-"maxcombo INTEGER NOT NULL DEFAULT 0, "  // 6
-"addtime INTEGER NOT NULL DEFAULT 0, "   // 7
-"pc INTEGER NOT NULL DEFAULT 0, "        // 8
-"clearcount INTEGER NOT NULL DEFAULT 0, "// 9
-"exscore INTEGER NOT NULL, "             // 10
-"lamp INTEGER NOT NULL, "                // 11
-"pgreat INTEGER NOT NULL, "              // 12
-"great INTEGER NOT NULL, "               // 13
-"good INTEGER NOT NULL, "                // 14
-"bad INTEGER NOT NULL, "                 // 15
-"bpoor INTEGER NOT NULL, "               // 16
-"miss INTEGER NOT NULL, "                // 17
-"bp INTEGER NOT NULL, "                  // 18
-"cb INTEGER NOT NULL, "                  // 19
-"replay TEXT "                           // 20
+"md5 TEXT PRIMARY KEY UNIQUE NOT NULL, "
+"notes INTEGER NOT NULL, "
+"score INTEGER NOT NULL, "
+"rate REAL NOT NULL, "
+"fast INTEGER NOT NULL, "
+"slow INTEGER NOT NULL, "
+"maxcombo INTEGER NOT NULL DEFAULT 0, "
+"addtime INTEGER NOT NULL DEFAULT 0, "
+"pc INTEGER NOT NULL DEFAULT 0, "
+"clearcount INTEGER NOT NULL DEFAULT 0, "
+"exscore INTEGER NOT NULL, "
+"lamp INTEGER NOT NULL, "
+"pgreat INTEGER NOT NULL, "
+"great INTEGER NOT NULL, "
+"good INTEGER NOT NULL, "
+"bad INTEGER NOT NULL, "
+"bpoor INTEGER NOT NULL, "
+"miss INTEGER NOT NULL, "
+"bp INTEGER NOT NULL, "
+"cb INTEGER NOT NULL, "
+"replay TEXT "
 ")";
 
 ScoreDB::ScoreDB(const char* path): SQLite(path, "SCORE")
@@ -263,7 +263,7 @@ void ScoreDB::updateScoreBMS(const char* tableName, const HashMD5& hash, const S
 
     char sqlbuf[96] = { 0 };
     sprintf(sqlbuf, "SELECT * FROM %s WHERE md5=?", tableName);
-    auto result = query(sqlbuf, SCORE_BMS_PARAM_COUNT, { hashStr });
+    auto result = query(sqlbuf, { hashStr });
     if (!result.empty())
     {
         const auto& r = result[0];
@@ -306,13 +306,13 @@ void ScoreDB::updateCourseScoreBMS(const HashMD5& hash, const ScoreBMS& score)
 void ScoreDB::preloadScore()
 {
     cache.clear();
-    for (auto& r : query("SELECT * FROM score_course_bms", SCORE_BMS_PARAM_COUNT))
+    for (auto& r : query("SELECT * FROM score_course_bms"))
     {
         auto ret = std::make_shared<ScoreBMS>();
         convert_score_bms(*ret, r);
         cache["score_course_bms"].insert_or_assign(ANY_STR(r[0]), std::move(ret));
     }
-    for (auto& r : query("SELECT * FROM score_bms", SCORE_BMS_PARAM_COUNT))
+    for (auto& r : query("SELECT * FROM score_bms"))
     {
         auto ret = std::make_shared<ScoreBMS>();
         convert_score_bms(*ret, r);

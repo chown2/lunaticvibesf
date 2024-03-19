@@ -1,4 +1,5 @@
 #include <string>
+#include <string_view>
 
 #include "sqlite3.h"
 #include "db_conn.h"
@@ -55,34 +56,44 @@ void sql_bind_any(sqlite3_stmt* stmt, const std::initializer_list<std::any>& arg
     }
 }
 
-std::vector<std::vector<std::any>> SQLite::query(const char* zsql, size_t retSize, std::initializer_list<std::any> args) const
+std::vector<std::vector<std::any>> SQLite::query(const std::string_view zsql, std::initializer_list<std::any> args) const
 {
     _lastSql = zsql;
 
     sqlite3_stmt* stmt = nullptr;
-    const char* pzTail;
-    if (int ret = sqlite3_prepare_v3(_db, zsql, (int)strlen(zsql), 0, &stmt, &pzTail))
+    int ret = sqlite3_prepare_v3(_db, zsql.data(), static_cast<int>(zsql.size()), 0, &stmt, nullptr);
+    if (ret != 0)
     {
         LOG_ERROR << "[sqlite3] sql \"" << zsql << "\" prepare error: [" << ret << "] " << errmsg();
         return {};
     }
+
+    const int columnCount = sqlite3_column_count(stmt);
+    if (columnCount == 0)
+    {
+        LOG_ERROR << "[sqlite3] Query returns 0 colums";
+        return {};
+    }
+
     sql_bind_any(stmt, args);
 
-    std::vector<std::vector<std::any>> ret;
+    std::vector<std::vector<std::any>> out;
     size_t idx = 0;
     while (sqlite3_step(stmt) == SQLITE_ROW)
     {
-        ret.emplace_back();
-        ret[idx].resize(retSize);
-        for (int i = 0; i < retSize; ++i)
+        auto& row = out.emplace_back();
+        row.resize(columnCount);
+        for (int i = 0; i < columnCount; ++i)
         {
-            auto c = sqlite3_column_type(stmt, i);
-            if (SQLITE_INTEGER == c)
-                ret[idx][i] = sqlite3_column_int64(stmt, i);
-            else if (SQLITE_FLOAT == c)
-                ret[idx][i] = sqlite3_column_double(stmt, i);
-            else if (SQLITE_TEXT == c)
-                ret[idx][i] = std::make_any<std::string>((const char*)sqlite3_column_text(stmt, i));
+            const int c = sqlite3_column_type(stmt, i);
+            switch (c) {
+            case SQLITE_INTEGER: row[i] = sqlite3_column_int64(stmt, i); break;
+            case SQLITE_FLOAT: row[i] = sqlite3_column_double(stmt, i); break;
+            case SQLITE_TEXT: row[i] = std::make_any<std::string>((const char *)sqlite3_column_text(stmt, i)); break;
+            case SQLITE_BLOB: LOG_ERROR << "[sqlite3] Fetched unsupported type SQLITE_BLOB which is not supported"; break;
+            case SQLITE_NULL: LOG_ERROR << "[sqlite3] Fetched unsupported type SQLITE_NULL which is not supported"; break;
+            default: LOG_ERROR << "[sqlite3] Unknown column type c=" << c; break;
+            }
         }
         ++idx;
     }
@@ -95,21 +106,20 @@ std::vector<std::vector<std::any>> SQLite::query(const char* zsql, size_t retSiz
     {
         ss << any_to_str(a) << ", ";
     }
-    ss << ") result: " << ret.size() << " rows";
-    LOG_DEBUG << ss.str();
+    ss << ") result: " << out.size() << " rows";
+    LOG_VERBOSE << ss.str();
 #endif
 
     sqlite3_finalize(stmt);
-    return ret;
+    return out;
 }
 
-int SQLite::exec(const char* zsql, std::initializer_list<std::any> args)
+int SQLite::exec(const std::string_view zsql, std::initializer_list<std::any> args)
 {
     _lastSql = zsql;
 
     sqlite3_stmt* stmt = nullptr;
-    const char* pzTail;
-    int ret = sqlite3_prepare_v3(_db, zsql, (int)strlen(zsql), 0, &stmt, &pzTail);
+    int ret = sqlite3_prepare_v3(_db, zsql.data(), static_cast<int>(zsql.size()), 0, &stmt, nullptr);
     if (ret != 0)
     {
         LOG_ERROR << "[sqlite3] sql \"" << zsql << "\" prepare error: [" << ret << "] " << errmsg();
@@ -139,7 +149,7 @@ int SQLite::exec(const char* zsql, std::initializer_list<std::any> args)
     if (ret != SQLITE_OK && ret != SQLITE_ROW && ret != SQLITE_DONE)
         LOG_ERROR << ss.str() << ": " << errmsg();
     else
-        LOG_DEBUG << ss.str();
+        LOG_VERBOSE << ss.str();
 #endif
 
     sqlite3_finalize(stmt);
@@ -155,8 +165,7 @@ void SQLite::transactionStart()
         return;
 
     sqlite3_stmt* stmt = nullptr;
-    const char* pzTail;
-    int ret = sqlite3_prepare_v3(_db, "BEGIN", 6, 0, &stmt, &pzTail);
+    int ret = sqlite3_prepare_v3(_db, "BEGIN", 6, 0, &stmt, nullptr);
     if (ret)
     {
         LOG_ERROR << "[sqlite3] " << tag << ": " << "sqlite3_prepare_v3 error";
@@ -181,8 +190,7 @@ void SQLite::transactionStop()
         return;
 
     sqlite3_stmt* stmt = nullptr;
-    const char* pzTail;
-    int ret = sqlite3_prepare_v3(_db, "COMMIT", 6, 0, &stmt, &pzTail);
+    int ret = sqlite3_prepare_v3(_db, "COMMIT", 6, 0, &stmt, nullptr);
     if (ret)
     {
         LOG_ERROR << "[sqlite3] " << tag << ": " << "sqlite3_prepare_v3 error";

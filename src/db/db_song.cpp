@@ -196,7 +196,7 @@ SongDB::SongDB(const char* path) : SQLite(path, "SONG")
         LOG_ERROR << "[SongDB] Create table folder ERROR! " << errmsg();
         abort();
     }
-    if (query("SELECT parent FROM folder WHERE pathmd5=?", 1, { ROOT_FOLDER_HASH.hexdigest()}).empty())
+    if (query("SELECT parent FROM folder WHERE pathmd5=?", { ROOT_FOLDER_HASH.hexdigest()}).empty())
     {
         if (exec("INSERT INTO folder(pathmd5,parent,path,name,type,modtime) VALUES(?,?,?,?,?,?)", 
             { ROOT_FOLDER_HASH.hexdigest(), nullptr, "", "ROOT", 0, 0}))
@@ -257,7 +257,7 @@ bool SongDB::addChart(const HashMD5& folder, const Path& path)
             return false;
         }
 
-        if (auto result = query("SELECT md5 FROM song WHERE parent=? AND file=?", 1,
+        if (auto result = query("SELECT md5 FROM song WHERE parent=? AND file=?",
             { folder.hexdigest(), filename }); !result.empty() && !result[0].empty())
         {
             // check if file exists in db
@@ -416,7 +416,7 @@ std::vector<std::shared_ptr<ChartFormatBase>> SongDB::findChartByName(const Hash
         ss << " LIMIT " << limit;
 
     std::string strSql = ss.str();
-    auto result = query(strSql.c_str(), SONG_PARAM_COUNT, {tag, tag, tag, tag, tag, tag});
+    auto result = query(strSql.c_str(), {tag, tag, tag, tag, tag, tag});
 
     std::vector<std::shared_ptr<ChartFormatBase>> ret;
     for (const auto& r : result)
@@ -532,7 +532,7 @@ std::vector<std::shared_ptr<ChartFormatBase>> SongDB::findChartFromTime(const Ha
     ss << "addtime>=?";
 
     std::string strSql = ss.str();
-    auto result = query(strSql.c_str(), SONG_PARAM_COUNT, { (long long)addTime });
+    auto result = query(strSql.c_str(), { (long long)addTime });
 
     std::vector<std::shared_ptr<ChartFormatBase>> ret;
     for (const auto& r : result)
@@ -580,7 +580,7 @@ void SongDB::prepareCache()
     freeCache();
 
     size_t count = 0;
-    for (auto& row : query("SELECT * FROM song", SONG_PARAM_COUNT))
+    for (auto& row : query("SELECT * FROM song"))
     {
         songQueryHashMap[HashMD5(ANY_STR(row[0]))].push_back(count);
         songQueryParentMap[HashMD5(ANY_STR(row[1]))].push_back(count);
@@ -589,7 +589,7 @@ void SongDB::prepareCache()
     }
 
     count = 0;
-    for (auto& row : query("SELECT * FROM folder", FOLDER_PARAM_COUNT))
+    for (auto& row : query("SELECT * FROM folder"))
     {
         folderQueryHashMap[HashMD5(ANY_STR(row[0]))].push_back(count);
         if (row[1].has_value()) 
@@ -685,7 +685,7 @@ int SongDB::addSubFolder(Path path, const HashMD5& parentHash)
     HashMD5 folderHash = md5(path.u8string());
     long long folderModifyTime = getFileLastWriteTime(path);
 
-    if (auto q = query("SELECT pathmd5,path,type,modtime FROM folder WHERE path=?", 4, { path.u8string() }); !q.empty())
+    if (auto q = query("SELECT pathmd5,path,type,modtime FROM folder WHERE path=?", { path.u8string() }); !q.empty())
     {
         LOG_VERBOSE << "[SongDB] Sub folder already exists (" << path << ")";
 
@@ -909,7 +909,9 @@ int SongDB::refreshExistingFolder(const HashMD5& hash, const Path& path, FolderT
                     else
                     {
                         long long fstime = getFileLastWriteTime(path);
-                        if (auto q = query("SELECT addtime FROM song WHERE md5=? AND parent=?", 1, { chart->fileHash.hexdigest(), hash.hexdigest() }); !q.empty())
+                        if (auto q = query("SELECT addtime FROM song WHERE md5=? AND parent=?",
+                                           {chart->fileHash.hexdigest(), hash.hexdigest()});
+                            !q.empty())
                         {
                             long long dbTime = ANY_INT(q[0][0]);
 
@@ -1058,22 +1060,17 @@ HashMD5 SongDB::getFolderParent(const Path& path) const
 
     auto parent = (path / "..").lexically_normal();
     HashMD5 parentHash = md5(parent.u8string());
-    auto result = query("SELECT name,type FROM folder WHERE parent=?", 3, { parentHash.hexdigest() });
-    if (!result.empty())
-    {
-        for (const auto& leaf : result)
-            if (ANY_INT(leaf[1]) == FOLDER)
-            {
-                return parentHash;
-            }
-    }
+    auto result = query("SELECT type FROM folder WHERE parent=?", { parentHash.hexdigest() });
+    for (const auto& leaf : result)
+        if (ANY_INT(leaf[0]) == FOLDER)
+            return parentHash;
 
     return {};
 }
 
 HashMD5 SongDB::getFolderParent(const HashMD5& folder) const
 {
-    auto result = query("SELECT type,parent FROM folder WHERE path=?", 2, { folder.hexdigest() });
+    auto result = query("SELECT type,parent FROM folder WHERE path=?", { folder.hexdigest() });
     if (!result.empty())
     {
         auto leaf = result[0];
@@ -1102,7 +1099,7 @@ std::pair<bool, Path> SongDB::getFolderPath(const HashMD5& folder) const
     }
     else
     {
-        auto result = query("SELECT type,path FROM folder WHERE pathmd5=?", 2, { folder.hexdigest() });
+        auto result = query("SELECT type,path FROM folder WHERE pathmd5=?", { folder.hexdigest() });
         if (!result.empty())
         {
             auto leaf = result[0];
