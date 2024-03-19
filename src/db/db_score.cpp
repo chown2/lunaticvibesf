@@ -170,31 +170,7 @@ void ScoreDB::deleteScoreBMS(const char* tableName, const HashMD5& hash)
 
 std::shared_ptr<ScoreBMS> ScoreDB::getScoreBMS(const char* tableName, const HashMD5& hash) const
 {
-    std::string hashStr = hash.hexdigest();
-    if (cache[tableName].find(hashStr) != cache[tableName].end())
-        return cache[tableName][hashStr];
-
-    /*
-    char sqlbuf[64] = { 0 };
-    sprintf(sqlbuf, "SELECT * FROM %s WHERE md5=?", tableName);
-    auto result = query(sqlbuf, SCORE_BMS_PARAM_COUNT, { hashStr });
-
-    if (!result.empty())
-    {
-        const auto& r = result[0];
-        auto ret = std::make_shared<ScoreBMS>();
-        convert_score_bms(ret, r);
-        cache[hashStr] = ret;
-        return ret;
-    }
-    else
-    {
-        cache[hashStr] = nullptr;
-        return nullptr;
-    }
-    */
-    cache[tableName][hashStr] = nullptr;
-    return nullptr;
+    return cache[tableName][hash.hexdigest()];
 }
 
 void ScoreDB::updateScoreBMS(const char* tableName, const HashMD5& hash, const ScoreBMS& score)
