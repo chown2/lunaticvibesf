@@ -1,9 +1,12 @@
 #include "db_score.h"
 
+#include <algorithm>
 #include <any>
 #include <memory>
 #include <unordered_map>
 #include <vector>
+
+#include <stdint.h>
 
 #include "common/log.h"
 #include "common/types.h"
@@ -33,6 +36,7 @@ static constexpr auto&& CREATE_SCORE_BMS_TABLE_STR =
 "cb INTEGER NOT NULL, "
 "replay TEXT "
 ")";
+// TODO: add a field like playedtimeseconds, when md5 is no longer UNIQUE.
 static constexpr size_t SCORE_BMS_PARAM_COUNT = 21;
 struct score_bms_all_params
 {
@@ -143,16 +147,39 @@ static constexpr auto&& CREATE_SCORE_COURSE_BMS_TABLE_STR =
 "replay TEXT "
 ")";
 
+static constexpr auto&& CREATE_STATS_CACHE_TABLE_STR =
+"CREATE TABLE IF NOT EXISTS stats( "
+"id INTEGER PRIMARY KEY CHECK (id = 573), " // only one row, ever.
+"play_count INTEGER NOT NULL, clear_count INTEGER NOT NULL, "
+"pgreat INTEGER NOT NULL, great INTEGER NOT NULL, good INTEGER NOT NULL, bad INTEGER NOT NULL, poor INTEGER NOT NULL, "
+"running_combo INTEGER NOT NULL, max_running_combo INTEGER NOT NULL, "
+"playtime INTEGER NOT NULL "
+")";
+
+static constexpr auto&& INIT_STATS_CACHE_TABLE_STR =
+"INSERT OR IGNORE INTO stats(id, play_count, clear_count, pgreat, great, good, bad, poor, running_combo, max_running_combo, playtime) "
+"VALUES(573, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)";
+
 ScoreDB::ScoreDB(const char* path): SQLite(path, "SCORE")
 {
     if (exec(CREATE_SCORE_BMS_TABLE_STR) != SQLITE_OK)
     {
-        LOG_ERROR << "[ScoreDB] Create table score_bms ERROR! " << errmsg();
+        LOG_FATAL << "[ScoreDB] Failed to create table 'score_bms': " << errmsg();
         abort();
     }
     if (exec(CREATE_SCORE_COURSE_BMS_TABLE_STR) != SQLITE_OK)
     {
-        LOG_ERROR << "[ScoreDB] Create table score_course_bms ERROR! " << errmsg();
+        LOG_FATAL << "[ScoreDB] Failed to create table 'score_course_bms': " << errmsg();
+        abort();
+    }
+    if (exec(CREATE_STATS_CACHE_TABLE_STR) != SQLITE_OK)
+    {
+        LOG_FATAL << "[ScoreDB] Failed to create table 'stats': " << errmsg();
+        abort();
+    }
+    if (exec(INIT_STATS_CACHE_TABLE_STR) != SQLITE_OK)
+    {
+        LOG_FATAL << "[ScoreDB] Failed to initialize table 'stats': " << errmsg();
         abort();
     }
 }
@@ -251,7 +278,7 @@ void ScoreDB::updateScoreBMS(const char* tableName, const HashMD5& hash, const S
 
 void ScoreDB::deleteChartScoreBMS(const HashMD5& hash)
 {
-    return deleteScoreBMS("score_bms", hash);
+    deleteScoreBMS("score_bms", hash);
 }
 
 std::shared_ptr<ScoreBMS> ScoreDB::getChartScoreBMS(const HashMD5& hash) const
@@ -261,12 +288,13 @@ std::shared_ptr<ScoreBMS> ScoreDB::getChartScoreBMS(const HashMD5& hash) const
 
 void ScoreDB::updateChartScoreBMS(const HashMD5& hash, const ScoreBMS& score)
 {
-    return updateScoreBMS("score_bms", hash, score);
+    updateScoreBMS("score_bms", hash, score);
+    updateStats(score);
 }
 
 void ScoreDB::deleteCourseScoreBMS(const HashMD5& hash)
 {
-    return deleteScoreBMS("score_course_bms", hash);
+    deleteScoreBMS("score_course_bms", hash);
 }
 
 std::shared_ptr<ScoreBMS> ScoreDB::getCourseScoreBMS(const HashMD5& hash) const
@@ -276,7 +304,7 @@ std::shared_ptr<ScoreBMS> ScoreDB::getCourseScoreBMS(const HashMD5& hash) const
 
 void ScoreDB::updateCourseScoreBMS(const HashMD5& hash, const ScoreBMS& score)
 {
-    return updateScoreBMS("score_course_bms", hash, score);
+    updateScoreBMS("score_course_bms", hash, score);
 }
 
 void ScoreDB::preloadScore()
@@ -293,5 +321,59 @@ void ScoreDB::preloadScore()
         auto ret = std::make_shared<ScoreBMS>();
         convert_score_bms(*ret, r);
         cache["score_bms"].insert_or_assign(ANY_STR(r[0]), std::move(ret));
+    }
+}
+
+lunaticvibes::OverallStats ScoreDB::getStats()
+{
+    lunaticvibes::OverallStats stats;
+    const auto stats_cache_all = query("SELECT play_count, clear_count, pgreat, great, good, bad, poor, running_combo, "
+                                       "max_running_combo, playtime FROM stats");
+    assert(stats_cache_all.size() == 1);
+    const auto& stats_cache = stats_cache_all[0];
+    stats.play_count = ANY_INT(stats_cache[0]);
+    stats.clear_count = ANY_INT(stats_cache[1]);
+    stats.pgreat = ANY_INT(stats_cache[2]);
+    stats.great = ANY_INT(stats_cache[3]);
+    stats.good = ANY_INT(stats_cache[4]);
+    stats.bad = ANY_INT(stats_cache[5]);
+    stats.poor = ANY_INT(stats_cache[6]);
+    stats.running_combo = ANY_INT(stats_cache[7]);
+    stats.max_running_combo = ANY_INT(stats_cache[8]);
+    stats.playtime = ANY_INT(stats_cache[9]);
+    return stats;
+}
+
+void ScoreDB::updateStats(const ScoreBMS& score)
+{
+    int ret;
+    auto stats = getStats();
+    // TODO: how should NOPLAY be counted?
+    if (score.lamp == ScoreBMS::Lamp::NOPLAY)
+    {
+        LOG_DEBUG << "[ScoreDB] not counting NOPLAY score in stats";
+        return;
+    }
+    const auto oldRunningCombo = stats.running_combo;
+    stats.play_count += 1;
+    stats.clear_count += static_cast<int64_t>(score.lamp != ScoreBMS::Lamp::FAILED);
+    stats.pgreat += score.pgreat;
+    stats.great += score.great;
+    stats.good += score.good;
+    // FIXME: not sure about these.
+    stats.bad += score.bad;
+    stats.poor += score.kpoor + score.miss;
+    // TODO: handle running combo when player got some combo breaks.
+    stats.running_combo = score.combobreak == 0 ? stats.running_combo + score.maxcombo : 0;
+    stats.max_running_combo = std::max(stats.running_combo, oldRunningCombo);
+    stats.playtime += 0; // TODO: count playtime. LR2 does so, but doesn't expose it anywhere.
+
+    ret = exec("UPDATE stats SET play_count=?, clear_count=?, pgreat=?, great=?, good=?, bad=?, poor=?, "
+               "running_combo=?, max_running_combo=? WHERE id = 573",
+               {stats.play_count, stats.clear_count, stats.pgreat, stats.great, stats.good, stats.bad, stats.pgreat,
+                stats.running_combo, stats.max_running_combo});
+    if (ret != SQLITE_OK)
+    {
+        LOG_ERROR << "[ScoreDB] Failed to write new stats: " << errmsg();
     }
 }

@@ -4,12 +4,32 @@
 #include <string>
 #include <unordered_map>
 
+#include <stdint.h>
+
 #include "common/types.h"
 #include "common/hash.h"
 #include "db/db_conn.h"
 
 class ScoreBase;
 class ScoreBMS;
+
+namespace lunaticvibes {
+
+struct OverallStats
+{
+    int64_t play_count;
+    int64_t clear_count;
+    int64_t pgreat;
+    int64_t great;
+    int64_t good;
+    int64_t bad;
+    int64_t poor;
+    int64_t running_combo; // Accumulates between plays.
+    int64_t max_running_combo;
+    int64_t playtime; // In seconds.
+};
+
+} // namespace lunaticvibes
 
 /* TABLE classic_chart:
     md5(TEXT), totalnotes(INTEGER), score(INTEGER), rate(REAL), reserved[1-4](INTEGER), reserved[5-6](REAL)
@@ -32,17 +52,22 @@ public:
 
 protected:
     void deleteScoreBMS(const char* tableName, const HashMD5& hash);
-    std::shared_ptr<ScoreBMS> getScoreBMS(const char* tableName, const HashMD5& hash) const;
+    [[nodiscard]] std::shared_ptr<ScoreBMS> getScoreBMS(const char* tableName, const HashMD5& hash) const;
     void updateScoreBMS(const char* tableName, const HashMD5& hash, const ScoreBMS& score);
 
 public:
     void deleteChartScoreBMS(const HashMD5& hash);
-    std::shared_ptr<ScoreBMS> getChartScoreBMS(const HashMD5& hash) const;
+    [[nodiscard]] std::shared_ptr<ScoreBMS> getChartScoreBMS(const HashMD5& hash) const;
     void updateChartScoreBMS(const HashMD5& hash, const ScoreBMS& score);
 
     void deleteCourseScoreBMS(const HashMD5& hash);
-    std::shared_ptr<ScoreBMS> getCourseScoreBMS(const HashMD5& hash) const;
+    [[nodiscard]] std::shared_ptr<ScoreBMS> getCourseScoreBMS(const HashMD5& hash) const;
     void updateCourseScoreBMS(const HashMD5& hash, const ScoreBMS& score);
 
     void preloadScore();
+
+    [[nodiscard]] lunaticvibes::OverallStats getStats();
+
+private:
+    void updateStats(const ScoreBMS& score);
 };
