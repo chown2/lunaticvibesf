@@ -1392,7 +1392,7 @@ static void open_ir_page()
 
 void help(int index_)
 {
-    assert(index_ > 0 && index_ < 10);
+    assert(index_ >= 0 && index_ < 10);
     auto index = static_cast<unsigned>(index_);
     lunaticvibes::Time now{};
 
