@@ -20,7 +20,7 @@ void SpriteImageText::updateTextTexture(std::string&& text)
 {
     // NOTE: we need to draw empty text too, to keep empty input fields selectable.
 
-    text = text;
+    _text = text;
 
     // convert UTF-8 to UTF-32
     std::u32string u32Text = utf8_to_utf32(text);

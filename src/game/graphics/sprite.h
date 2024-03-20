@@ -309,7 +309,7 @@ protected:
     bool editable = false;
 
 protected:
-    std::string text;
+    std::string _text;
 private:
     Rect textureRect;
 

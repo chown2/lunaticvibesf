@@ -409,7 +409,7 @@ void SpriteText::updateTextTexture(std::string&& text, const Color& c)
     if (!pFont || !pFont->loaded)
         return;
 
-    if (pTexture != nullptr && this->text == text && textColor == c)
+    if (pTexture != nullptr && this->_text == text && textColor == c)
         return;
 
     if (text.empty() || c.a == 0)
@@ -419,7 +419,7 @@ void SpriteText::updateTextTexture(std::string&& text, const Color& c)
         return;
     }
 
-    this->text = text;
+    this->_text = text;
     textColor = c;
 
     pTexture = pFont->TextUTF8(text.c_str(), c);
@@ -472,7 +472,7 @@ void SpriteText::startEditing(bool clear)
     {
         editing = true;
         textBeforeEdit = State::get(textInd);
-        textAfterEdit = (clear ? "" : text);
+        textAfterEdit = (clear ? "" : _text);
         startTextInput(_current.rect, textAfterEdit, std::bind(&SpriteText::updateTextWhileEditing, this, _1));
     }
 }
