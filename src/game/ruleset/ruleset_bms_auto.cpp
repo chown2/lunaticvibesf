@@ -138,6 +138,7 @@ void RulesetBMSAuto::update(const lunaticvibes::Time& t)
         setStartTime(t);
 
     auto rt = t - _startTime.norm();
+    _basic.play_time = rt;
     using namespace chart;
 
     auto updateSection = [&](Input::Pad begin, Input::Pad end, int side)

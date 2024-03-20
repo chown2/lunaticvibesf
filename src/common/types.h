@@ -5,6 +5,8 @@
 #include <string>
 #include <string_view>
 
+#include "common/beat.h"
+
 typedef std::filesystem::path                   Path;
 typedef Path::string_type                       StringPath;
 typedef std::basic_string_view<Path::value_type> StringPathView;
@@ -181,6 +183,8 @@ public:
     ScoreBMS() = default;
 
 public:
+    lunaticvibes::Time play_time{};
+
     int exscore = 0;
 
     enum class Lamp

@@ -18,6 +18,8 @@ void RulesetBMSNetwork::update(const lunaticvibes::Time& t)
 {
     if (!_hasStartTime)
         setStartTime(t);
+    auto rt = t - _startTime.norm();
+    _basic.play_time = rt;
 
     auto B = [this](IndexBargraph base) -> IndexBargraph
     {

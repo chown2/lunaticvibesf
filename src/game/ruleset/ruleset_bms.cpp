@@ -1298,6 +1298,7 @@ void RulesetBMS::update(const lunaticvibes::Time& t)
         setStartTime(t);
 
     auto rt = t - _startTime.norm();
+    _basic.play_time = rt;
 
     for (auto& [c, n]: _noteListIterators)
     {

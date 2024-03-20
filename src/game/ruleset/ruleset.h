@@ -18,6 +18,7 @@ class RulesetBase
 public:
     struct BasicData
     {
+        lunaticvibes::Time play_time;
         double health = 1.0;
 
         double acc;         // 0.0 - 100.0
@@ -61,9 +62,9 @@ public:
     virtual void updateAxis(double s1, double s2, const lunaticvibes::Time& t) = 0;
     virtual void update(const lunaticvibes::Time& t) = 0;
 public:
-    constexpr BasicData getData() const { return _basic; }
-    constexpr double getClearHealth() const { return _clearHealth; }
-    constexpr bool failWhenNoHealth() const { return _failWhenNoHealth; }
+    BasicData getData() const { return _basic; }
+    double getClearHealth() const { return _clearHealth; }
+    bool failWhenNoHealth() const { return _failWhenNoHealth; }
 
     virtual bool isNoScore() const { return false; }    // for quick esc
     virtual bool isFinished() const { return notesExpired >= getNoteCount(); }

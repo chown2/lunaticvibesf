@@ -366,12 +366,12 @@ void ScoreDB::updateStats(const ScoreBMS& score)
     // TODO: handle running combo when player got some combo breaks.
     stats.running_combo = score.combobreak == 0 ? stats.running_combo + score.maxcombo : 0;
     stats.max_running_combo = std::max(stats.running_combo, oldRunningCombo);
-    stats.playtime += 0; // TODO: count playtime. LR2 does so, but doesn't expose it anywhere.
+    stats.playtime += score.play_time.norm();
 
     ret = exec("UPDATE stats SET play_count=?, clear_count=?, pgreat=?, great=?, good=?, bad=?, poor=?, "
-               "running_combo=?, max_running_combo=? WHERE id = 573",
+               "running_combo=?, max_running_combo=?, playtime=? WHERE id = 573",
                {stats.play_count, stats.clear_count, stats.pgreat, stats.great, stats.good, stats.bad, stats.pgreat,
-                stats.running_combo, stats.max_running_combo});
+                stats.running_combo, stats.max_running_combo, stats.playtime});
     if (ret != SQLITE_OK)
     {
         LOG_ERROR << "[ScoreDB] Failed to write new stats: " << errmsg();

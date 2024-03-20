@@ -165,6 +165,7 @@ void RulesetBMSReplay::update(const lunaticvibes::Time& t)
     }
 
     auto rt = t - _startTime.norm();
+    _basic.play_time = rt;
     using namespace chart;
 
     while (itReplayCommand != replay->commands.end() && rt.norm() >= (long long)std::round(itReplayCommand->ms * playbackSpeed / gSelectContext.pitchSpeed))

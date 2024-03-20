@@ -1372,7 +1372,7 @@ void ScenePlay::_updateAsync()
     // record 
     if (gChartContext.started && gPlayContext.replayNew)
     {
-        long long ms = t.norm() - State::get(IndexTimer::PLAY_START);
+        const long long ms = t.norm() - State::get(IndexTimer::PLAY_START);
         if (playerState[PLAYER_SLOT_PLAYER].hispeedHasChanged)
         {
             gPlayContext.replayNew->commands.push_back({ int64_t(ms), ReplayChart::Commands::Type::HISPEED, gPlayContext.playerState[PLAYER_SLOT_PLAYER].hispeed });

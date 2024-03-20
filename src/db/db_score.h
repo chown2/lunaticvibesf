@@ -26,7 +26,7 @@ struct OverallStats
     int64_t poor;
     int64_t running_combo; // Accumulates between plays.
     int64_t max_running_combo;
-    int64_t playtime; // In seconds.
+    int64_t playtime; // In milliseconds (LR2 used seconds).
 };
 
 } // namespace lunaticvibes

@@ -326,6 +326,7 @@ void SceneResult::updateFadeout()
                 score->notes = chart->getNoteTotalCount();
                 score->rate = data.total_acc;
                 score->maxcombo = data.maxCombo;
+                score->play_time = data.play_time;
                 score->playcount = _pScoreOld ? _pScoreOld->playcount + 1 : 1;
                 auto isclear = ruleset->isCleared() ? 1 : 0;
                 score->clearcount = _pScoreOld ? _pScoreOld->clearcount + isclear : isclear;
