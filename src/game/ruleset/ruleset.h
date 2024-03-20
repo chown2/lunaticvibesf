@@ -1,4 +1,7 @@
 #pragma once
+
+#include <utility>
+
 #include "game/input/input_wrapper.h"
 #include "common/chartformat/chartformat.h"
 #include "game/chart/chart.h"
@@ -49,7 +52,7 @@ protected:
 public:
     RulesetBase() : _basic{ 0 } {}
     RulesetBase(std::shared_ptr<ChartFormatBase> format, std::shared_ptr<ChartObjectBase> chart) :
-        _format(format), _chart(chart), _basic{ 0 }{}
+        _format(std::move(format)), _chart(std::move(chart)), _basic{ 0 }{}
     virtual ~RulesetBase() = default;
 public:
     virtual void updatePress(InputMask& pg, const lunaticvibes::Time& t) = 0;
