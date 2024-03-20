@@ -1,5 +1,9 @@
 #include "sprite_imagetext.h"
 
+#include <cassert>
+#include <string>
+
+#include "common/beat.h"
 #include "common/encoding.h"
 
 SpriteImageText::SpriteImageText(const SpriteImageTextBuilder& builder) : SpriteText(builder)

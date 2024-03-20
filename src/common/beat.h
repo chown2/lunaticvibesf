@@ -1,11 +1,8 @@
 #pragma once
-#include "types.h"
+
 #include "fraction.h"
-#include <string>
 #include <chrono>
-#include <variant>
-#include <climits>
-#include <iostream>
+#include <limits>
 
 typedef unsigned Bar;
 typedef double BPM;
@@ -52,7 +49,7 @@ public:
 	}
 	constexpr Time(long long n, bool init_with_high_resolution_timestamp = false) : _regular(), _highres()
 	{
-		if (init_with_high_resolution_timestamp || n > LLONG_MAX / 1000000)
+		if (init_with_high_resolution_timestamp || n > std::numeric_limits<long long>::max() / 1000000)
 		{
 			_highres = n;
 			_regular = std::chrono::duration_cast<timeNormRes>(timeHighRes(n)).count();

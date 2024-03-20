@@ -2,12 +2,10 @@
 
 #include <array>
 #include <bitset>
-#include <functional>
-#include <map>
-#include <vector>
 
 #include "common/beat.h"
 #include "common/keymap.h"
+#include "common/types.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Input manager
