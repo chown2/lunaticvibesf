@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <any>
+#include <cassert>
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -187,11 +188,18 @@ ScoreDB::ScoreDB(const char* path): SQLite(path, "SCORE")
 
 void ScoreDB::deleteScoreBMS(const char* tableName, const HashMD5& hash)
 {
+    int ret;
+
     const auto hashStr = hash.hexdigest();
 
     char sqlbuf[128] = { 0 };
     snprintf(static_cast<char*>(sqlbuf), sizeof(sqlbuf) - 1, "DELETE FROM %s WHERE md5=?", tableName);
-    exec(static_cast<char*>(sqlbuf), {hashStr});
+    ret = exec(static_cast<char*>(sqlbuf), {hashStr});
+    if (ret != SQLITE_OK)
+    {
+        LOG_ERROR << "[ScoreDB] Failed to delete score: " << errmsg();
+        return;
+    }
 
     cache[tableName].erase(hashStr);
 }
@@ -203,6 +211,8 @@ std::shared_ptr<ScoreBMS> ScoreDB::getScoreBMS(const char* tableName, const Hash
 
 void ScoreDB::updateScoreBMS(const char* tableName, const HashMD5& hash, const ScoreBMS& score)
 {
+    int ret;
+
     std::string hashStr = hash.hexdigest();
 
     auto pRecord = getScoreBMS(tableName, hash);
@@ -246,35 +256,34 @@ void ScoreDB::updateScoreBMS(const char* tableName, const HashMD5& hash, const S
         char sqlbuf[224] = { 0 };
         sprintf(sqlbuf, "UPDATE %s SET notes=?,score=?,rate=?,fast=?,slow=?,maxcombo=?,addtime=?,pc=?,clearcount=?,exscore=?,lamp=?,"
             "pgreat=?,great=?,good=?,bad=?,bpoor=?,miss=?,bp=?,cb=?,replay=? WHERE md5=?", tableName);
-        exec(sqlbuf,
+        ret = exec(sqlbuf,
             { record.notes, record.score, record.rate, record.fast, record.slow,
             record.maxcombo, score.addtime, record.playcount, record.clearcount, record.exscore, (int)record.lamp,
             record.pgreat, record.great, record.good, record.bad, record.kpoor, record.miss, record.bp, record.combobreak, record.replayFileName,
             hashStr });
-        cache[tableName].erase(hashStr);
+        assert(ret == SQLITE_OK);
     }
     else
     {
         char sqlbuf[224] = { 0 };
         sprintf(sqlbuf, "INSERT INTO %s(md5,notes,score,rate,fast,slow,maxcombo,addtime,pc,clearcount,exscore,lamp,"
             "pgreat,great,good,bad,bpoor,miss,bp,cb,replay) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", tableName);
-        exec(sqlbuf,
+        ret = exec(sqlbuf,
             { hashStr,
             score.notes, score.score, score.rate, score.fast, score.slow,
             score.maxcombo, score.addtime, score.playcount, score.clearcount, score.exscore, (int)score.lamp,
             score.pgreat, score.great, score.good, score.bad, score.kpoor, score.miss, score.bp, score.combobreak, score.replayFileName });
+        assert(ret == SQLITE_OK);
     }
 
     char sqlbuf[96] = { 0 };
     sprintf(sqlbuf, "SELECT * FROM %s WHERE md5=?", tableName);
     auto result = query(sqlbuf, { hashStr });
-    if (!result.empty())
-    {
-        const auto& r = result[0];
-        auto ret = std::make_shared<ScoreBMS>();
-        convert_score_bms(*ret, r);
-        cache[tableName][hashStr] = ret;
-    }
+    assert(!result.empty());
+    const auto& r = result[0];
+    auto scoreRefetched = std::make_shared<ScoreBMS>();
+    assert(convert_score_bms(*scoreRefetched, r));
+    cache[tableName].insert_or_assign(hashStr, std::move(scoreRefetched));
 }
 
 void ScoreDB::deleteChartScoreBMS(const HashMD5& hash)
