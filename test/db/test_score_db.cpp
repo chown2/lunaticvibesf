@@ -50,6 +50,11 @@ TEST(ScoreDb, ChartScoreUpdating)
         EXPECT_EQ(score_db.getStats().play_count, 2);
         EXPECT_EQ(score_db.getStats().clear_count, 1);
     }
+
+    // Cache reloading works.
+    score_db.preloadScore();
+    ASSERT_NE(score_db.getChartScoreBMS(hash), nullptr);
+    EXPECT_EQ(score_db.getChartScoreBMS(hash)->exscore, 2);
 }
 
 TEST(ScoreDb, CourseScoreUpdating)
@@ -78,6 +83,11 @@ TEST(ScoreDb, CourseScoreUpdating)
     score_db.updateCourseScoreBMS(hash, score);
     EXPECT_EQ(score_db.getCourseScoreBMS(hash)->exscore, 2);
     EXPECT_EQ(score_db.getStats().pgreat, 0);
+
+    // Cache reloading works.
+    score_db.preloadScore();
+    ASSERT_NE(score_db.getCourseScoreBMS(hash), nullptr);
+    EXPECT_EQ(score_db.getCourseScoreBMS(hash)->exscore, 2);
 }
 
 TEST(ScoreDb, ChartScoreDeleting)
@@ -91,9 +101,14 @@ TEST(ScoreDb, ChartScoreDeleting)
     EXPECT_EQ(score_db.getChartScoreBMS(hash), nullptr);
 
     score_db.updateChartScoreBMS(hash, score);
+    ASSERT_NE(score_db.getChartScoreBMS(hash), nullptr);
     EXPECT_EQ(score_db.getChartScoreBMS(hash)->exscore, 1);
 
     score_db.deleteChartScoreBMS(hash);
+    EXPECT_EQ(score_db.getChartScoreBMS(hash), nullptr);
+
+    // Not just cache that was invalidated.
+    score_db.preloadScore();
     EXPECT_EQ(score_db.getChartScoreBMS(hash), nullptr);
 }
 
@@ -108,8 +123,13 @@ TEST(ScoreDb, CourseScoreDeleting)
     EXPECT_EQ(score_db.getCourseScoreBMS(hash), nullptr);
 
     score_db.updateCourseScoreBMS(hash, score);
+    EXPECT_NE(score_db.getCourseScoreBMS(hash), nullptr);
     EXPECT_EQ(score_db.getCourseScoreBMS(hash)->exscore, 1);
 
     score_db.deleteCourseScoreBMS(hash);
     EXPECT_EQ(score_db.getCourseScoreBMS(hash), nullptr);
+
+    // Not just cache that was invalidated.
+    score_db.preloadScore();
+    EXPECT_EQ(score_db.getChartScoreBMS(hash), nullptr);
 }
