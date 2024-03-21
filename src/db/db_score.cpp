@@ -350,7 +350,7 @@ void ScoreDB::updateLegacyScoreBMS(const char* tableName, const HashMD5& hash, c
     assert(!result.empty());
     const auto& r = result[0];
     auto scoreRefetched = std::make_shared<ScoreBMS>();
-    assert(convert_score_bms(*scoreRefetched, r));
+    convert_score_bms(*scoreRefetched, r);
     cache[tableName].insert_or_assign(hashStr, std::move(scoreRefetched));
 }
 
@@ -430,7 +430,7 @@ catch (const std::exception& e)
     if (scores.empty())
         return nullptr;
     assert(scores.size() == 1);
-    assert(convertCachedPbBms(*out, scores[0]));
+    convertCachedPbBms(*out, scores[0]);
     return out;
 }
 
@@ -559,7 +559,7 @@ void ScoreDB::rebuildBmsPbCache()
     {
         auto score = std::make_shared<ScoreBMS>();
         const std::string md5 = ANY_STR(raw_score[0]);
-        assert(convert_score_bms(*score, raw_score));
+        convert_score_bms(*score, raw_score);
         updateCachedChartPbBms(md5, *score);
     }
     for (const auto& raw_score : query("SELECT "
@@ -570,7 +570,7 @@ void ScoreDB::rebuildBmsPbCache()
     {
         auto score = std::make_shared<ScoreBMS>();
         const std::string md5 = ANY_STR(raw_score[0]);
-        assert(convertHistoryScoreBms(*score, raw_score));
+        convertHistoryScoreBms(*score, raw_score);
         updateCachedChartPbBms(md5, *score);
     }
     transactionStop();
@@ -598,7 +598,7 @@ void ScoreDB::preloadScore()
     for (const auto& r : query("SELECT * FROM score_course_bms"))
     {
         auto score = std::make_shared<ScoreBMS>();
-        assert(convert_score_bms(*score, r));
+        convert_score_bms(*score, r);
         cache["score_course_bms"].insert_or_assign(ANY_STR(r[0]), std::move(score));
     }
     for (const auto& r : query("SELECT "
@@ -607,7 +607,7 @@ void ScoreDB::preloadScore()
                                "FROM score_cache_bms"))
     {
         auto score = std::make_shared<ScoreBMS>();
-        assert(convertCachedPbBms(*score, r));
+        convertCachedPbBms(*score, r);
         cache["score_bms"].insert_or_assign(ANY_STR(r[0]), std::move(score));
     }
 }
