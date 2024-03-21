@@ -354,7 +354,6 @@ void ScoreDB::updateStats(const ScoreBMS& score)
         LOG_DEBUG << "[ScoreDB] not counting NOPLAY score in stats";
         return;
     }
-    const auto oldRunningCombo = stats.running_combo;
     stats.play_count += 1;
     stats.clear_count += static_cast<int64_t>(score.lamp != ScoreBMS::Lamp::FAILED);
     stats.pgreat += score.pgreat;
@@ -363,9 +362,10 @@ void ScoreDB::updateStats(const ScoreBMS& score)
     // FIXME: not sure about these.
     stats.bad += score.bad;
     stats.poor += score.kpoor + score.miss;
-    // TODO: handle running combo when player got some combo breaks.
-    stats.running_combo = score.combobreak == 0 ? stats.running_combo + score.maxcombo : 0;
-    stats.max_running_combo = std::max(stats.running_combo, oldRunningCombo);
+    const auto first_running_combo = stats.running_combo + score.first_max_combo;
+    stats.running_combo = score.combobreak == 0 ? stats.running_combo + score.maxcombo : score.final_combo;
+    stats.max_running_combo = std::max(
+        {stats.max_running_combo, first_running_combo, static_cast<int64_t>(score.maxcombo), stats.running_combo});
     stats.playtime += score.play_time.norm();
 
     ret = exec("UPDATE stats SET play_count=?, clear_count=?, pgreat=?, great=?, good=?, bad=?, poor=?, "

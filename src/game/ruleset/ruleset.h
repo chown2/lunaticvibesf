@@ -26,6 +26,7 @@ public:
 
         unsigned combo;
         unsigned maxCombo;
+        unsigned firstMaxCombo; // max combo until first break.
         unsigned comboDisplay;  // for course
         unsigned maxComboDisplay;
 

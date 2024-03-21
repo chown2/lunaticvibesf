@@ -325,6 +325,8 @@ void SceneResult::updateFadeout()
                 const auto data = ruleset->getData();
                 score->notes = chart->getNoteTotalCount();
                 score->rate = data.total_acc;
+                score->first_max_combo = data.firstMaxCombo;
+                score->final_combo = data.combo;
                 score->maxcombo = data.maxCombo;
                 score->play_time = data.play_time;
                 score->playcount = _pScoreOld ? _pScoreOld->playcount + 1 : 1;

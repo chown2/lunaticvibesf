@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <cstdint>
 #include <filesystem>
 #include <string>
 #include <string_view>
@@ -163,11 +164,15 @@ public:
     double rate = 0.0;
     int fast = 0;
     int slow = 0;
-    long long maxcombo = 0;
-    long long addtime = 0;
-    long long playcount = 0;
-    long long clearcount = 0;
-    long long reserved[1]{ 0 };
+    // Max combo until first break.
+    int64_t first_max_combo = 0;
+    // Combo at the end of the play.
+    int64_t final_combo = 0;
+    int64_t maxcombo = 0;
+    int64_t addtime = 0;
+    int64_t playcount = 0;
+    int64_t clearcount = 0;
+    int64_t reserved[1]{ 0 };
     double reservedlf[2]{ 0.0 };
 
     std::string replayFileName;

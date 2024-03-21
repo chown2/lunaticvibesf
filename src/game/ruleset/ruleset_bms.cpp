@@ -1076,6 +1076,8 @@ void RulesetBMS::updateJudge(const lunaticvibes::Time& t, const NoteLaneIndex ch
             _basic.maxCombo = _basic.combo;
         if (_basic.combo + _basic.comboDisplay > _basic.maxComboDisplay)
             _basic.maxComboDisplay = _basic.combo + _basic.comboDisplay;
+        if (_basic.judge[JUDGE_CB] == 0)
+            _basic.firstMaxCombo = _basic.combo;
     }
 
     unsigned max = getNoteCount() * 2;
