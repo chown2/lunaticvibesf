@@ -20,7 +20,8 @@ TEST(ScoreDb, ChartScoreUpdating)
         score.exscore = 1;
         score.lamp = ScoreBMS::Lamp::NOPLAY;
         score.pgreat = 2;
-        score_db.updateChartScoreBMS(hash, score);
+        score.replayFileName = "score1";
+        score_db.insertChartScoreBMS(hash, score);
         EXPECT_EQ(score_db.getChartScoreBMS(hash)->exscore, 1);
         EXPECT_EQ(score_db.getStats().pgreat, 0);
         EXPECT_EQ(score_db.getStats().play_count, 0);
@@ -32,7 +33,8 @@ TEST(ScoreDb, ChartScoreUpdating)
         score.exscore = 2;
         score.lamp = ScoreBMS::Lamp::FAILED;
         score.pgreat = 2;
-        score_db.updateChartScoreBMS(hash, score);
+        score.replayFileName = "score2";
+        score_db.insertChartScoreBMS(hash, score);
         EXPECT_EQ(score_db.getChartScoreBMS(hash)->exscore, 2);
         EXPECT_EQ(score_db.getStats().pgreat, 2);
         EXPECT_EQ(score_db.getStats().play_count, 1);
@@ -44,7 +46,8 @@ TEST(ScoreDb, ChartScoreUpdating)
         score.exscore = 1;
         score.lamp = ScoreBMS::Lamp::EASY;
         score.pgreat = 2;
-        score_db.updateChartScoreBMS(hash, score);
+        score.replayFileName = "score3";
+        score_db.insertChartScoreBMS(hash, score);
         EXPECT_EQ(score_db.getChartScoreBMS(hash)->exscore, 2);
         EXPECT_EQ(score_db.getStats().pgreat, 4);
         EXPECT_EQ(score_db.getStats().play_count, 2);
@@ -100,7 +103,9 @@ TEST(ScoreDb, ChartScoreDeleting)
 
     EXPECT_EQ(score_db.getChartScoreBMS(hash), nullptr);
 
-    score_db.updateChartScoreBMS(hash, score);
+    // And also test for old DB table. Same scores themselves are never supposed to be in both.
+    score_db.updateLegacyChartScoreBMS(hash, score);
+    score_db.insertChartScoreBMS(hash, score);
     ASSERT_NE(score_db.getChartScoreBMS(hash), nullptr);
     EXPECT_EQ(score_db.getChartScoreBMS(hash)->exscore, 1);
 
@@ -108,7 +113,7 @@ TEST(ScoreDb, ChartScoreDeleting)
     EXPECT_EQ(score_db.getChartScoreBMS(hash), nullptr);
 
     // Not just cache that was invalidated.
-    score_db.preloadScore();
+    score_db.rebuildBmsPbCache();
     EXPECT_EQ(score_db.getChartScoreBMS(hash), nullptr);
 }
 
@@ -130,6 +135,6 @@ TEST(ScoreDb, CourseScoreDeleting)
     EXPECT_EQ(score_db.getCourseScoreBMS(hash), nullptr);
 
     // Not just cache that was invalidated.
-    score_db.preloadScore();
+    score_db.rebuildBmsPbCache();
     EXPECT_EQ(score_db.getChartScoreBMS(hash), nullptr);
 }

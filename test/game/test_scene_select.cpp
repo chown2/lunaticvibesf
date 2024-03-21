@@ -33,7 +33,7 @@ TEST(SceneSelect, SearchQueryScoreDeletionWorks)
     ScoreBMS chart_score;
     chart_score.exscore = 1;
     EXPECT_EQ(score_db.getChartScoreBMS(chart->fileHash), nullptr);
-    score_db.updateChartScoreBMS(chart->fileHash, chart_score);
+    score_db.insertChartScoreBMS(chart->fileHash, chart_score);
     EXPECT_EQ(score_db.getChartScoreBMS(chart->fileHash)->exscore, 1);
 
     ScoreBMS course_score;

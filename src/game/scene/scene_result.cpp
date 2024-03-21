@@ -354,7 +354,7 @@ void SceneResult::updateFadeout()
                     score->combobreak = rBMS->getJudgeCountEx(RulesetBMS::JUDGE_CB);
                 }
 
-                g_pScoreDB->updateChartScoreBMS(gChartContext.hash, *score);
+                g_pScoreDB->insertChartScoreBMS(gChartContext.hash, *score);
                 pScore = score;
 
                 break;

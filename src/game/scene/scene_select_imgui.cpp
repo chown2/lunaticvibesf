@@ -547,6 +547,20 @@ void SceneSelect::imguiPageOptionsGeneral()
             imgui_add_profile_popup = true;
         }
 
+        // TODO: translations.
+        if (ImGui::Button("Rebuild score cache"))
+        {
+            g_pScoreDB->rebuildBmsPbCache();
+            for (size_t idx = 0; idx < gSelectContext.entries.size(); ++idx)
+            {
+                std::unique_lock<std::shared_mutex> u(gSelectContext._mutex);
+                updateEntryScore(idx);
+                setEntryInfo();
+            }
+        }
+
+        // TODO: rebuild profile stats button.
+
         ImGui::Spacing();
         ImGui::Separator();
 

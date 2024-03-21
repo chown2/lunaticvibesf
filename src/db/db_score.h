@@ -51,23 +51,32 @@ public:
     ScoreDB& operator= (ScoreDB&) = delete;
 
 protected:
-    void deleteScoreBMS(const char* tableName, const HashMD5& hash);
+    void deleteLegacyScoreBMS(const char* tableName, const HashMD5& hash);
+    void updateLegacyScoreBMS(const char* tableName, const HashMD5& hash, const ScoreBMS& score);
+
     [[nodiscard]] std::shared_ptr<ScoreBMS> getScoreBMS(const char* tableName, const HashMD5& hash) const;
-    void updateScoreBMS(const char* tableName, const HashMD5& hash, const ScoreBMS& score);
+
+    [[nodiscard]] std::shared_ptr<ScoreBMS> fetchCachedPbBMS(const HashMD5& hash) const;
+    void saveChartScoreBmsToHistory(const HashMD5& hash, const ScoreBMS& score);
+    void updateCachedChartPbBms(const HashMD5& hash, const ScoreBMS& score);
 
 public:
     void deleteChartScoreBMS(const HashMD5& hash);
     [[nodiscard]] std::shared_ptr<ScoreBMS> getChartScoreBMS(const HashMD5& hash) const;
-    void updateChartScoreBMS(const HashMD5& hash, const ScoreBMS& score);
+    void insertChartScoreBMS(const HashMD5& hash, const ScoreBMS& score);
 
     void deleteCourseScoreBMS(const HashMD5& hash);
     [[nodiscard]] std::shared_ptr<ScoreBMS> getCourseScoreBMS(const HashMD5& hash) const;
     void updateCourseScoreBMS(const HashMD5& hash, const ScoreBMS& score);
 
+    void rebuildBmsPbCache();
     void preloadScore();
 
     [[nodiscard]] lunaticvibes::OverallStats getStats();
 
+    // Test things, don't normally use:
+
+    void updateLegacyChartScoreBMS(const HashMD5& hash, const ScoreBMS& score);
 private:
     void updateStats(const ScoreBMS& score);
 };
