@@ -119,6 +119,7 @@ bool convert_score_bms(ScoreBMS& out, const std::vector<std::any>& in)
     out.bp = params.bp;
     out.combobreak = params.cb;
     out.replayFileName = params.replay;
+    out.play_time = lunaticvibes::Time{0};
     return true;
 }
 
@@ -247,7 +248,7 @@ void ScoreDB::updateScoreBMS(const char* tableName, const HashMD5& hash, const S
             "pgreat=?,great=?,good=?,bad=?,bpoor=?,miss=?,bp=?,cb=?,replay=? WHERE md5=?", tableName);
         exec(sqlbuf,
             { record.notes, record.score, record.rate, record.fast, record.slow,
-            record.maxcombo, (long long)std::time(nullptr), record.playcount, record.clearcount, record.exscore, (int)record.lamp,
+            record.maxcombo, score.addtime, record.playcount, record.clearcount, record.exscore, (int)record.lamp,
             record.pgreat, record.great, record.good, record.bad, record.kpoor, record.miss, record.bp, record.combobreak, record.replayFileName,
             hashStr });
         cache[tableName].erase(hashStr);
@@ -260,7 +261,7 @@ void ScoreDB::updateScoreBMS(const char* tableName, const HashMD5& hash, const S
         exec(sqlbuf,
             { hashStr,
             score.notes, score.score, score.rate, score.fast, score.slow,
-            score.maxcombo, (long long)std::time(nullptr), score.playcount, score.clearcount, score.exscore, (int)score.lamp,
+            score.maxcombo, score.addtime, score.playcount, score.clearcount, score.exscore, (int)score.lamp,
             score.pgreat, score.great, score.good, score.bad, score.kpoor, score.miss, score.bp, score.combobreak, score.replayFileName });
     }
 

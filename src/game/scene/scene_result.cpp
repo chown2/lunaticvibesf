@@ -328,6 +328,7 @@ void SceneResult::updateFadeout()
                 score->first_max_combo = data.firstMaxCombo;
                 score->final_combo = data.combo;
                 score->maxcombo = data.maxCombo;
+                score->addtime = t.norm() / 1000;
                 score->play_time = data.play_time;
                 score->playcount = _pScoreOld ? _pScoreOld->playcount + 1 : 1;
                 auto isclear = ruleset->isCleared() ? 1 : 0;
