@@ -1151,7 +1151,8 @@ void RulesetBMS::judgeNotePress(Input::Pad k, const lunaticvibes::Time& t, const
     // break-out BAD chain 
     if (j.area == JudgeArea::LATE_BAD)
     {
-         judgeNotePress(k, t, rt, slot);
+        // FIXME: infinite recursion and stack overflow.
+        judgeNotePress(k, t, rt, slot);
     }
 }
 void RulesetBMS::judgeNoteHold(Input::Pad k, const lunaticvibes::Time& t, const lunaticvibes::Time& rt, int slot)
