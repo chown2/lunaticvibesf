@@ -78,7 +78,6 @@ std::vector<std::vector<std::any>> SQLite::query(const std::string_view zsql, st
     sql_bind_any(stmt, args);
 
     std::vector<std::vector<std::any>> out;
-    size_t idx = 0;
     while (sqlite3_step(stmt) == SQLITE_ROW)
     {
         auto& row = out.emplace_back();
@@ -95,7 +94,6 @@ std::vector<std::vector<std::any>> SQLite::query(const std::string_view zsql, st
             default: LOG_ERROR << "[sqlite3] Unknown column type c=" << c; break;
             }
         }
-        ++idx;
     }
 
 #ifndef NDEBUG
