@@ -3,6 +3,7 @@
 #include <plog/Init.h>
 #include <plog/Appenders/ColorConsoleAppender.h>
 #include <plog/Formatters/TxtFormatter.h>
+#include <plog/Severity.h>
 #include "common/sysutil.h"
 #include "config/config_mgr.h"
 
@@ -16,7 +17,7 @@ int main(int argc, char** argv)
     SetThreadAsMainThread();
 
     auto appender = plog::ColorConsoleAppender<plog::TxtFormatterImpl<false>>();
-    plog::init(plog::debug, &appender);
+    plog::init(plog::verbose, &appender);
 
     ConfigMgr::init();
     ConfigMgr::load();
