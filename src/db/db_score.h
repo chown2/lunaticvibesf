@@ -1,8 +1,11 @@
 #pragma once
 
+#include <any>
+#include <initializer_list>
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include <stdint.h>
 
@@ -79,4 +82,7 @@ public:
     void updateLegacyChartScoreBMS(const HashMD5& hash, const ScoreBMS& score);
 private:
     void updateStats(const ScoreBMS& score);
+    void initTables();
+    [[nodiscard]] std::vector<std::pair<HashMD5, ScoreBMS>> fetchCachedPbBMSImpl(
+        const std::string& sql_where, std::initializer_list<std::any> params) const;
 };
