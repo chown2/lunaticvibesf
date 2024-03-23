@@ -36,7 +36,7 @@ public:
 protected:
     std::shared_ptr<ChartFormatBase> _format;
     std::shared_ptr<ChartObjectBase> _chart;
-    BasicData _basic = { 0 };
+    BasicData _basic{};
     double _minHealth;
     double _clearHealth;
     bool _failWhenNoHealth = false;
@@ -52,9 +52,13 @@ protected:
     unsigned notesExpired = 0;    // total notes expired. +1 when timestamp+POOR reached; +1 for LN when tail timestamp (no +POOR) is reached
 
 public:
-    RulesetBase() : _basic{ 0 } {}
-    RulesetBase(std::shared_ptr<ChartFormatBase> format, std::shared_ptr<ChartObjectBase> chart) :
-        _format(std::move(format)), _chart(std::move(chart)), _basic{ 0 }{}
+    RulesetBase() : _basic{}
+    {
+    }
+    RulesetBase(std::shared_ptr<ChartFormatBase> format, std::shared_ptr<ChartObjectBase> chart)
+        : _format(std::move(format)), _chart(std::move(chart)), _basic{}
+    {
+    }
     virtual ~RulesetBase() = default;
 public:
     virtual void updatePress(InputMask& pg, const lunaticvibes::Time& t) = 0;

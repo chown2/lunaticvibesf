@@ -1146,14 +1146,15 @@ void updateDstOpt()
 
 		switch (gArenaData.getPlayerCount())
 		{
-		case 8: set(1008);
-		case 7: set(1007);
-		case 6: set(1006);
-		case 5: set(1005);
-		case 4: set(1004);
-		case 3: set(1003);
-		case 2: set(1002);
-		case 1: set(1001);
+		case 8: set(1008); [[fallthrough]];
+		case 7: set(1007); [[fallthrough]];
+		case 6: set(1006); [[fallthrough]];
+		case 5: set(1005); [[fallthrough]];
+		case 4: set(1004); [[fallthrough]];
+		case 3: set(1003); [[fallthrough]];
+		case 2: set(1002); [[fallthrough]];
+		case 1: set(1001); [[fallthrough]];
+		case 0: break;
 		}
 
 		set(1400, gArenaData.isSelfReady());

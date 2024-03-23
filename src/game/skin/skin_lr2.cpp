@@ -1855,10 +1855,7 @@ ParseRet SkinLR2::SRC_GROOVEGAUGE()
 
     if (d.div_y * d.div_x < 4)
     {
-        if (csvLineNumber >= 0)
-        {
-            LOG_DEBUG << "[Skin] " << csvLineNumber << ": div not enough (Line " << csvLineNumber << ")";
-        }
+        LOG_DEBUG << "[Skin] " << csvLineNumber << ": div not enough (Line " << csvLineNumber << ")";
         return ParseRet::DIV_NOT_ENOUGH;
     }
 
@@ -3257,11 +3254,8 @@ ParseRet SkinLR2::DST_BAR_RIVAL()
     auto type = BarRivalType(d._null);
     if (d._null >= (int)BarRivalType::RIVAL_TYPE_COUNT)
     {
-        if (csvLineNumber >= 0)
-        {
-            LOG_DEBUG << "[SkinLR2] BarEntry rival type (" << int(type) << ") Invalid!"
-                << " (Line " << csvLineNumber << ")";
-        }
+        LOG_DEBUG << "[SkinLR2] BarEntry rival type (" << int(type) << ") Invalid!"
+            << " (Line " << csvLineNumber << ")";
         return ParseRet::PARAM_INVALID;
     }
 

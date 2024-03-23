@@ -1008,7 +1008,7 @@ void SoundDriverFMOD::setDSP(DSPType type, int dspIndex, SampleChannel ch, float
     FMOD_DSP_TYPE fmodType;
     switch (type)
 	{
-    case DSPType::OFF:        fmodType = FMOD_DSP_TYPE_UNKNOWN;
+    case DSPType::OFF:        fmodType = FMOD_DSP_TYPE_UNKNOWN; break;
     case DSPType::REVERB:     fmodType = FMOD_DSP_TYPE_SFXREVERB; break; // The DSP type LR2 used (FMOD_DSP_TYPE_REVERB) is long gone
 	case DSPType::DELAY:      fmodType = FMOD_DSP_TYPE_ECHO; break;
 	case DSPType::LOWPASS:    fmodType = FMOD_DSP_TYPE_LOWPASS; break;

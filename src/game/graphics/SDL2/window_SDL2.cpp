@@ -300,7 +300,7 @@ int graphics_get_monitor_index()
 std::pair<int, int> graphics_get_desktop_resolution()
 {
     int index = graphics_get_monitor_index();
-    SDL_DisplayMode mode = { 0 };
+    SDL_DisplayMode mode{};
     SDL_GetDesktopDisplayMode(index, &mode);
     return { mode.w, mode.h };
 }
@@ -312,7 +312,7 @@ std::vector<std::tuple<int, int, int>> graphics_get_resolution_list()
     std::vector<std::tuple<int, int, int>> res;
     for (int i = 0; i < modes; ++i)
     {
-        SDL_DisplayMode mode = { 0 };
+        SDL_DisplayMode mode{};
         SDL_GetDisplayMode(index, i, &mode);
         LOG_DEBUG << mode.w << 'x' << mode.h << ' ' << mode.refresh_rate << "Hz";
         res.emplace_back(mode.w, mode.h, mode.refresh_rate);

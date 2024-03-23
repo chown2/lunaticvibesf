@@ -103,7 +103,7 @@ std::shared_ptr<Texture> TTFFont::TextUTF8(const char* text, const Color& c)
     if (!loaded) return nullptr;
 
     SDL_Surface* surfaceText = TTF_RenderUTF8_Blended(_pFont, text, c);
-    SDL_Rect rcText = { 0 };
+    SDL_Rect rcText{};
     TTF_SizeUTF8(_pFont, text, &rcText.w, &rcText.h);
     if (_pFontOutline)
     {

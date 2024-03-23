@@ -239,6 +239,10 @@ int main(int argc, char* argv[])
             bms->minBPM,
             bms->startBPM,
             bms->maxBPM,
+
+            {},
+            {},
+            {},
         };
     }
     else

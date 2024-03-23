@@ -142,8 +142,7 @@ void SpriteImageText::draw() const
         for (auto [c, r] : _drawList)
         {
             auto& [idx, rect] = _chrList->at(c);
-            if (idx >= 0)
-                _textures[idx]->draw(rect, r, _current.color, _current.blend, _current.filter, _current.angle);
+            _textures[idx]->draw(rect, r, _current.color, _current.blend, _current.filter, _current.angle);
         }
     }
 }
