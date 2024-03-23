@@ -39,7 +39,7 @@ protected:
 	private:
 		std::array<Value, _size> _data;
 		std::array<Value, _size> _dataDefault;
-		std::shared_mutex _mutex;
+		mutable std::shared_mutex _mutex;
 
 	public:
 		Value get(Key n) const
