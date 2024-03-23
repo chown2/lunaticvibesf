@@ -152,8 +152,8 @@ public:
     bool unregister_kb(const std::string& key);
 
 protected:
-    std::array<JoystickMask, InputMgr::MAX_JOYSTICK_COUNT> _joyprev = { 0 };
-    std::array<JoystickMask, InputMgr::MAX_JOYSTICK_COUNT> _joycurr = { 0 };
+    std::array<JoystickMask, InputMgr::MAX_JOYSTICK_COUNT> _joyprev{};
+    std::array<JoystickMask, InputMgr::MAX_JOYSTICK_COUNT> _joycurr{};
 private:
     std::map<const std::string, JOYSTICKCALLBACK> _joystickCallbackMap;
 public:
@@ -161,8 +161,8 @@ public:
     bool unregister_joy(const std::string& key);
 
 protected:
-    std::array<JoystickAxis, InputMgr::MAX_JOYSTICK_COUNT> _joyaxisprev = { 0 };
-    std::array<JoystickAxis, InputMgr::MAX_JOYSTICK_COUNT> _joyaxiscurr = { 0 };
+    std::array<JoystickAxis, InputMgr::MAX_JOYSTICK_COUNT> _joyaxisprev{};
+    std::array<JoystickAxis, InputMgr::MAX_JOYSTICK_COUNT> _joyaxiscurr{};
 private:
     std::map<const std::string, ABSAXISCALLBACK> _absaxisCallbackMap;
 public:

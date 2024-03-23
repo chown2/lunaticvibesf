@@ -157,7 +157,7 @@ void SpriteBarEntry::pushPartsOrder(BarPartsType type)
 }
 
 
-bool SpriteBarEntry::update(lunaticvibes::Time time)
+bool SpriteBarEntry::update(const lunaticvibes::Time& time)
 {
     for (auto& s: sBodyOff) if (s) s->setHideInternal(true);
     for (auto& s: sBodyOn) if (s) s->setHideInternal(true);

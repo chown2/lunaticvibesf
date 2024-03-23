@@ -437,7 +437,7 @@ void ChartObjectBMS::loadBMS(const ChartFormatBMS& objBms)
 
         // Calculate note times and push to note list
         Segment lastBPMChangedSegment(0, 1);
-        double stopMetre = 0; // FIXME: set but unused
+        [[maybe_unused]] double stopMetre = 0; // FIXME: unused-but-set-variable
         Metre barMetre = objBms.metres[m];      // visual metre
 		lunaticvibes::Time beatLength = lunaticvibes::Time::singleBeatLengthFromBPM(bpm);
 

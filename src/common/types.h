@@ -179,6 +179,7 @@ public:
 
 public:
     ScoreBase() = default;
+    virtual ~ScoreBase() = default;
     virtual Type getType() const { return Type::UNKNOWN; }
 };
 

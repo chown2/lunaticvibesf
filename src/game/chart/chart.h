@@ -162,6 +162,7 @@ public:
     ChartObjectBase() = delete;
     ChartObjectBase(int slot, size_t plain_n, size_t ext_n);
     static std::shared_ptr<ChartObjectBase> createFromChartFormat(int slot, const std::shared_ptr<ChartFormatBase>& p);
+    virtual ~ChartObjectBase() = default;
 
 public:
     using NoteIterator = decltype(_noteLists)::value_type::iterator;

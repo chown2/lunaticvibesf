@@ -501,7 +501,7 @@ void SceneKeyConfig::updateForceBargraphs()
         }
     }
     // update joystick force bargraph
-    size_t base = 0;
+    [[maybe_unused]] size_t base = 0; // FIXME: unused-but-set-variable
 
     for (size_t index = 0; index < InputMgr::MAX_JOYSTICK_BUTTON_COUNT; ++index)
     {

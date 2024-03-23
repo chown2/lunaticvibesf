@@ -162,7 +162,7 @@ public:
     void pushPartsOrder(BarPartsType type);
 
 public:
-    virtual bool update(lunaticvibes::Time time);
+    bool update(const lunaticvibes::Time& time) override;
     void setMotionLoopTo(int t) override;
     void setMotionStartTimer(IndexTimer t) override;
     void appendMotionKeyFrame(const MotionKeyFrame& f) override;

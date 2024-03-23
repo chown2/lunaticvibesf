@@ -25,7 +25,6 @@ const char* CREATE_FOLDER_TABLE_STR =
 "path TEXT NOT NULL,"
 "modtime INTEGER"
 ");";
-static constexpr size_t FOLDER_PARAM_COUNT = 6;
 
 const char* CREATE_SONG_TABLE_STR =
 "CREATE TABLE IF NOT EXISTS song("
