@@ -25,8 +25,7 @@ void SetThreadAsMainThread()
 
 int64_t GetCurrentThreadID()
 {
-    // TODO.
-    return 0;
+    return static_cast<int64_t>(gettid());
 }
 
 bool IsMainThread()
