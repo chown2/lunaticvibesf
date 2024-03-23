@@ -10,6 +10,8 @@
 #include "index/timer.h"
 
 #include <array>
+#include <mutex>
+#include <shared_mutex>
 #include <string>
 #include <string_view>
 
@@ -37,6 +39,7 @@ protected:
 	private:
 		std::array<Value, _size> _data;
 		std::array<Value, _size> _dataDefault;
+		std::shared_mutex _mutex;
 
 	public:
 		Value get(Key n) const
@@ -44,6 +47,7 @@ protected:
 			size_t idx = (size_t)n;
 			if (idx < _size)
 			{
+				std::shared_lock l{_mutex};
 				return _data.data()[idx];
 			}
 			return Value();
@@ -54,6 +58,7 @@ protected:
 			size_t idx = (size_t)n;
 			if (idx < _size)
 			{
+				std::unique_lock l{_mutex};
 				_data[idx] = value;
 				return true;
 			}
