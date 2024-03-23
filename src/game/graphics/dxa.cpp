@@ -266,13 +266,13 @@ int Decompress(void* Src, void* Dest)
 			break;
 
 		case 1:
-			index = *((u16*)sp);
+			index = sp[0] | (sp[1] << 8);
 			sp += 2;
 			srcsize -= 2;
 			break;
 
 		case 2:
-			index = *((u16*)sp) | (sp[2] << 16);
+			index = sp[0] | (sp[1] << 8) | (sp[2] << 16);
 			sp += 3;
 			srcsize -= 3;
 			break;
