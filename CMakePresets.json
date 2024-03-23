@@ -68,7 +68,7 @@
             "inherits": "linux-vcpkg",
             "cacheVariables": {
                 "CMAKE_CXX_COMPILER": "clang++",
-                "CMAKE_CXX_FLAGS": "-fsanitize=address,undefined -pedantic"
+                "CMAKE_CXX_FLAGS": "-fsanitize=address,undefined -pedantic -Wall -Wextra -Wno-missing-braces -Wno-missing-field-initializers -Wno-unknown-pragmas -Wno-unused-parameter"
             }
         }
     ]
