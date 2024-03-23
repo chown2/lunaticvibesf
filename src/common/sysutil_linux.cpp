@@ -10,6 +10,7 @@
 
 #include <boost/format.hpp>
 
+#include <sys/prctl.h>
 #include <unistd.h>
 
 #include "common/utils.h"
@@ -33,7 +34,15 @@ bool IsMainThread()
     return s_main_thread == std::this_thread::get_id();
 }
 
-void SetThreadName(const char* name) {}
+void SetThreadName(const char* name)
+{
+    // > The  name  can  be up to 16 bytes long, including the terminating null byte.
+    int ret = prctl(PR_SET_NAME, name);
+    if (ret != 0)
+    {
+        LOG_ERROR << "PR_SET_NAME failed, ret=" << ret;
+    }
+}
 
 void panic(const char* title, const char* msg)
 {
