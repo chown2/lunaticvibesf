@@ -55,6 +55,7 @@ Path GetExecutablePath()
 
 long long getFileLastWriteTime(const Path& p)
 {
+    // FIXME: this returns bogus absolute timestamps, which are only fine to compare to each other.
     return std::chrono::duration_cast<std::chrono::seconds>(fs::last_write_time(p).time_since_epoch()).count();
 }
 
