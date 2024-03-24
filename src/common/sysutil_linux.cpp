@@ -2,7 +2,9 @@
 
 #include "sysutil.h"
 
+#include <cstdint>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <filesystem>
 #include <string>
@@ -11,9 +13,10 @@
 #include <boost/format.hpp>
 
 #include <sys/prctl.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
-#include "common/utils.h"
+#include <common/utils.h>
 #include <common/log.h>
 
 static std::thread::id s_main_thread {};
