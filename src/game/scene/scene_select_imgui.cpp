@@ -1001,11 +1001,11 @@ void SceneSelect::imguiPageAbout()
     using namespace i18nText;
 
     ImGui::SetNextItemWidth(tabItemWidth);
-    if (ImGui::BeginTabItem("Lunatic Vibes", NULL, ImGuiTabItemFlags_NoCloseWithMiddleMouseButton))
+    if (ImGui::BeginTabItem("Lunatic Vibes F", NULL, ImGuiTabItemFlags_NoCloseWithMiddleMouseButton))
     {
         if (ImGui::BeginChild("##pagesub21"))
         {
-            ImGui::TextUnformatted("\"Lunatic Vibes\" 2017-2022");
+            ImGui::TextUnformatted("\"Lunatic Vibes F\" 2017-2024");
             ImGui::TextUnformatted((boost::format("Version: %s %s (%s %s)")
                 % PROJECT_VERSION
 #ifndef NDEBUG
@@ -1016,12 +1016,14 @@ void SceneSelect::imguiPageAbout()
                 % GIT_BRANCH % GIT_COMMIT
                 ).str().c_str());
                 
-            ImGui::TextUnformatted("https://github.com/yaasdf/lunaticvibes");
+            ImGui::TextUnformatted("https://github.com/chown2/lunaticvibesf");
 
             ImGui::TextUnformatted(R"(
 
+Current programmer:
+    chown2
 
-Casts:（敬称略）
+Original cast:（敬称略）
 
 Leader:
     yaasdf a.k.a. rustbell
@@ -1037,6 +1039,7 @@ Sound Effects:
 Contributors:
     jbscj
     lxdlam
+    staticssleever668
 
 Testers:
     XX

@@ -7,11 +7,11 @@ endif()
 #########################################################################
 # PROJECT CONFIG
 
-project(LunaticVibes
+project(LunaticVibesF
     VERSION 0.11.0
     LANGUAGES CXX
 )
-set(PROJECT_TITLE "Lunatic Vibes")
+set(PROJECT_TITLE "Lunatic Vibes F")
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(BUILD_X64 TRUE CACHE BOOL "Build x64 arch")

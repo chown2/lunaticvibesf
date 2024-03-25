@@ -1,8 +1,8 @@
-# Lunatic Vibes
+# Lunatic Vibes F
 
-Lunatic Vibes is a rhythm game that plays community-made charts in BMS format.
+Lunatic Vibes F is a rhythm game that plays community-made charts in BMS format.
 
-The project is basically a rewritten version of the Lunatic Rave 2 (beta3 100201).
+It is a fork of [Lunatic Vibes](https://github.com/yaasdf/lunaticvibes), a clone of Lunatic Rave 2 (beta3 100201).
 
 The project is still in development stage. Please do not expect a bug-free experience. Feel free to open issues.
 
@@ -25,7 +25,7 @@ For LR2 feature compatibility list, check out [the wiki](https://github.com/yaas
 ## Quick Start
 
 -   Install [Microsoft Visual C++ Redistributable 2015+ x64](https://aka.ms/vs/17/release/vc_redist.x64.exe)
--   Download the latest release from [here](https://github.com/yaasdf/lunaticvibes/releases)
+-   Download the latest release from [here](https://github.com/chown2/lunaticvibesf/releases)
 -   Copy LR2files folder from LR2 (must include default theme; a fresh copy right from LR2 release is recommended)
 
 ## Build

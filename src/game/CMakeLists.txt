@@ -130,20 +130,20 @@ target_precompile_headers(gamelib REUSE_FROM common)
 #############################################################
 
 if (WIN32)
-    add_executable(LunaticVibes game.cpp LunaticVibes.exe.manifest)
+    add_executable(LunaticVibesF game.cpp LunaticVibesF.exe.manifest)
 else()
-    add_executable(LunaticVibes game.cpp)
+    add_executable(LunaticVibesF game.cpp)
 endif()
-target_link_libraries(LunaticVibes PRIVATE gamelib)
-set_target_properties(LunaticVibes PROPERTIES
+target_link_libraries(LunaticVibesF PRIVATE gamelib)
+set_target_properties(LunaticVibesF PROPERTIES
     CXX_STANDARD 17
 )
-install(TARGETS LunaticVibes COMPONENT Game)
+install(TARGETS LunaticVibesF COMPONENT Game)
 
-add_custom_command(TARGET LunaticVibes POST_BUILD
+add_custom_command(TARGET LunaticVibesF POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     $<TARGET_FILE:fmod>
-    $<TARGET_FILE_DIR:LunaticVibes>
+    $<TARGET_FILE_DIR:LunaticVibesF>
 )
 install(IMPORTED_RUNTIME_ARTIFACTS fmod
     COMPONENT Game
@@ -151,13 +151,13 @@ install(IMPORTED_RUNTIME_ARTIFACTS fmod
 )
 
 if (MSVC)
-    install(FILES $<TARGET_PDB_FILE:LunaticVibes> DESTINATION bin COMPONENT Symbols)
+    install(FILES $<TARGET_PDB_FILE:LunaticVibesF> DESTINATION bin COMPONENT Symbols)
 endif()
 
-add_custom_command(TARGET LunaticVibes POST_BUILD
+add_custom_command(TARGET LunaticVibesF POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/res
-    $<TARGET_FILE_DIR:LunaticVibes>/gamedata/resources
+    $<TARGET_FILE_DIR:LunaticVibesF>/gamedata/resources
 )
 # NOTE: trailing slash is significant.
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/res/
@@ -165,10 +165,10 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/res/
     COMPONENT Game
 )
 
-add_custom_command(TARGET LunaticVibes POST_BUILD
+add_custom_command(TARGET LunaticVibesF POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     ${CMAKE_SOURCE_DIR}/LICENSE_3RD_PARTY
-    $<TARGET_FILE_DIR:LunaticVibes>/gamedata/resources/LICENSE_3RD_PARTY
+    $<TARGET_FILE_DIR:LunaticVibesF>/gamedata/resources/LICENSE_3RD_PARTY
 )
 install(FILES ${CMAKE_SOURCE_DIR}/LICENSE_3RD_PARTY
     DESTINATION bin

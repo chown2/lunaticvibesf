@@ -55,9 +55,7 @@ int InitLogger()
     logfile << PROJECT_NAME << "-" << buf << ".log";
     static auto txtAppender = plog::RollingFileAppender<plog::TxtFormatterImpl<false>>{ logfile.str().c_str(), 1000000, 5 };
     */
-    std::stringstream logfile;
-    logfile << "LunaticVibes" << ".log";
-    pTxtAppender = std::make_shared<plog::RollingFileAppender<plog::TxtFormatterFileLine>>(logfile.str().c_str(), 1000000, 5);
+    pTxtAppender = std::make_shared<plog::RollingFileAppender<plog::TxtFormatterFileLine>>("LunaticVibesF.log", 1000000, 5);
     plog::get()->addAppender(&*pTxtAppender);
 
     return 0;
