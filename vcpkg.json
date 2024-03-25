@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "lunaticvibes",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "$when-upgrading-check": "https://github.com/microsoft/vcpkg/issues/37213",
   "$builtin-baseline-git-tag": "2024.02.14",
   "builtin-baseline": "fba75d09065fcc76a25dcf386b1d00d33f5175af",
