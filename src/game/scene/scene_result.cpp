@@ -1,6 +1,8 @@
 #include <game/scene/scene_result.h>
 
 #include <common/assert.h>
+#include <common/chartformat/chartformat_bms.h>
+#include <common/log.h>
 #include <common/types.h>
 #include <config/config_mgr.h>
 #include <db/db_score.h>
@@ -8,9 +10,13 @@
 #include <game/arena/arena_client.h>
 #include <game/arena/arena_data.h>
 #include <game/arena/arena_host.h>
+#include <game/lua_ir.h>
+#include <game/lua_ir_global.h>
 #include <game/ruleset/ruleset.h>
 #include <game/ruleset/ruleset_bms.h>
+#include <game/runtime/index/number.h>
 #include <game/scene/scene_context.h>
+#include <game/skin/skin_mgr.h>
 #include <game/sound/sound_mgr.h>
 #include <game/sound/sound_sample.h>
 
@@ -19,6 +25,10 @@
 
 #include <algorithm>
 #include <filesystem>
+#include <functional>
+#include <future>
+#include <memory>
+#include <optional>
 
 ScoreBMS::Lamp optionLampToBms(const Option::e_lamp_type lamp)
 {
@@ -253,7 +263,8 @@ void SceneResult::_updateAsync()
 }
 
 static void saveReplay(const lunaticvibes::Time t, std::string replayFileName, ScoreBMS::Lamp lamp,
-                       bool also_save_for_course)
+                       bool also_save_for_course,
+                       std::future<std::optional<lunaticvibes::ir::ScoreResult>>& out_score_upload)
 {
     // save replay
     std::unique_lock l{gPlayContext._mutex};
@@ -275,8 +286,9 @@ static void saveReplay(const lunaticvibes::Time t, std::string replayFileName, S
     }
 
     // save score
-    LVF_ASSERT(gPlayContext.ruleset[PLAYER_SLOT_PLAYER] != nullptr);
+    LVF_ASSERT(gChartContext.chart != nullptr);
     LVF_ASSERT(gPlayContext.chartObj[PLAYER_SLOT_PLAYER] != nullptr);
+    LVF_ASSERT(gPlayContext.ruleset[PLAYER_SLOT_PLAYER] != nullptr);
     std::shared_ptr<ScoreBase> pScore = nullptr;
     switch (gChartContext.chart->type())
     {
@@ -330,6 +342,31 @@ static void saveReplay(const lunaticvibes::Time t, std::string replayFileName, S
         for (auto& [entry, scoreOld] : frame.displayEntries)
             if (entry->md5 == gChartContext.hash)
                 scoreOld = pScore;
+
+    LVF_VERIFY(!out_score_upload.valid());
+    if (auto score_bms = std::dynamic_pointer_cast<ScoreBMS>(pScore); score_bms != nullptr)
+    {
+        const auto song = std::dynamic_pointer_cast<ChartFormatBMSMeta>(gChartContext.chart);
+        LVF_ASSERT(song != nullptr); // Guaranteed by switch case above.
+
+        const auto ruleset = std::dynamic_pointer_cast<RulesetBMS>(gPlayContext.ruleset[PLAYER_SLOT_PLAYER]);
+        LVF_ASSERT(ruleset != nullptr); // Safe to assume after switch case above.
+
+        const lunaticvibes::BmsGaugeType gauge = ruleset->getGaugeType();
+        const auto mods = PlayModifierRandomType::NONE; // FIXME: stub
+        out_score_upload = std::async(
+            std::launch::async,
+            [](const std::shared_ptr<ScoreBMS>& score, const std::shared_ptr<ChartFormatBMSMeta>& song,
+               lunaticvibes::BmsGaugeType gauge, PlayModifierRandomType mods) {
+                auto ir = lunaticvibes::get_global_ir_context();
+                return ir->send_score(score, song, gauge, mods);
+            },
+            score_bms, song, gauge, mods);
+    }
+    else
+    {
+        LOG_VERBOSE << "[Result] No score for IR";
+    }
 }
 
 void SceneResult::updateDraw()
@@ -346,13 +383,12 @@ void SceneResult::updateDraw()
                                                  State::get(IndexNumber::DATE_MIN), State::get(IndexNumber::DATE_SEC));
         saveReplay(State::get(IndexTimer::SCENE_START), std::move(replayFileName),
                    std::min(lamp[PLAYER_SLOT_PLAYER], saveLampMax),
-                   !(_retryRequested && gPlayContext.canRetry) && gPlayContext.isCourse);
+                   !(_retryRequested && gPlayContext.canRetry) && gPlayContext.isCourse, _scoreUpload);
     }
 
     if (rt.norm() >= pSkin->info.timeResultRank)
     {
         State::set(IndexTimer::RESULT_RANK_START, t.norm());
-        // TODO play hit sound
         state = eResultState::STOP;
         LOG_DEBUG << "[Result] State changed to STOP";
     }
@@ -362,7 +398,8 @@ void SceneResult::updateStop() {}
 
 void SceneResult::updateRecord()
 {
-    // TODO sync score in online mode?
+    // TODO(rustbell): sync score in online mode?
+    // chown2: surely that meant arena?
     if (true)
     {
         _scoreSyncFinished = true;
@@ -545,6 +582,10 @@ void SceneResult::updateWaitArena()
 // CALLBACK
 void SceneResult::inputGamePress(InputMask& m, const lunaticvibes::Time& t)
 {
+    auto futureReady = []<typename T>(const std::future<T>& f) {
+        return !f.valid() || f.wait_for(std::chrono::seconds(0)) == std::future_status::ready;
+    };
+
     if (t - State::get(IndexTimer::SCENE_START) < pSkin->info.timeIntro)
         return;
 
@@ -554,7 +595,6 @@ void SceneResult::inputGamePress(InputMask& m, const lunaticvibes::Time& t)
         {
         case eResultState::DRAW:
             State::set(IndexTimer::RESULT_RANK_START, t.norm());
-            // TODO play hit sound
             state = eResultState::STOP;
             LOG_DEBUG << "[Result] State changed to STOP";
             break;
@@ -562,11 +602,32 @@ void SceneResult::inputGamePress(InputMask& m, const lunaticvibes::Time& t)
         case eResultState::STOP:
             if (saveScore)
             {
-                State::set(IndexTimer::RESULT_HIGHSCORE_START, t.norm());
-                // TODO stop result sound
-                // TODO play record sound
-                state = eResultState::RECORD;
-                LOG_DEBUG << "[Result] State changed to RECORD";
+                auto ir = lunaticvibes::get_global_ir_context();
+                const bool no_ir = ir->clients.empty();
+                if (futureReady(_scoreUpload) || no_ir)
+                {
+                    if (_scoreUpload.valid())
+                    {
+                        auto res = _scoreUpload.get();
+                        if (res.has_value())
+                        {
+                            State::set(IndexNumber::RESULT_RECORD_IR_RANK, res->place);
+                            State::set(IndexNumber::RESULT_RECORD_IR_TOTALPLAYER, res->total_players);
+                            State::set(IndexNumber::RESULT_RECORD_IR_CLEARRATE, 999);
+                        }
+                        else
+                        {
+                            LOG_VERBOSE << "[Result] No score upload result";
+                        }
+                    }
+                    State::set(IndexTimer::RESULT_HIGHSCORE_START, t.norm());
+                    state = eResultState::RECORD;
+                    LOG_DEBUG << "[Result] State changed to RECORD";
+                }
+                else
+                {
+                    LOG_VERBOSE << "[Result] Waiting on IR";
+                }
             }
             else if (gArenaData.isOnline())
             {

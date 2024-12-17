@@ -1,5 +1,6 @@
 #include <common/assert.h>
 #include <game/arena/arena_data.h>
+#include <game/lua_ir_global.h>
 #include <game/ruleset/ruleset_bms.h>
 #include <game/scene/scene_context.h>
 #include <game/skin/skin_lr2.h>
@@ -180,8 +181,8 @@ static bool getDstOptAbs(unsigned d)
     case 47: return false; // 47 難易度フィルタが無効
     case 48: return any_of({GAUGE_EXHARD, GAUGE_DEATH}, State::get(IndexOption::PLAY_GAUGE_TYPE_1P)); // lunaticvibes
     case 49: return any_of({GAUGE_EXHARD, GAUGE_DEATH}, State::get(IndexOption::PLAY_GAUGE_TYPE_2P)); // lunaticvibes
-    case 50: return !State::get(IndexSwitch::NETWORK);
-    case 51: return State::get(IndexSwitch::NETWORK);
+    case 50: return !getDstOptAbs(51);
+    case 51: return lunaticvibes::get_global_ir_context()->is_online();
     case 52: return !State::get(IndexSwitch::PLAY_OPTION_EXTRA);
     case 53: return State::get(IndexSwitch::PLAY_OPTION_EXTRA);
     case 54: return !State::get(IndexSwitch::PLAY_OPTION_AUTOSCR_1P);

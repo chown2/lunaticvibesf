@@ -15,6 +15,8 @@ endif()
 pkg_check_modules(libavcodec REQUIRED IMPORTED_TARGET libavcodec)
 pkg_check_modules(libavformat REQUIRED IMPORTED_TARGET libavformat)
 pkg_check_modules(libavutil REQUIRED IMPORTED_TARGET libavutil)
+pkg_check_modules(luajit REQUIRED IMPORTED_TARGET luajit)
+pkg_check_modules(sol2 REQUIRED IMPORTED_TARGET sol2)
 find_package(CURL REQUIRED)
 find_package(cereal 1.3.2 CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
@@ -66,6 +68,8 @@ add_library(
     input/input_dinput8.cpp
     input/input_windows.cpp
     input/input_wrapper.cpp
+    lua_ir.cpp
+    lua_ir_global.cpp
     ruleset/ruleset_bms.cpp
     ruleset/ruleset_bms_auto.cpp
     ruleset/ruleset_bms_replay.cpp
@@ -129,6 +133,8 @@ target_link_libraries(
     PUBLIC PkgConfig::libavcodec
     PUBLIC PkgConfig::libavformat
     PUBLIC PkgConfig::libavutil
+    PUBLIC PkgConfig::luajit
+    PUBLIC PkgConfig::sol2
     PUBLIC re2::re2
     PRIVATE tinyfiledialogs
 )

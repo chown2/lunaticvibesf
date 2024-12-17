@@ -1306,6 +1306,11 @@ void setEntryInfo(const size_t idx)
         State::set(IndexText::COURSE_STAGE3_SUBTITLE, text["coursesubtitle3"]);
         State::set(IndexText::COURSE_STAGE4_SUBTITLE, text["coursesubtitle4"]);
         State::set(IndexText::COURSE_STAGE5_SUBTITLE, text["coursesubtitle5"]);
+
+        // TODO: stub
+        // State::set(IndexNumber::INFO_LR2IR_RANK, 1111);
+        // State::set(IndexNumber::INFO_LR2IR_TOTALPLAYER, 2222);
+        // State::set(IndexNumber::INFO_LR2IR_CLEARRATE, 333);
     }
 
     setPlayModeInfo();

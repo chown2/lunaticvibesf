@@ -11,9 +11,12 @@
 
 #include <common/assert.h>
 #include <common/entry/entry_song.h>
+#include <common/log.h>
 #include <common/sysutil.h>
 #include <config/config_mgr.h>
 #include <game/arena/arena_data.h>
+#include <game/lua_ir.h>
+#include <game/lua_ir_global.h>
 #include <game/runtime/state.h>
 #include <game/scene/scene_context.h>
 #include <game/scene/scene_keyconfig.h>
@@ -1452,16 +1455,14 @@ void open_ir_page()
     const auto& chart = song->getCurrentChart();
     LVF_DEBUG_ASSERT(chart != nullptr);
 
-    // FIXME: unhardcode LR2IR
-    std::string link = (boost::format("http://dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=%s") %
-                        chart->fileHash.hexdigest())
-                           .str();
-    if (!lunaticvibes::open(link))
+    auto ir = lunaticvibes::get_global_ir_context();
+    if (ir->clients.empty())
     {
-        LOG_ERROR << "[SkinLR2] Failed to open IR page link";
+        LOG_WARNING << "[SkinLR2] No IR client for IR page";
         return;
     }
 
+    ir->clients.front().open_ir_page(chart->fileHash.hexdigest());
     LOG_DEBUG << "[SkinLR2] Opened IR page";
 }
 

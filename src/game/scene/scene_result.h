@@ -1,8 +1,13 @@
 #pragma once
-#include "game/skin/skin_mgr.h"
+
 #include "scene.h"
+
+#include <game/lua_ir.h>
+
+#include <future>
 #include <memory>
-#include <mutex>
+
+class SkinMgr;
 
 class ScoreBase;
 enum class eResultState
@@ -40,6 +45,7 @@ private:
     InputMask _inputAvailable;
 
 protected:
+    std::future<std::optional<lunaticvibes::ir::ScoreResult>> _scoreUpload;
     bool _scoreSyncFinished = false;
     bool _retryRequested = false;
     bool _savedScore = false;

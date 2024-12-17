@@ -4,6 +4,7 @@
 #include <list>
 #include <memory>
 #include <optional>
+#include <span>
 #include <string>
 #include <string_view>
 #include <thread>
@@ -12,6 +13,7 @@
 #include "scene.h"
 #include "scene_context.h"
 #include "scene_pre_select.h"
+#include <game/lua_ir.h>
 
 enum class eSelectState
 {
@@ -105,7 +107,7 @@ public:
 
 protected:
     // Looper callbacks
-    bool readyToStopAsync() const override;
+    [[nodiscard]] bool readyToStopAsync() const override;
     void _updateAsync() override;
     void updatePrepare();
     void updateSelect();
@@ -177,6 +179,7 @@ private:
     // pages
     void imguiPageOptions();
     void imguiPageOptionsGeneral();
+    void imguiPageOptionsIr();
     void imguiPageOptionsJukebox();
     void imguiPageOptionsVideo();
     void imguiPageOptionsAudio();
@@ -189,6 +192,7 @@ private:
     void imguiPageExit();
 
     // misc
+    void imguiLoadIrClientSettings(std::span<lunaticvibes::ir::Client>);
     void imguiRefreshProfileList();
     void imguiRefreshLanguageList();
     void imguiRefreshFolderList();
@@ -205,6 +209,8 @@ private:
     bool imguiDelTable();
     bool imguiApplyResolution();
     bool imguiRefreshAudioDevices();
+    bool imguiReloadIr();
+    bool imguiApplyIrSettings();
     bool imguiApplyAudioSettings();
 
     // etc
@@ -303,6 +309,13 @@ private:
     bool imgui_play_adjustLanecoverWithStart67 = false;
     bool imgui_play_adjustLanecoverWithMousewheel = false;
     bool imgui_play_adjustLanecoverWithLeftRight = false;
+
+    std::vector<std::map<std::string, lunaticvibes::ir::SettingType>> _imgui_ir_settings;
+    std::vector<std::pair<std::string, bool>> _imgui_ir;
+    std::vector<std::vector<std::array<char, 512>>> _imgui_ir_setting_values;
+    int _imgui_ir_settings_item = 0;
+    bool _imgui_ir_did_load_clients = false;
+    bool _imgui_ir_dirty = false;
 
     bool _imgui_show_demo_window = false;
 

@@ -21,6 +21,7 @@ add_executable(
     game/test_graphics.cpp
     game/test_lr2skin.cpp
     game/test_lr2soundset.cpp
+    game/test_lua_ir.cpp
     game/test_ruleset_bms.cpp
     game/test_scene_select.cpp
 )

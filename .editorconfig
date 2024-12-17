@@ -4,6 +4,11 @@ root = true
 indent_size = 4
 indent_style = space
 
+# Stylua
+[*.lua]
+indent_size = 4
+indent_style = tab
+
 [vcpkg.json]
 indent_size = 2
 indent_style = space

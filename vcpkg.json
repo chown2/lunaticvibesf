@@ -21,6 +21,7 @@
       "features": ["sdl2-binding", "sdl2-renderer-binding"]
     },
     "gtest",
+    "luajit",
     {
       "name": "openssl",
       "platform": "!windows"
@@ -34,6 +35,7 @@
       "features": ["libjpeg-turbo"]
     },
     "sdl2-ttf",
+    "sol2",
     "sqlite3",
     "taocpp-json",
     "yaml-cpp"

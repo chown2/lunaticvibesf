@@ -28,7 +28,6 @@ enum class IndexSwitch : unsigned
     SYSTEM_AUTOPLAY,
     SYSTEM_SCOREGRAPH,
 
-    NETWORK,
     PLAY_OPTION_EXTRA,
 
     PLAY_OPTION_AUTOSCR_1P,

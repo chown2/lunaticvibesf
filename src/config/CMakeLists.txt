@@ -7,6 +7,7 @@ add_library(
     config_mgr.cpp
     cfg_general.cpp
     cfg_input.cpp
+    cfg_ir.cpp
     cfg_profile.cpp
     cfg_skin.cpp
 )

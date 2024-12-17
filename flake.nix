@@ -66,6 +66,9 @@
           sqlite
           yaml-cpp
 
+          luajit
+          sol2
+
           # Something here is required for GPU acceleration.
           libdrm.dev
           libglvnd.dev

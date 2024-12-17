@@ -1,18 +1,27 @@
 #include "scene_select.h"
 
+#include <algorithm>
 #include <array>
 #include <fstream>
+#include <map>
+#include <ranges>
 #include <string>
 
+#include <common/assert.h>
 #include <common/log.h>
 #include <common/str_utils.h>
+#include <common/u8.h>
 #include <common/utils.h>
+#include <config/cfg_ir.h>
+#include <config/cfg_profile.h>
 #include <config/config_mgr.h>
 #include <db/db_lr2_score.h>
 #include <db/db_score.h>
 #include <game/arena/arena_client.h>
 #include <game/arena/arena_data.h>
 #include <game/arena/arena_host.h>
+#include <game/lua_ir.h>
+#include <game/lua_ir_global.h>
 #include <game/runtime/i18n.h>
 #include <game/scene/scene_context.h>
 #include <game/skin/skin_lr2_debug.h>
@@ -23,6 +32,7 @@
 #include <boost/format.hpp>
 #include <imgui.h>
 #include <tinyfiledialogs.h>
+#include <vector>
 
 #ifdef _WIN32
 #include <VersionHelpers.h>
@@ -30,6 +40,9 @@
 
 // TODO: translations.
 #define _(String) String
+
+namespace r = std::ranges;
+namespace v = std::ranges::views;
 
 bool g_enable_gas_for_test = false;
 
@@ -612,6 +625,85 @@ void SceneSelect::imguiPageOptionsGeneral()
     }
 }
 
+void SceneSelect::imguiPageOptionsIr()
+{
+    auto move_to = [&](const int pos_new) {
+        if (pos_new == _imgui_ir_settings_item)
+            return;
+        std::swap(_imgui_ir[_imgui_ir_settings_item], _imgui_ir[pos_new]);
+        std::swap(_imgui_ir_settings[_imgui_ir_settings_item], _imgui_ir_settings[pos_new]);
+        std::swap(_imgui_ir_setting_values[_imgui_ir_settings_item], _imgui_ir_setting_values[pos_new]);
+        _imgui_ir_settings_item = pos_new;
+        _imgui_ir_dirty = true;
+    };
+
+    if (ImGui::BeginChild("##imguiPageOptionsIr"))
+    {
+        if (!_imgui_ir_did_load_clients)
+        {
+            auto ir = lunaticvibes::get_global_ir_context();
+            imguiLoadIrClientSettings(ir->clients);
+            _imgui_ir_did_load_clients = true;
+        }
+
+        if (ImGui::BeginListBox(_("IR clients")))
+        {
+            for (const auto [i, ir] : v::enumerate(_imgui_ir))
+            {
+                ImGui::PushID(i);
+                const bool is_selected = _imgui_ir_settings_item == i;
+                _imgui_ir_dirty |= ImGui::Checkbox("##enable client", &ir.second);
+                ImGui::SameLine();
+                if (ImGui::Selectable(ir.first.c_str(), is_selected))
+                    _imgui_ir_settings_item = i;
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+                ImGui::PopID();
+            }
+            ImGui::EndListBox();
+        }
+        ImGui::SameLine();
+        HelpMarker(
+            _("Score ranking place is only taken from the first IR in the list.\nScores are sent to each enabled IR."));
+
+        if (ImGui::Button(_("Up")) && !_imgui_ir.empty())
+            move_to(std::clamp(_imgui_ir_settings_item - 1, 0, static_cast<int>(_imgui_ir.size() - 1)));
+        ImGui::SameLine();
+        if (ImGui::Button(_("Down")) && !_imgui_ir.empty())
+            move_to(std::clamp(_imgui_ir_settings_item + 1, 0, static_cast<int>(_imgui_ir.size() - 1)));
+
+        ImGui::SameLine();
+        if (ImGui::Button(_("Reload list")))
+            imguiReloadIr();
+        ImGui::SameLine();
+        HelpMarker(_("Settings for newly enabled clients are not visible until the list is reloaded"));
+
+        ImGui::Separator();
+
+        if (!_imgui_ir.empty() && ImGui::BeginListBox(_("IR client settings")))
+        {
+            for (const auto& [i, x] : v::enumerate(_imgui_ir_settings[_imgui_ir_settings_item]))
+            {
+                int flags = 0;
+                switch (x.second)
+                {
+                case lunaticvibes::ir::SettingType::TEXT: break;
+                case lunaticvibes::ir::SettingType::PASSWORD: flags |= ImGuiInputTextFlags_Password; break;
+                }
+                std::span buf = _imgui_ir_setting_values[_imgui_ir_settings_item][i];
+                _imgui_ir_dirty |= ImGui::InputText(x.first.c_str(), buf.data(), buf.size(), flags);
+            }
+            ImGui::EndListBox();
+        }
+        ImGui::BeginDisabled(!_imgui_ir_dirty);
+        if (ImGui::Button(_("Apply settings")))
+            imguiApplyIrSettings();
+        ImGui::EndDisabled();
+
+        ImGui::EndChild();
+    }
+}
+
 void SceneSelect::imguiPageOptionsJukebox()
 {
     using namespace i18nText;
@@ -1070,6 +1162,13 @@ void SceneSelect::imguiPageDebug()
         }
         ImGui::EndTabItem();
     }
+
+    // TODO: move to imguiPageOptions once ready for prime time.
+    if (ImGui::BeginTabItem(_("IR (WIP)"), nullptr, ImGuiTabItemFlags_NoCloseWithMiddleMouseButton))
+    {
+        imguiPageOptionsIr();
+        ImGui::EndTabItem();
+    }
 }
 
 void SceneSelect::imguiPageDebugMain()
@@ -1521,6 +1620,40 @@ void SceneSelect::imguiCheckSettings()
     }
 }
 
+static lunaticvibes::ConfigIr& config_ir(const std::string& id)
+{
+    static std::vector<lunaticvibes::ConfigIr> config;
+    for (auto& ir : config)
+        if (ir.id() == id)
+            return ir;
+    return config.emplace_back(ConfigMgr::get('E', cfg::E_PROFILE, cfg::PROFILE_DEFAULT), id);
+}
+
+void SceneSelect::imguiLoadIrClientSettings(std::span<lunaticvibes::ir::Client> clients)
+{
+    _imgui_ir.clear();
+    _imgui_ir.reserve(clients.size());
+    for (auto& c : clients)
+        _imgui_ir.emplace_back(c.id(), true);
+
+    _imgui_ir_settings.clear();
+    _imgui_ir_settings.reserve(clients.size());
+    for (auto& c : clients)
+        _imgui_ir_settings.push_back(c.get_settings());
+
+    _imgui_ir_setting_values.clear();
+    _imgui_ir_setting_values.reserve(_imgui_ir_settings.size());
+    for (auto [i, c] : v::enumerate(_imgui_ir_settings))
+    {
+        auto& config = config_ir(_imgui_ir[i].first);
+        auto& setting_values = _imgui_ir_setting_values.emplace_back();
+        for (const auto& cc : c)
+            lunaticvibes::assign(setting_values.emplace_back(), config.get("OPT_" + cc.first, ""));
+    }
+
+    _imgui_ir_dirty = false;
+}
+
 bool SceneSelect::imguiApplyPlayerName()
 {
     ConfigMgr::Profile()->set(cfg::P_PLAYERNAME, imgui_player_name_buf);
@@ -1729,6 +1862,73 @@ bool SceneSelect::imguiRefreshAudioDevices()
     {
         imgui_audio_device_index = 0;
     }
+
+    return false;
+}
+
+bool SceneSelect::imguiReloadIr()
+{
+    auto ir = lunaticvibes::get_global_ir_context();
+
+    auto enabled_irs = ConfigMgr::get<std::vector<std::string>>('P', "EnabledIrs", {});
+
+    auto discovered = lunaticvibes::ir::Client::discover();
+
+    ir->clients.clear();
+    for (const auto& available : discovered)
+        if (r::contains(enabled_irs, lunaticvibes::s(available.u8string())))
+            if (auto c = lunaticvibes::ir::Client::open(available); c.has_value())
+                ir->clients.push_back(std::move(*c));
+    r::sort(ir->clients, {},
+            [&](lunaticvibes::ir::Client& c) { return r::find(enabled_irs, c.id()) - r::begin(enabled_irs); });
+
+    LOG_VERBOSE << "[Select] Opened " << ir->clients.size() << " IR clients";
+
+    imguiLoadIrClientSettings(ir->clients);
+
+    for (const auto& available : discovered)
+    {
+        if (!r::contains(enabled_irs, lunaticvibes::s(available.u8string())))
+        {
+            _imgui_ir.emplace_back(lunaticvibes::u8str(available), false);
+            _imgui_ir_settings.emplace_back();
+            _imgui_ir_setting_values.emplace_back();
+        }
+    }
+
+    return false;
+}
+
+bool SceneSelect::imguiApplyIrSettings()
+{
+    auto ir = lunaticvibes::get_global_ir_context();
+    for (auto [i, pair] : v::enumerate(_imgui_ir))
+    {
+        auto& [id, is_enabled] = pair;
+        if (!is_enabled)
+            continue;
+        auto& config = config_ir(id);
+        std::map<std::string, std::string> s;
+        for (auto [k, v] : v::zip(_imgui_ir_settings[i], _imgui_ir_setting_values[i]))
+        {
+            s.insert_or_assign(k.first, v.data());
+            config.set("OPT_" + k.first, v.data());
+        }
+        // Will not be there when we turn the client on. The settings list will be empty then.
+        if (auto c = r::find(ir->clients, id, &lunaticvibes::ir::Client::id); c != r::end(ir->clients))
+            c->apply_settings(s);
+        config.save();
+    }
+
+    // FIXME: apply_settings logic is broken.
+
+    std::vector<std::string> enabled_irs;
+    for (auto& [ir, is_enabled] : _imgui_ir)
+        if (is_enabled)
+            enabled_irs.push_back(ir);
+    ConfigMgr::set('P', "EnabledIrs", enabled_irs);
+
+    imguiReloadIr();
 
     return false;
 }

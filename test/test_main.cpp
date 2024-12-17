@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 {
     executablePath = GetExecutablePath();
     std::filesystem::current_path(executablePath);
-    std::filesystem::current_path("test");
+    std::filesystem::current_path("test"); // TODO: maybe remove this?
 
     SetThreadAsMainThread();
 
