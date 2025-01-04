@@ -998,11 +998,17 @@ void SceneSelect::imguiPageOptionsPlay()
         ImGui::BeginDisabled(!imgui_play_lockGreenNumber);
         ImGui::TextUnformatted(i18n::c(GREENNUMBER));
         ImGui::SameLine(infoRowWidth);
-        imgui_play_greenNumber = State::get(IndexNumber::GREEN_NUMBER_1P);
-        if (ImGui::SliderInt("##greennumber", &imgui_play_greenNumber, 1, 1200, "%d", ImGuiSliderFlags_None))
-        {
+        int imgui_play_greenNumber = State::get(IndexNumber::GREEN_NUMBER_1P);
+        if (ImGui::SliderInt("##greennumberP1", &imgui_play_greenNumber, 1, 1200, "%d", ImGuiSliderFlags_None))
             State::set(IndexNumber::GREEN_NUMBER_1P, imgui_play_greenNumber >= 0 ? imgui_play_greenNumber : 0);
-        }
+        ImGui::SameLine();
+        HelpMarker(i18n::c(GREENNUMBER_HINT));
+
+        ImGui::TextUnformatted(_("Notes time (P2)"));
+        ImGui::SameLine(infoRowWidth);
+        int green_number_p2 = State::get(IndexNumber::GREEN_NUMBER_2P);
+        if (ImGui::SliderInt("##greennumberP2", &green_number_p2, 1, 1200, "%d", ImGuiSliderFlags_None))
+            State::set(IndexNumber::GREEN_NUMBER_2P, green_number_p2 >= 0 ? green_number_p2 : 0);
         ImGui::SameLine();
         HelpMarker(i18n::c(GREENNUMBER_HINT));
         ImGui::EndDisabled();
