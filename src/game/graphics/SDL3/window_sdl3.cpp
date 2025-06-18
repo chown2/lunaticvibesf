@@ -25,9 +25,9 @@
 #include <common/utils.h>
 #include <config/cfg_general.h>
 #include <config/config_mgr.h>
-#include <game/graphics/SDL2/graphics_SDL2.h>
-#include <game/graphics/SDL2/image_SDL2.h>
-#include <game/graphics/SDL2/input_SDL2.h>
+#include <game/graphics/SDL3/graphics_sdl3.h>
+#include <game/graphics/SDL3/image_sdl3.h>
+#include <game/graphics/SDL3/input_sdl3.h>
 #include <game/graphics/graphics.h>
 #include <game/graphics/video.h>
 

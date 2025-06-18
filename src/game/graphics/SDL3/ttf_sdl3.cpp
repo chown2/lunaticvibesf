@@ -2,7 +2,7 @@
 #include <common/log.h>
 #include <common/sysutil.h>
 #include <common/u8.h>
-#include <game/graphics/SDL2/graphics_SDL2.h>
+#include <game/graphics/SDL3/graphics_sdl3.h>
 #include <game/graphics/font.h>
 
 #include <SDL3/SDL.h>

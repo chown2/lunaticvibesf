@@ -21,13 +21,13 @@ find_package(re2 CONFIG REQUIRED)
 
 if(${LVF_GRAPHICS_BACKEND} STREQUAL SDL3)
     set(LVF_GRAPHICS_BACKEND_SRC
-        graphics/SDL2/common_SDL2.cpp
-        graphics/SDL2/graph_line_SDL2.cpp
-        graphics/SDL2/image_SDL2.cpp
-        graphics/SDL2/input_SDL2.cpp
-        graphics/SDL2/ttf_SDL2.cpp
-        graphics/SDL2/window_SDL2.cpp
-        input/platform/sdl2/input_sdl2.cpp
+        graphics/SDL3/common_sdl3.cpp
+        graphics/SDL3/graph_line_sdl3.cpp
+        graphics/SDL3/image_sdl3.cpp
+        graphics/SDL3/input_sdl3.cpp
+        graphics/SDL3/ttf_sdl3.cpp
+        graphics/SDL3/window_sdl3.cpp
+        input/platform/sdl3/input_sdl3.cpp
     )
 endif()
 
