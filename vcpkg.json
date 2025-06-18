@@ -1,7 +1,5 @@
 {
-  "$builtin-baseline-comment1": "imgui SDL2 bindings will be gone after 2025.02.14 https://github.com/microsoft/vcpkg/pull/42850",
-  "$builtin-baseline-comment2": "SDL2 builds without graphics supports on 2025.02.14 for me",
-  "$builtin-baseline-git-tag": "2025.01.13",
+  "$builtin-baseline-git-tag": "2025.06.13",
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "vcpkg-configuration": {
     "overlay-ports": [
@@ -9,7 +7,7 @@
     ]
   },
   "name": "lunaticvibesf",
-  "builtin-baseline": "6f29f12e82a8293156836ad81cc9bf5af41fe836",
+  "builtin-baseline": "ef7dbf94b9198bc58f45951adcf1f041fcbc5ea0",
   "dependencies": [
     "boost-asio",
     "boost-format",
@@ -22,8 +20,8 @@
     {
       "name": "imgui",
       "features": [
-        "sdl2-binding",
-        "sdl2-renderer-binding"
+        "sdl3-binding",
+        "sdl3-renderer-binding"
       ]
     },
     {
@@ -32,15 +30,9 @@
     },
     "plog",
     "re2",
-    "sdl2",
-    "sdl2-gfx",
-    {
-      "name": "sdl2-image",
-      "features": [
-        "libjpeg-turbo"
-      ]
-    },
-    "sdl2-ttf",
+    "sdl3",
+    "sdl3-image",
+    "sdl3-ttf",
     "sqlite3",
     "taocpp-json",
     "yaml-cpp"

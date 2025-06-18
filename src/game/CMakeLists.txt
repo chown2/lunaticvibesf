@@ -1,27 +1,14 @@
 find_package(PkgConfig REQUIRED)
-if(${LVF_GRAPHICS_BACKEND} STREQUAL SDL2)
-    pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2>=2.30.1)
-    pkg_check_modules(SDL2_gfx IMPORTED_TARGET SDL2_gfx>=1.0.2)
-    if(SDL2_gfx_FOUND)
-        list(APPEND LVF_GRAPHICS_PUBLIC_TARGETS PkgConfig::SDL2_gfx)
-    else()
-        # vcpkg doesn't make pkg-config file for SDL2_gfx.
-        find_package(sdl2-gfx CONFIG REQUIRED)
-        list(APPEND LVF_GRAPHICS_PUBLIC_TARGETS SDL2::SDL2_gfx)
-    endif()
-    pkg_check_modules(SDL2_image REQUIRED IMPORTED_TARGET SDL2_image>=2.8.2)
-    pkg_check_modules(SDL2_ttf REQUIRED IMPORTED_TARGET SDL2_ttf>=2.22.0)
+if(${LVF_GRAPHICS_BACKEND} STREQUAL SDL3)
+    pkg_check_modules(SDL3 REQUIRED IMPORTED_TARGET sdl3>=3.2.12)
+    pkg_check_modules(SDL3_image REQUIRED IMPORTED_TARGET sdl3-image>=3.2.4)
+    pkg_check_modules(SDL3_ttf REQUIRED IMPORTED_TARGET sdl3-ttf>=3.2.2)
     list(
         APPEND
         LVF_GRAPHICS_PUBLIC_TARGETS
-        PkgConfig::SDL2
-        PkgConfig::SDL2_image
-        PkgConfig::SDL2_ttf
-    )
-    list(
-        APPEND
-        LVF_GRAPHICS_PRIVATE_TARGETS
-        $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main> # vcpkg
+        PkgConfig::SDL3
+        PkgConfig::SDL3_image
+        PkgConfig::SDL3_ttf
     )
 endif()
 pkg_check_modules(libavcodec REQUIRED IMPORTED_TARGET libavcodec)
@@ -32,7 +19,7 @@ find_package(cereal 1.3.2 CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(re2 CONFIG REQUIRED)
 
-if(${LVF_GRAPHICS_BACKEND} STREQUAL SDL2)
+if(${LVF_GRAPHICS_BACKEND} STREQUAL SDL3)
     set(LVF_GRAPHICS_BACKEND_SRC
         graphics/SDL2/common_SDL2.cpp
         graphics/SDL2/graph_line_SDL2.cpp
@@ -146,7 +133,6 @@ target_link_libraries(
     PUBLIC PkgConfig::libavformat
     PUBLIC PkgConfig::libavutil
     PUBLIC re2::re2
-    PRIVATE ${LVF_GRAPHICS_PRIVATE_TARGETS}
     PRIVATE tinyfiledialogs
 )
 

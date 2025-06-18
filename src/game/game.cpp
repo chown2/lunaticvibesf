@@ -46,9 +46,9 @@
 #include <timeapi.h>
 #endif // WIN32
 
-#ifdef RENDER_SDL2
-#include <SDL_main.h> // WinMain implementation
-#endif                // RENDER_SDL2
+#ifdef RENDER_SDL3
+#include <SDL3/SDL_main.h> // WinMain implementation
+#endif                     // RENDER_SDL3
 
 #include <boost/nowide/args.hpp>
 

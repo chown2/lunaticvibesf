@@ -10,7 +10,7 @@
 #include <game/graphics/rectf.h>      // IWUY pragma: export
 
 // SDL forward declarations. Don't include SDL itself to avoid leaking implementation details.
-struct SDL_RWops;
+struct SDL_IOStream;
 struct SDL_Renderer;
 struct SDL_Surface;
 struct SDL_Texture;

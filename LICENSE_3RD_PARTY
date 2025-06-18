@@ -773,13 +773,6 @@ SDL2_ttf
 
 
 ============================================================================
-SDL2_gfx
- - License: zlib license
-
-(C) A. Schiffler, aschiffler [at] ferzkopp.net 2012-2018, licensed under the zlib license
-
-
-============================================================================
 sqlite3
  - License: public domain
 

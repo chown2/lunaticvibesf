@@ -11,11 +11,11 @@
 #include <common/utils.h>
 #include <game/graphics/graphics.h>
 
-#include <SDL_filesystem.h>
-#include <SDL_image.h>
-#include <SDL_render.h>
-#include <SDL_ttf.h>
-#include <SDL_video.h>
+#include <SDL3/SDL_filesystem.h>
+#include <SDL3/SDL_render.h>
+#include <SDL3/SDL_video.h>
+#include <SDL3_image/SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Texture
@@ -28,7 +28,10 @@ Texture::Texture(const SDL_Surface* pSurface)
         std::bind_front(pushAndWaitMainThreadTask<void, SDL_Texture*>, SDL_DestroyTexture));
     if (!_texture)
         return;
-    textureRect = std::bit_cast<Rect>(pSurface->clip_rect);
+    SDL_Rect clip_rect;
+    bool bret = SDL_GetSurfaceClipRect(const_cast<SDL_Surface*>(pSurface), &clip_rect);
+    LVF_ASSERT(bret);
+    textureRect = std::bit_cast<Rect>(clip_rect);
     loaded = true;
 }
 
@@ -44,7 +47,7 @@ Texture::Texture(SDL_Texture* pTexture, int w, int h)
 
 Texture::Texture(int w, int h, PixelFormat fmt, bool target)
 {
-    SDL_PixelFormatEnum sdlfmt = SDL_PIXELFORMAT_UNKNOWN;
+    SDL_PixelFormat sdlfmt = SDL_PIXELFORMAT_UNKNOWN;
     switch (fmt)
     {
     case PixelFormat::RGB24: sdlfmt = SDL_PIXELFORMAT_RGB24; break;
@@ -91,8 +94,8 @@ int Texture::updateYUV(uint8_t* Y, int Ypitch, uint8_t* U, int Upitch, uint8_t* 
     return 0;
 }
 
-static void do_draw(SDL_Texture* pTex, const SDL_Rect* srcRect, const RectF dstRectF_, const Color c, const BlendMode b,
-                    const double angle, const Point* center)
+static void do_draw(SDL_Texture* pTex, const SDL_FRect* srcRect, const RectF dstRectF_, const Color c,
+                    const BlendMode b, const double angle, const Point* center)
 {
     const int ssLevel = lunaticvibes::window::graphics_get_supersample_level();
     auto dstRectF = std::bit_cast<SDL_FRect>(dstRectF_ * ssLevel);
@@ -108,7 +111,10 @@ static void do_draw(SDL_Texture* pTex, const SDL_Rect* srcRect, const RectF dstR
         dstRectF.y -= dstRectF.h; /*flipFlags |= SDL_FLIP_VERTICAL;*/
     }
 
-    SDL_SetTextureColorMod(pTex, c.r, c.g, c.b);
+    if (!SDL_SetTextureColorMod(pTex, c.r, c.g, c.b))
+    {
+        LOG_WARNING << "[SDL2] SDL_SetTextureColorMod failed: " << SDL_GetError();
+    }
 
     SDL_FPoint scenter;
     if (center)
@@ -117,7 +123,7 @@ static void do_draw(SDL_Texture* pTex, const SDL_Rect* srcRect, const RectF dstR
     if (b == BlendMode::INVERT)
     {
         // ... pls help
-        const SDL_Rect rc = {0, 0, static_cast<int>(std::ceil(dstRectF.w)), static_cast<int>(std::ceil(dstRectF.h))};
+        const SDL_FRect rc = {0, 0, dstRectF.w, dstRectF.h};
 
         static auto pTextureInverted = std::shared_ptr<SDL_Texture>(
             SDL_CreateTexture(gFrameRenderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, rc.w, rc.h),
@@ -137,12 +143,12 @@ static void do_draw(SDL_Texture* pTex, const SDL_Rect* srcRect, const RectF dstR
             SDL_BLENDFACTOR_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
         SDL_SetTextureBlendMode(pTex, blendMode);
         SDL_SetTextureAlphaMod(pTex, c.a);
-        SDL_RenderCopy(gFrameRenderer, pTex, srcRect, &rc);
+        SDL_RenderTexture(gFrameRenderer, pTex, srcRect, &rc);
 
         SDL_SetRenderTarget(gFrameRenderer, oldTarget);
         SDL_SetTextureBlendMode(&*pTextureInverted, SDL_BLENDMODE_BLEND);
-        SDL_RenderCopyExF(gFrameRenderer, &*pTextureInverted, &rc, &dstRectF, angle, center ? &scenter : nullptr,
-                          SDL_RendererFlip(flipFlags));
+        SDL_RenderTextureRotated(gFrameRenderer, &*pTextureInverted, &rc, &dstRectF, angle, center ? &scenter : nullptr,
+                                 SDL_FlipMode(flipFlags));
         return;
     }
     else if (b == BlendMode::MULTIPLY_INVERTED_BACKGROUND)
@@ -159,6 +165,7 @@ static void do_draw(SDL_Texture* pTex, const SDL_Rect* srcRect, const RectF dstR
     }
     else
     {
+        // NOTE: c.a = opacity
         SDL_SetTextureAlphaMod(pTex, b == BlendMode::NONE ? 255 : c.a);
 
         auto to_sdl_blend_mode = [](const BlendMode b) -> SDL_BlendMode {
@@ -189,12 +196,18 @@ static void do_draw(SDL_Texture* pTex, const SDL_Rect* srcRect, const RectF dstR
 
         if (const auto blend_mode = to_sdl_blend_mode(b); blend_mode != SDL_BLENDMODE_INVALID)
         {
-            SDL_SetTextureBlendMode(pTex, blend_mode);
+            if (!SDL_SetTextureBlendMode(pTex, blend_mode))
+            {
+                LOG_WARNING << "[SDL2] SDL_SetTextureBlendMode failed: " << SDL_GetError();
+            }
         }
     }
 
-    SDL_RenderCopyExF(gFrameRenderer, pTex, srcRect, &dstRectF, angle, center ? &scenter : nullptr,
-                      SDL_RendererFlip(flipFlags));
+    if (!SDL_RenderTextureRotated(gFrameRenderer, pTex, srcRect, &dstRectF, angle, center ? &scenter : nullptr,
+                                  SDL_FlipMode(flipFlags)))
+    {
+        LOG_WARNING << "[SDL2] SDL_RenderTextureRotated failed: " << SDL_GetError();
+    }
 
     // #ifndef NDEBUG
     //     SDL_FRect& d = dstRectF;
@@ -212,7 +225,7 @@ void Texture::maybe_set_filtering(bool filter) const
         return;
     _filtering_set = true;
 
-    const SDL_ScaleMode mode = filter ? SDL_ScaleModeLinear : SDL_ScaleModeNearest;
+    const SDL_ScaleMode mode = filter ? SDL_SCALEMODE_LINEAR : SDL_SCALEMODE_NEAREST;
     SDL_ScaleMode current_mode;
     SDL_GetTextureScaleMode(_texture.get(), &current_mode);
     // SDL_SetTextureScaleMode is very expensive, while SDL_GetTextureScaleMode is practically free.
@@ -223,26 +236,33 @@ void Texture::maybe_set_filtering(bool filter) const
 void Texture::draw(const Rect& srcRect, RectF dstRect, const Color c, const BlendMode b, const bool filter,
                    const double angle, const Point* center) const
 {
+    // Don't try to render 0x0 textures.
+    // In SDL2 that was basically a no-op, but with SDL3 it fills the destination with a single color.
+    if (srcRect.w == 0 || srcRect.h == 0)
+        return;
+
     auto srcRectTmp = std::bit_cast<SDL_Rect>(srcRect);
     if (srcRectTmp.w == RECT_FULL.w)
         srcRectTmp.w = textureRect.w;
     if (srcRectTmp.h == RECT_FULL.h)
         srcRectTmp.h = textureRect.h;
+    SDL_FRect srcRectTmpF;
+    SDL_RectToFRect(&srcRectTmp, &srcRectTmpF);
     maybe_set_filtering(filter);
-    do_draw(_texture.get(), &srcRectTmp, dstRect, c, b, angle, center);
+    do_draw(_texture.get(), &srcRectTmpF, dstRect, c, b, angle, center);
 }
 
 struct SdlSurfaceDeleter
 {
-    void operator()(SDL_Surface* surface) { SDL_FreeSurface(surface); }
+    void operator()(SDL_Surface* surface) { SDL_DestroySurface(surface); }
 };
 
 static std::unique_ptr<SDL_Surface, SdlSurfaceDeleter> make_full(const Color& c)
 {
     // NOTE: whatever srcrect you will use to render this, SDL will show the whole texture.
-    auto surface = SDL_CreateRGBSurfaceWithFormat(0, 1, 1, 24, SDL_PIXELFORMAT_RGB24);
+    auto surface = SDL_CreateSurface(1, 1, SDL_PIXELFORMAT_RGB24);
     const SDL_Rect textureRect = {0, 0, 1, 1};
-    SDL_FillRect(&*surface, &textureRect, SDL_MapRGBA(surface->format, c.r, c.g, c.b, c.a));
+    SDL_FillSurfaceRect(&*surface, &textureRect, SDL_MapSurfaceRGBA(surface, c.r, c.g, c.b, c.a));
     return std::unique_ptr<SDL_Surface, SdlSurfaceDeleter>{surface};
 }
 
