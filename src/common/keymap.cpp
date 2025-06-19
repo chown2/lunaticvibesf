@@ -9,11 +9,13 @@
 #include <common/log.h>
 #include <common/utils.h>
 
+static constexpr char UNDEF_KEYMAP = '-';
+
 std::string KeyMap::toString() const
 {
     switch (type)
     {
-    case DeviceType::UNDEF: return "-";
+    case DeviceType::UNDEF: return {UNDEF_KEYMAP};
     case DeviceType::KEYBOARD: return toStringK();
     case DeviceType::JOYSTICK: return toStringJ();
     case DeviceType::MOUSE: return toStringM();
@@ -47,6 +49,7 @@ void KeyMap::loadFromString(const std::string_view name)
     case 'K': loadFromStringK(name); break;
     case 'J': loadFromStringJ(name); break;
     case 'M': loadFromStringM(name); break;
+    case UNDEF_KEYMAP: break;
     default: LOG_WARNING << "Bad keymap value: " << name;
     }
 }

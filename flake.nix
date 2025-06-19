@@ -29,16 +29,17 @@
       });
       imgui = (
         pkgs.imgui.override {
-          IMGUI_BUILD_SDL2_BINDING = true;
-          IMGUI_BUILD_SDL2_RENDERER_BINDING = true;
+          IMGUI_BUILD_SDL3_BINDING = true;
+          IMGUI_BUILD_SDL3_RENDERER_BINDING = true;
         }
       );
 
       buildInputsShared = with pkgs; [
         # Something here is required for GPU acceleration.
+        libGL.dev
         libdrm.dev
         libglvnd.dev
-        mesa.dev
+        # mesa.dev
         mesa_glu.dev
         xorg.libX11.dev
         xorg.libXext.dev
@@ -89,10 +90,9 @@
               glib
               pcre2
 
-              SDL2
-              SDL2_gfx
-              SDL2_image
-              SDL2_ttf
+              sdl3
+              sdl3-image
+              sdl3-ttf
               boost
               cereal_1_3_2
               curl
@@ -117,21 +117,8 @@
           buildInputs =
             # vcpkg will silently build SDL without graphics support if it couldn't
             # find a god know what dependency.
-            buildInputsShared
-            ++ (with pkgs; [
-              # These are what vcpkg says is required, but seems like they are
-              # not enough.
-              # SDL2 X11
-              # xorg.libX11.dev
-              xorg.libXft.dev
-              # xorg.libXext.dev
-              # SDL2 Wayland
-              # libegl1-mesa-dev #?
-              # libwayland # ?
-              libxkbcommon
-              # SDL2 ibus
-              # ibus.dev
-            ]);
+            # ..and that seems to be the case here...
+            buildInputsShared ++ pkgs.sdl3.buildInputs;
           nativeBuildInputs =
             nativeBuildInputsShared
             ++ (with pkgs; [
@@ -140,8 +127,11 @@
               jinja2-cli # libsystemd
               libtool # libxcrypt building
               nasm # ffmpeg building
-              pkg-config # libcurl fails with wrapped on 2025.02.14 but not 2025.01.13.
+              # libcurl fails with wrapped on 2025.02.14 - 2025.06.13 but not 2025.01.13
+              # Mentioned here https://github.com/microsoft/vcpkg/issues/42332#issuecomment-2651993455
+              pkg-config-unwrapped
               vcpkg
+              wayland-scanner # sdl3
             ]);
           VCPKG_ROOT = "${pkgs.vcpkg}/share/vcpkg";
         };

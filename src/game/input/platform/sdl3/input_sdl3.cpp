@@ -1,32 +1,33 @@
 #ifndef _WIN32
-#ifdef RENDER_SDL2
+#ifdef RENDER_SDL3
 
 #include <common/assert.h>
 #include <common/log.h>
 #include <common/types.h>
-#include <game/graphics/SDL2/input_SDL2.h>
+#include <game/graphics/SDL3/input_sdl3.h>
 #include <game/input/input_mgr.h>
 
 #include <algorithm>
 #include <array>
+#include <memory>
 #include <mutex>
 #include <shared_mutex>
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 
 struct SdlJoystickDeleter
 {
-    void operator()(SDL_GameController* joystick)
+    void operator()(SDL_Gamepad* joystick)
     {
         if (joystick != nullptr)
-            SDL_GameControllerClose(joystick);
+            SDL_CloseGamepad(joystick);
     }
 };
-using SdlJoystickPtr = std::unique_ptr<SDL_GameController, SdlJoystickDeleter>;
+using SdlJoystickPtr = std::unique_ptr<SDL_Gamepad, SdlJoystickDeleter>;
 
 struct SdlInputHolder
 {
-    std::array<SDL_GameController*, InputMgr::MAX_JOYSTICK_COUNT> controllers;
+    std::array<SDL_Gamepad*, InputMgr::MAX_JOYSTICK_COUNT> controllers;
     SdlInputHolder();
     SdlInputHolder(const SdlInputHolder&) = delete;
     SdlInputHolder(SdlInputHolder&&) = delete;
@@ -37,15 +38,17 @@ struct SdlInputHolder
 
 SdlInputHolder::SdlInputHolder()
 {
-    LOG_INFO << "[SDL2] Initializing SDL_INIT_GAMECONTROLLER";
-    SDL_Init(SDL_INIT_GAMECONTROLLER);
+    LOG_INFO << "[SDL2] Initializing SDL_INIT_GAMEPAD";
+    bool ret = SDL_Init(SDL_INIT_GAMEPAD);
+    (void)ret;
+    LVF_DEBUG_ASSERT(ret);
 }
 
 SdlInputHolder::~SdlInputHolder()
 {
     controllers.fill(nullptr);
-    LOG_INFO << "[SDL2] De-initializing SDL_INIT_GAMECONTROLLER";
-    SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER);
+    LOG_INFO << "[SDL2] De-initializing SDL_INIT_GAMEPAD";
+    SDL_QuitSubSystem(SDL_INIT_GAMEPAD);
 }
 
 [[nodiscard]] static SdlInputHolder& getInputState()
@@ -60,42 +63,50 @@ void initInput()
     (void)getInputState();
 }
 
+struct SdlDeleter
+{
+    void operator()(void* ptr) { SDL_free(ptr); }
+};
+
 void refreshInputDevices()
 {
     auto& state = getInputState();
-    int ret = SDL_NumJoysticks();
-    if (ret < 0)
+    int joystick_count;
+    auto joysticks = std::unique_ptr<SDL_JoystickID, SdlDeleter>(SDL_GetJoysticks(&joystick_count));
+    if (joysticks == nullptr)
     {
         LOG_ERROR << "[SDL2] SDL_NumJoysticks failed: " << SDL_GetError();
         return;
     }
-    if (ret < 1)
+    if (joystick_count < 1)
     {
         LOG_INFO << "[SDL2] No game controller connected";
         return;
     }
-    const int joystick_count = ret;
     LOG_INFO << "[SDL2] Found " << joystick_count << " joysticks";
     for (int i = 0; i < std::min(joystick_count, static_cast<int>(sdl::state::g_con_buttons.size())); ++i)
     {
-        LOG_DEBUG << "[SDL2] Opening game controller " << i;
-        auto j = SDL_GameControllerOpen(i);
+        const SDL_JoystickID id = joysticks.get()[i];
+        LOG_DEBUG << "[SDL2] Opening game controller " << id << " (" << i << "-nth" << ")";
+        SDL_Gamepad* j = SDL_OpenGamepad(id);
         if (j == nullptr)
         {
             LOG_ERROR << "[SDL2] Failed to open game controller: " << SDL_GetError();
             continue;
         }
 
-        const char* name = SDL_GameControllerName(j);
+        const char* name = SDL_GetGamepadName(j);
         if (name == nullptr)
             name = "(unnamed)";
 
         std::array<char, 64> guid{0};
-        SDL_JoystickGetGUIDString(SDL_JoystickGetGUID(SDL_GameControllerGetJoystick(j)), guid.data(), guid.size());
+        SDL_Joystick* jj = SDL_GetGamepadJoystick(j);
+        LVF_VERIFY(jj != nullptr);
+        SDL_GUIDToString(SDL_GetJoystickGUID(jj), guid.data(), guid.size());
 
         state.controllers[i] = j;
 
-        LOG_INFO << "[SDL2] Initialized game controller: " << name;
+        LOG_INFO << "[SDL2] Initialized a game controller: " << name;
         LOG_DEBUG << "[SDL2] GUID: " << guid.data();
     }
 }
@@ -182,5 +193,5 @@ short getLastMouseWheelState()
     return state;
 }
 
-#endif // RENDER_SDL2
+#endif // RENDER_SDL3
 #endif // _WIN32

@@ -1,8 +1,8 @@
-#include "input_SDL2.h"
+#include "input_sdl3.h"
 
 #include <common/assert.h>
 
-#include <SDL_scancode.h>
+#include <SDL3/SDL_scancode.h>
 
 unsigned char sdl_key_from_common_scancode(Input::Keyboard key)
 {

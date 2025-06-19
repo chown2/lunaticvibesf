@@ -9,21 +9,12 @@
 #include <plog/Formatters/TxtFormatter.h>
 #include <plog/Init.h>
 
+#ifdef _WIN32
+#include <plog/Appenders/DebugOutputAppender.h>
+#endif // _WIN32
+
 #include <common/assert.h>
 #include <common/types.h>
-
-#ifdef _WIN32
-
-#include <common/in_test_mode.h>
-
-#include <plog/Appenders/DebugOutputAppender.h>
-
-static bool have_console_window()
-{
-    return lunaticvibes::in_test_mode();
-}
-
-#endif // _WIN32
 
 namespace plog
 {
@@ -56,29 +47,30 @@ public:
 };
 } // namespace plog
 
-static std::shared_ptr<plog::IAppender> pConsoleAppender;
-static std::shared_ptr<plog::IAppender> pTxtAppender;
-
 namespace lunaticvibes
 {
 
 void InitLogger(const char* logFileName)
 {
-#ifdef _WIN32
-    if (have_console_window())
-        pConsoleAppender = std::make_shared<plog::ColorConsoleAppender<plog::TxtFormatterFileLine>>();
-    else
-        pConsoleAppender = std::make_shared<plog::DebugOutputAppender<plog::TxtFormatterFileLine>>();
-#else
-    pConsoleAppender = std::make_shared<plog::ColorConsoleAppender<plog::TxtFormatterFileLine>>();
-#endif // WIN32
-    plog::init(plog::info, pConsoleAppender.get());
+    LVF_ASSERT(logFileName != nullptr);
 
-    if (logFileName != nullptr)
-    {
-        pTxtAppender = std::make_shared<plog::RollingFileAppender<plog::TxtFormatterFileLine>>(logFileName, 1000000, 5);
-        plog::get()->addAppender(pTxtAppender.get());
-    }
+    static std::shared_ptr<plog::IAppender> s_console_appender;
+    static std::shared_ptr<plog::IAppender> s_debug_appender;
+    static std::shared_ptr<plog::IAppender> s_txt_appender;
+
+    // NOTE: on Windows if there is no console window this writes to void. Console is there when auto-testing and with
+    // Wine so don't remove this.
+    s_console_appender = std::make_shared<plog::ColorConsoleAppender<plog::TxtFormatterFileLine>>();
+    plog::init(plog::info, s_console_appender.get());
+
+#ifdef _WIN32
+    // NOTE: writes to Visual Studio debugger messages.
+    s_debug_appender = std::make_shared<plog::DebugOutputAppender<plog::TxtFormatterFileLine>>();
+    plog::get()->addAppender(s_debug_appender.get());
+#endif // WIN32
+
+    s_txt_appender = std::make_shared<plog::RollingFileAppender<plog::TxtFormatterFileLine>>(logFileName, 1000000, 5);
+    plog::get()->addAppender(s_txt_appender.get());
 }
 
 static plog::Severity plogSeverityFromLogLevel(const LogLevel level)
