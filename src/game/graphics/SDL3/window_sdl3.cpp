@@ -21,6 +21,7 @@
 #include <common/log.h>
 #include <common/meta.h>
 #include <common/sysutil.h>
+#include <common/thread_pool.h>
 #include <common/u8.h>
 #include <common/utils.h>
 #include <config/cfg_general.h>
@@ -31,6 +32,7 @@
 #include <game/graphics/graphics.h>
 #include <game/graphics/video.h>
 
+namespace lvf = lunaticvibes;
 namespace v = std::views;
 
 static std::atomic<double> s_canvas_scale_x = 1.0;
@@ -204,19 +206,23 @@ void lunaticvibes::window::graphics_flush()
         // Save screenshot before presenting per SDL_RenderReadPixels docs.
         if (!screenshotPath.empty())
         {
-            fs::create_directories(screenshotPath.parent_path());
+            struct SdlSurfaceDeleter
+            {
+                void operator()(SDL_Surface* surface) { SDL_DestroySurface(surface); }
+            };
             SDL_Rect rect{0, 0, s_window_rect_w, s_window_rect_h};
-            SDL_Surface* sshot = SDL_RenderReadPixels(gFrameRenderer, &rect);
+            auto sshot = std::unique_ptr<SDL_Surface, SdlSurfaceDeleter>(SDL_RenderReadPixels(gFrameRenderer, &rect));
             if (sshot == nullptr)
             {
                 LOG_ERROR << "[SDL2] SDL_RenderReadPixels error: " << SDL_GetError();
             }
             else
             {
-                // TODO: PNG encoding could be done on separate thread.
-                (void)lunaticvibes::save_into_png(sshot, screenshotPath);
-                SDL_DestroySurface(sshot);
-                screenshotPath.clear();
+                std::atomic<size_t> _;
+                lvf::post_job(_, [sshot = std::move(sshot), screenshotPath = std::exchange(screenshotPath, {})]() {
+                    fs::create_directories(screenshotPath.parent_path());
+                    (void)lvf::save_into_png(sshot.get(), screenshotPath);
+                });
             }
         }
         SDL_RenderPresent(gFrameRenderer);

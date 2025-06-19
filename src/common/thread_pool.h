@@ -12,7 +12,7 @@ void post_job(std::atomic<size_t>& counter, auto callable)
 {
     auto [pool, mutex] = get_thread_pool();
     std::unique_lock l{mutex};
-    boost::asio::post(pool, [&counter, callable]() {
+    boost::asio::post(pool, [&counter, callable = std::move(callable)]() {
         struct Counter
         {
             std::atomic<size_t>& counter;
